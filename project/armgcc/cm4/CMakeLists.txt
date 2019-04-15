@@ -78,6 +78,9 @@ include_directories(${ProjDirPath}/../../../devices/LPC54114/utilities/debug_con
 include_directories(${ProjDirPath}/../../../components/uart)
 include_directories(${ProjDirPath}/../../../components/serial_manager)
 include_directories(${ProjDirPath}/../../../components/lists)
+include_directories(${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/inc)
+include_directories(${ProjDirPath}/../../../middleware/fatfs/source)
+include_directories(${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk)
 include_directories(${ProjDirPath}/../../../middleware/multicore/mcmgr/src)
 
 add_executable(core0.elf 
@@ -87,12 +90,23 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../app/incbin.S"
     "${ProjDirPath}/../../../bsp/bsp_led.c"
     "${ProjDirPath}/../../../bsp/bsp_led.h"
+    "${ProjDirPath}/../../../bsp/bsp_sdspi.c"
+    "${ProjDirPath}/../../../bsp/bsp_sdspi.h"
     "${ProjDirPath}/../../../bsp/pin_mux.c"
     "${ProjDirPath}/../../../bsp/pin_mux.h"
     "${ProjDirPath}/../../../bsp/board.c"
     "${ProjDirPath}/../../../bsp/board.h"
     "${ProjDirPath}/../../../bsp/clock_config.c"
     "${ProjDirPath}/../../../bsp/clock_config.h"
+    "${ProjDirPath}/../../../middleware/fatfs/source/integer.h"
+    "${ProjDirPath}/../../../middleware/fatfs/source/ffunicode.c"
+    "${ProjDirPath}/../../../middleware/fatfs/source/ffsystem.c"
+    "${ProjDirPath}/../../../middleware/fatfs/source/ff.h"
+    "${ProjDirPath}/../../../middleware/fatfs/source/ff.c"
+    "${ProjDirPath}/../../../middleware/fatfs/source/diskio.h"
+    "${ProjDirPath}/../../../middleware/fatfs/source/diskio.c"
+    "${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk/fsl_sdspi_disk.c"
+    "${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk/fsl_sdspi_disk.h"
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr.c"
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr.h"
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr_internal_core_api.h"
@@ -110,6 +124,8 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_clock.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_power.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_power.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi.c"
     "${ProjDirPath}/../../../devices/LPC54114/fsl_device_registers.h"
     "${ProjDirPath}/../../../devices/LPC54114/LPC54114_cm4.h"
     "${ProjDirPath}/../../../devices/LPC54114/LPC54114_cm4_features.h"
@@ -136,6 +152,8 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../components/serial_manager/serial_port_uart.c"
     "${ProjDirPath}/../../../components/lists/generic_list.h"
     "${ProjDirPath}/../../../components/lists/generic_list.c"
+    "${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/src/fsl_sdspi.c"
+    "${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/inc/fsl_sdspi.h"
     "${ProjDirPath}/../../../CMSIS/Include/core_cm4.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_armcc.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_armclang.h"

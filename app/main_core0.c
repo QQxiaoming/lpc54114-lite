@@ -13,6 +13,8 @@
 #include "fsl_debug_console.h"
 
 #include "mcmgr.h"
+#include "ff.h"
+#include "diskio.h"
 
 #include "board.h"
 #include "bsp_led.h"
@@ -20,6 +22,9 @@
 
 #include "start_core1.h"
 
+
+static FATFS g_fileSystem; /* File system object */
+const TCHAR driverNumberBuffer[3U] = {SDSPIDISK + '0', ':', '/'};
 
 /**
  * @brief 粗略延时
@@ -81,6 +86,11 @@ int main(void)
     {
     }
 #else
+
+    if (f_mount(&g_fileSystem, driverNumberBuffer, 1))
+	{
+		PRINTF("Mount volume failed.\r\n");
+	}
 
     /* 初始化LED */
 	LEDInit();
