@@ -79,6 +79,9 @@ include_directories(${ProjDirPath}/../../../components/uart)
 include_directories(${ProjDirPath}/../../../components/serial_manager)
 include_directories(${ProjDirPath}/../../../components/lists)
 include_directories(${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/inc)
+include_directories(${ProjDirPath}/../../../components/mx25r_flash)
+include_directories(${ProjDirPath}/../../../components/codec)
+include_directories(${ProjDirPath}/../../../components/codec/wm8904)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk)
 include_directories(${ProjDirPath}/../../../middleware/multicore/mcmgr/src)
@@ -90,6 +93,14 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../app/incbin.S"
     "${ProjDirPath}/../../../bsp/bsp_led.c"
     "${ProjDirPath}/../../../bsp/bsp_led.h"
+    "${ProjDirPath}/../../../bsp/bsp_dmic.c"
+    "${ProjDirPath}/../../../bsp/bsp_dmic.h"
+    "${ProjDirPath}/../../../bsp/bsp_systick.c"
+    "${ProjDirPath}/../../../bsp/bsp_systick.h"
+    "${ProjDirPath}/../../../bsp/bsp_flash.c"
+    "${ProjDirPath}/../../../bsp/bsp_flash.h"
+    "${ProjDirPath}/../../../bsp/bsp_wm8904.c"
+    "${ProjDirPath}/../../../bsp/bsp_wm8904.h"
     "${ProjDirPath}/../../../bsp/bsp_sdspi.c"
     "${ProjDirPath}/../../../bsp/bsp_sdspi.h"
     "${ProjDirPath}/../../../bsp/pin_mux.c"
@@ -115,17 +126,24 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_iocon.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_reset.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_reset.c"
-    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_reset.h"
-    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_reset.c"
-    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_iocon.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_common.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_common.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_clock.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_clock.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_power.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_power.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_dmic.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_dmic.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2c.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2c.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2s.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2s.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2s_dma.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2s_dma.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_dma.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_dma.c"
     "${ProjDirPath}/../../../devices/LPC54114/fsl_device_registers.h"
     "${ProjDirPath}/../../../devices/LPC54114/LPC54114_cm4.h"
     "${ProjDirPath}/../../../devices/LPC54114/LPC54114_cm4_features.h"
@@ -154,6 +172,12 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../components/lists/generic_list.c"
     "${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/src/fsl_sdspi.c"
     "${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/inc/fsl_sdspi.h"
+    "${ProjDirPath}/../../../components/mx25r_flash/mx25r_flash.c"
+    "${ProjDirPath}/../../../components/mx25r_flash/mx25r_flash.h"
+    "${ProjDirPath}/../../../components/codec/fsl_codec_common.c"
+    "${ProjDirPath}/../../../components/codec/fsl_codec_common.h"
+    "${ProjDirPath}/../../../components/codec/wm8904/fsl_wm8904.c"
+    "${ProjDirPath}/../../../components/codec/wm8904/fsl_wm8904.h"
     "${ProjDirPath}/../../../CMSIS/Include/core_cm4.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_armcc.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_armclang.h"

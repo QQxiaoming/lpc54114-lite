@@ -19,12 +19,12 @@
 #include "fsl_iocon.h"
 #include "fsl_gpio.h"
 #include "fsl_spi.h"
-
+#include "bsp_sdspi.h"
+#include "bsp_systick.h"
 
 /* SDSPI driver state. */
 sdspi_card_t g_card;
 sdspi_host_t g_host;
-volatile uint32_t dwSysTicks = 0;
 
 /*******************************************************************************
  * Code - SPI interface
@@ -32,7 +32,6 @@ volatile uint32_t dwSysTicks = 0;
 
 void spi_init(void)
 {
-	uint32_t sourceClock;
 	spi_master_config_t masterConfig = {0};
 		
 	/* attach 12 MHz clock to SPI2 */

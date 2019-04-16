@@ -18,6 +18,10 @@
 
 #include "board.h"
 #include "bsp_led.h"
+#include "bsp_dmic.h"
+#include "bsp_flash.h"
+#include "bsp_systick.h"
+#include "bsp_wm8904.h"
 #include "pin_mux.h"
 
 #include "start_core1.h"
@@ -65,6 +69,9 @@ int main(void)
     /* attach 12 MHz clock to FLEXCOMM0 (debug console) */
     CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0);
 
+    /* 初始化systick */
+    systick_init();
+    
     /* 配置引脚功能*/
     BOARD_InitPins_Core0();
 
@@ -87,15 +94,22 @@ int main(void)
     }
 #else
 
+    /* 文件系统初始化 */
     if (f_mount(&g_fileSystem, driverNumberBuffer, 1))
 	{
 		PRINTF("Mount volume failed.\r\n");
 	}
 
+    /* flash 初始化 */
+    spiflash_init();
+
     /* 初始化LED */
 	LEDInit();
 	LED4_ON();
-
+    
+    dmic_init();
+    wm8904_i2s_init();
+    
 	PRINTF("LED Init Successful!\r\n");
 	while (1)
 	{
