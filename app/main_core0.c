@@ -258,7 +258,7 @@ int main(void)
 
     /* 初始化LED */
     LEDInit();
-    LED4_ON();
+    LED7_ON();
     PRINTF("LED Init Successful!\r\n");
 
 

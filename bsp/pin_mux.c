@@ -1,6 +1,6 @@
 /**
  * @file pin_mux.c
- * @author your name (you@domain.com)
+ * @author qiaoqiming
  * @brief 
  * @version 0.1
  * @date 2019-04-15
@@ -61,9 +61,9 @@ void BOARD_InitPins_Core0(void)
     CLOCK_EnableClock(kCLOCK_Iocon);
 
     /* Flexcomm Interface 0: USART RXD */ /* UART_RX - debug */
-    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN0_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN0_IDX, IOCON_FUNC1 | IOCON_MODE_INACT | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
     /* Flexcomm Interface 0: USART TXD */ /* UART_TX - debug */
-    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN1_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN1_IDX, IOCON_FUNC1 | IOCON_MODE_INACT | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
 
     /* Flexcomm Interface 3: SPI SSEL3 */ /* SPI_CS - FLASH */
     IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN2_IDX, IOCON_FUNC2 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
@@ -84,10 +84,19 @@ void BOARD_InitPins_Core0(void)
     /* Flexcomm Interface 2: SPI clock */ /* SPI_SCK - FLASH/TF */
     IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN10_IDX, IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
 
-    /* Flexcomm Interface 4: I2C SCL */ /* I2C_SCLK - wm8904 */
+    /* Flexcomm Interface 4: SPI clock */ /* SPI_SCK - arduino */
+    //IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN11_IDX, IOCON_FUNC4 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
+
+    /* ADC0_3  */ /* ADC - Potentiometer */
+	IOCON_PinMuxSet(IOCON, 1, 0, IOCON_FUNC0 | IOCON_MODE_INACT | IOCON_ANALOG_EN | IOCON_INPFILT_OFF);
+
+    /* Flexcomm Interface 4: I2C SCL */ /* I2C_SCLK - wm8904/PCT2075DP */
     IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN1_IDX, IOCON_FUNC5 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
-    /* Flexcomm Interface 4: I2C SDA */ /* I2C_SDA - wm8904 */    
+    /* Flexcomm Interface 4: I2C SDA */ /* I2C_SDA - wm8904/PCT2075DP */    
     IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN2_IDX, IOCON_FUNC5 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+
+    /* USB_VBUS */ /* USB_VBUS - MicroUSB */
+	IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN6_IDX, IOCON_MODE_INACT | IOCON_FUNC7 | IOCON_DIGITAL_EN);
 
     /* Flexcomm Interface 7: I2S clock */ /* I2S_BCLK - wm8904 */
     IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN12_IDX, IOCON_FUNC4 | IOCON_DIGITAL_EN);
