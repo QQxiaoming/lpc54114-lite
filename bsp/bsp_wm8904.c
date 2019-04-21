@@ -147,23 +147,6 @@ uint8_t wm8904_i2s_init(void)
 	RESET_PeripheralReset(kFC6_RST_SHIFT_RSTn);
 	RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn);
 	
-	/* I2S */
-    /* Flexcomm 6 I2S Rx */
-	IOCON_PinMuxSet(IOCON, 0, 5, IOCON_FUNC1 | IOCON_DIGITAL_EN); /* Flexcomm 6 / SDA */
-	IOCON_PinMuxSet(IOCON, 0, 6, IOCON_FUNC1 | IOCON_DIGITAL_EN); /* Flexcomm 6 / WS */
-	IOCON_PinMuxSet(IOCON, 0, 7, IOCON_FUNC1 | IOCON_DIGITAL_EN); /* Flexcomm 6 / SCK */
-    /* Flexcomm 7 I2S Tx */
-	IOCON_PinMuxSet(IOCON, 1, 12, IOCON_FUNC4 | IOCON_DIGITAL_EN); /* Flexcomm 7 / SCK */
-	IOCON_PinMuxSet(IOCON, 1, 13, IOCON_FUNC4 | IOCON_DIGITAL_EN);  /* Flexcomm 7 / SDA */
-	IOCON_PinMuxSet(IOCON, 1, 14, IOCON_FUNC4 | IOCON_DIGITAL_EN);  /* Flexcomm 7 / WS */
-
-	/* MCLK output for I2S */
-	IOCON_PinMuxSet(IOCON, 1, 17, IOCON_FUNC4 | IOCON_MODE_INACT | IOCON_DIGITAL_EN);
-	SYSCON->MCLKIO = 1U;
-	
-	/* I2C */
-	IOCON_PinMuxSet(IOCON, 1,  1, IOCON_MODE_PULLUP | IOCON_FUNC5 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
-  	IOCON_PinMuxSet(IOCON, 1,  2, IOCON_MODE_PULLUP | IOCON_FUNC5 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
 	
 	PRINTF("Configure I2C\r\n");
     BOARD_Codec_I2C_Init();

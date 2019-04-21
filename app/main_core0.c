@@ -8,6 +8,8 @@
  * @copyright Copyright (c) 2019
  * 
  */
+#include <string.h>
+#include <stdio.h>
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_debug_console.h"
@@ -232,7 +234,9 @@ int main(void)
 
     /* 配置引脚功能*/
     BOARD_InitPins_Core0();
-
+    CLOCK_EnableClock(kCLOCK_Gpio0);
+    CLOCK_EnableClock(kCLOCK_Gpio1);
+    
     BOARD_BootClockFROHF48M();
     BOARD_InitDebugConsole();
 

@@ -39,12 +39,7 @@ void spi_init(void)
     /* reset FLEXCOMM for SPI */
     RESET_PeripheralReset(kFC2_RST_SHIFT_RSTn);
 	
-	/* SPI2 pins */
-	IOCON_PinMuxSet(IOCON, 0,  3, (IOCON_FUNC2 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN));  /* SPI2_CS - FLASH */
-	IOCON_PinMuxSet(IOCON, 0, 10, (IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN));  /* SPI2_SCK        */
-	IOCON_PinMuxSet(IOCON, 0,  8, (IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN));  /* SPI2_MOSI       */
-	IOCON_PinMuxSet(IOCON, 0,  9, (IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN));  /* SPI2_MISO       */
-	
+
 	SPI_MasterGetDefaultConfig(&masterConfig);
 	masterConfig.direction = kSPI_MsbFirst;
 	masterConfig.polarity = kSPI_ClockPolarityActiveHigh;

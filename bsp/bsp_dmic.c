@@ -50,9 +50,7 @@ uint8_t dmic_init(void)
 	uint32_t i = 0;
 	dmic_channel_config_t dmic_channel_cfg;
 	
-	/* PDM interface */
-	IOCON_PinMuxSet(IOCON, 1, 15, IOCON_FUNC1 | IOCON_DIGITAL_EN);  /* PDM CLK  0 */
-	IOCON_PinMuxSet(IOCON, 1, 16, IOCON_FUNC1 | IOCON_DIGITAL_EN);  /* PDM DATA 0 */
+
 	
 	/* DMIC uses 12MHz FRO clock */
     CLOCK_AttachClk(kFRO12M_to_DMIC);

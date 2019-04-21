@@ -14,56 +14,102 @@
 #include "pin_mux.h"
 
 
-#define IOCON_PIO_DIGITAL_EN          0x80u   /*!< Enables digital function */
-#define IOCON_PIO_FUNC1               0x01u   /*!< Selects pin function 1 */
-#define IOCON_PIO_INPFILT_OFF       0x0100u   /*!< Input filter disabled */
-#define IOCON_PIO_INV_DI              0x00u   /*!< Input function is not inverted */
-#define IOCON_PIO_MODE_INACT          0x00u   /*!< No addition pin function */
-#define IOCON_PIO_OPENDRAIN_DI        0x00u   /*!< Open drain is disabled */
-#define IOCON_PIO_SLEW_STANDARD       0x00u   /*!< Standard mode, output slew rate control is enabled */
-#define PIN0_IDX                         0u   /*!< Pin number for pin 0 in a port 0 */
-#define PIN1_IDX                         1u   /*!< Pin number for pin 1 in a port 0 */
-#define PORT0_IDX                        0u   /*!< Port index */
+#define PORT0_IDX 0u
+#define PORT1_IDX 1u
+
+#define PIN0_IDX 0u
+#define PIN1_IDX 1u                   
+#define PIN2_IDX 2u
+#define PIN3_IDX 3u
+#define PIN4_IDX 4u 
+#define PIN5_IDX 5u 
+#define PIN6_IDX 6u 
+#define PIN7_IDX 7u 
+#define PIN8_IDX 8u 
+#define PIN9_IDX 9u 
+#define PIN10_IDX 10u 
+#define PIN11_IDX 11u 
+#define PIN12_IDX 12u 
+#define PIN13_IDX 13u 
+#define PIN14_IDX 14u 
+#define PIN15_IDX 15u 
+#define PIN16_IDX 16u 
+#define PIN17_IDX 17u 
+#define PIN18_IDX 18u 
+#define PIN19_IDX 19u 
+#define PIN20_IDX 20u 
+#define PIN21_IDX 21u 
+#define PIN22_IDX 22u 
+#define PIN23_IDX 23u 
+#define PIN24_IDX 24u 
+#define PIN25_IDX 25u 
+#define PIN26_IDX 26u 
+#define PIN27_IDX 27u 
+#define PIN28_IDX 28u 
+#define PIN29_IDX 29u 
+#define PIN30_IDX 30u 
+#define PIN31_IDX 31u 
 
 
-/*FUNCTION**********************************************************************
- *
- * Function Name : BOARD_InitPins_Core0
- *
- *END**************************************************************************/
-void BOARD_InitPins_Core0(void)  /* Function assigned for the Cortex-M4F */
+/**
+ * @brief Function assigned for the Cortex-M4F
+ * 
+ */
+void BOARD_InitPins_Core0(void)
 {
-  CLOCK_EnableClock(kCLOCK_Iocon);                           /* Enables the clock for the IOCON block. 0 = Disable; 1 = Enable.: 0x01u */
+    /* Enables the clock for the IOCON block. 0 = Disable; 1 = Enable.: 0x01u */
+    CLOCK_EnableClock(kCLOCK_Iocon);
 
-  const uint32_t port0_pin0_config = (
-    IOCON_PIO_FUNC1 |                                        /* Pin is configured as FC0_RXD_SDA_MOSI */
-    IOCON_PIO_MODE_INACT |                                   /* No addition pin function */
-    IOCON_PIO_INV_DI |                                       /* Input function is not inverted */
-    IOCON_PIO_DIGITAL_EN |                                   /* Enables digital function */
-    IOCON_PIO_INPFILT_OFF |                                  /* Input filter disabled */
-    IOCON_PIO_SLEW_STANDARD |                                /* Standard mode, output slew rate control is enabled */
-    IOCON_PIO_OPENDRAIN_DI                                   /* Open drain is disabled */
-  );
-  IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN0_IDX, port0_pin0_config); /* PORT0 PIN0 (coords: 31) is configured as FC0_RXD_SDA_MOSI */
-  const uint32_t port0_pin1_config = (
-    IOCON_PIO_FUNC1 |                                        /* Pin is configured as FC0_TXD_SCL_MISO */
-    IOCON_PIO_MODE_INACT |                                   /* No addition pin function */
-    IOCON_PIO_INV_DI |                                       /* Input function is not inverted */
-    IOCON_PIO_DIGITAL_EN |                                   /* Enables digital function */
-    IOCON_PIO_INPFILT_OFF |                                  /* Input filter disabled */
-    IOCON_PIO_SLEW_STANDARD |                                /* Standard mode, output slew rate control is enabled */
-    IOCON_PIO_OPENDRAIN_DI                                   /* Open drain is disabled */
-  );
-  IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN1_IDX, port0_pin1_config); /* PORT0 PIN1 (coords: 32) is configured as FC0_TXD_SCL_MISO */
+    /* Flexcomm Interface 0: USART RXD */ /* UART_RX - debug */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN0_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+    /* Flexcomm Interface 0: USART TXD */ /* UART_TX - debug */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN1_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+
+    /* Flexcomm Interface 3: SPI SSEL3 */ /* SPI_CS - FLASH */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN2_IDX, IOCON_FUNC2 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 2: SPI SSEL2 */ /* SPI_CS - TF */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN3_IDX, IOCON_FUNC2 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
+
+    /* Flexcomm Interface 6: I2S data */ /* I2S_RXD - wm8904 */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN5_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 6: I2S WS */ 
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN6_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 6: I2S clock */ 
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN7_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN);
+
+    /* Flexcomm Interface 2: SPI MOSI */ /* SPI_MOSI - FLASH/TF */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN8_IDX, IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 2: SPI MISO */ /* SPI_MISO - FLASH/TF */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN9_IDX, IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 2: SPI clock */ /* SPI_SCK - FLASH/TF */
+    IOCON_PinMuxSet(IOCON, PORT0_IDX, PIN10_IDX, IOCON_FUNC1 | IOCON_MODE_PULLUP | IOCON_GPIO_MODE | IOCON_DIGITAL_EN);
+
+    /* Flexcomm Interface 4: I2C SCL */ /* I2C_SCLK - wm8904 */
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN1_IDX, IOCON_FUNC5 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+    /* Flexcomm Interface 4: I2C SDA */ /* I2C_SDA - wm8904 */    
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN2_IDX, IOCON_FUNC5 | IOCON_MODE_PULLUP | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+
+    /* Flexcomm Interface 7: I2S clock */ /* I2S_BCLK - wm8904 */
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN12_IDX, IOCON_FUNC4 | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 7: I2S DATA */ /* I2S_TXD - wm8904 */
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN13_IDX, IOCON_FUNC4 | IOCON_DIGITAL_EN);
+    /* Flexcomm Interface 7: I2S WS */ /* I2S_LRCLK - wm8904 */
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN14_IDX, IOCON_FUNC4 | IOCON_DIGITAL_EN);
+
+    /* PDM0_CLK  */ /* CLK - SPH0641LM4H */
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN15_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN);
+    /* PDM0_DATA  */ /* Dout - SPH0641LM4H */    
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN16_IDX, IOCON_FUNC1 | IOCON_DIGITAL_EN);
+
+    /* MCLK */ /* I2S_MCLK - wm8904 */
+    IOCON_PinMuxSet(IOCON, PORT1_IDX, PIN17_IDX, IOCON_FUNC4 | IOCON_MODE_INACT | IOCON_DIGITAL_EN);
+    SYSCON->MCLKIO = 1U;
 }
 
-
-/*FUNCTION**********************************************************************
- *
- * Function Name : BOARD_InitPins_Core1
- *
- *END**************************************************************************/
-void BOARD_InitPins_Core1(void)  /* Function assigned for the Cortex-M0P */
+/**
+ * @brief Function assigned for the Cortex-M0P
+ * 
+ */
+void BOARD_InitPins_Core1(void)
 {
-
 }
