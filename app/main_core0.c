@@ -63,7 +63,7 @@ static FRESULT miscellaneous(void)
         {
             /* 格式化写入，参数格式类似printf函数 */
             f_printf(&file, "在原来文件新添加一行内容\r\n");
-            f_printf(&file, ">设备总空间：%10lu KB。\r\n>可用空间：  %10lu KB。\r\n", tot_sect * 4, fre_sect * 4);
+            f_printf(&file, ">设备总空间：%d KB。\r\n>可用空间： %d KB。\r\n", tot_sect * 4, fre_sect * 4);
             /*  文件定位到文件起始位置 */
             f_res = f_lseek(&file, 0);
             /* 读取文件所有内容到缓存区 */
@@ -288,7 +288,7 @@ int main(void)
     dmic_init();
 
     /* codec初始化 */
-    //wm8904_i2s_init();
+    wm8904_i2s_init();
 
     
     while (1)

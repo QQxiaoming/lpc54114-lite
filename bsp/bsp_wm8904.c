@@ -1,3 +1,13 @@
+/**
+ * @file bsp_wm8904.c
+ * @author qiaoqiming
+ * @brief 
+ * @version 0.1
+ * @date 2019-04-21
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include "bsp_wm8904.h"
 #include "fsl_device_registers.h"
 #include "fsl_debug_console.h"
@@ -8,7 +18,6 @@
 #include "fsl_i2c.h"
 #include "fsl_i2s.h"
 #include "fsl_i2s_dma.h"
-//#include "music.h"
 
 #define I2S_TX  I2S1
 #define I2S_RX  I2S0
@@ -16,13 +25,25 @@
 #define I2S_DMA_TX  15
 #define I2S_DMA_RX  12
 
-#define BOARD_CODEC_I2C_BASEADDR I2C4
+#define BOARD_CODEC_I2C_BASEADDR   I2C4
 #define BOARD_CODEC_I2C_CLOCK_FREQ 12000000
 
 static dma_handle_t s_DmaTxHandle;
 static dma_handle_t s_DmaRxHandle;
 static i2s_config_t s_TxConfig;
 static i2s_config_t s_RxConfig;
+wm8904_config_t codecConfig;
+codec_handle_t codecHandle;
+const pll_setup_t pllSetup = 
+{
+	.syspllctrl = SYSCON_SYSPLLCTRL_BANDSEL_MASK | SYSCON_SYSPLLCTRL_SELP(0x1FU) | SYSCON_SYSPLLCTRL_SELI(0x8U),
+	.syspllndec = SYSCON_SYSPLLNDEC_NDEC(0x2DU),
+	.syspllpdec = SYSCON_SYSPLLPDEC_PDEC(0x42U),
+	.syspllssctrl = {SYSCON_SYSPLLSSCTRL0_MDEC(0x34D3U) | SYSCON_SYSPLLSSCTRL0_SEL_EXT_MASK, 0x00000000U},
+	.pllRate = 24576000U, /* 16 bits * 2 channels * 48 kHz * 16 */
+	.flags = PLL_SETUPFLAG_WAITLOCK
+};
+
 
 
 void BOARD_I2C_Init(I2C_Type *base, uint32_t clkSrc_Hz)
@@ -93,47 +114,45 @@ status_t BOARD_Codec_I2C_Receive(
     return BOARD_I2C_Receive(BOARD_CODEC_I2C_BASEADDR, deviceAddress, subAddress, subAddressSize, rxBuff, rxBuffSize);
 }
 
-wm8904_config_t codecConfig;
-codec_config_t codecHandle = {.I2C_SendFunc = BOARD_Codec_I2C_Send,
-                                   .I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
-                                   .op.Init = WM8904_Init,
-                                   .op.Deinit = WM8904_Deinit,
-                                   .op.SetFormat = WM8904_SetAudioFormat};
-
-
-const pll_setup_t pllSetup = {
-		.syspllctrl = SYSCON_SYSPLLCTRL_BANDSEL_MASK | SYSCON_SYSPLLCTRL_SELP(0x1FU) | SYSCON_SYSPLLCTRL_SELI(0x8U),
-		.syspllndec = SYSCON_SYSPLLNDEC_NDEC(0x2DU),
-		.syspllpdec = SYSCON_SYSPLLPDEC_PDEC(0x42U),
-		.syspllssctrl = {SYSCON_SYSPLLSSCTRL0_MDEC(0x34D3U) | SYSCON_SYSPLLSSCTRL0_SEL_EXT_MASK, 0x00000000U},
-		.pllRate = 24576000U, /* 16 bits * 2 channels * 48 kHz * 16 */
-		.flags = PLL_SETUPFLAG_WAITLOCK};
-
-
+codec_config_t boardCodecConfig = 
+{
+	.I2C_SendFunc = BOARD_Codec_I2C_Send,
+	.I2C_ReceiveFunc = BOARD_Codec_I2C_Receive,
+	.op.Init = WM8904_Init,
+	.op.Deinit = WM8904_Deinit,
+	.op.SetFormat = WM8904_SetAudioFormat
+};
 
 uint8_t wm8904_i2s_init(void)
 {
-    // we need initial i2c here, but we initial the right i2c at pct2075 already
-	
+	/* I2C clock */
+	CLOCK_AttachClk(kFRO12M_to_FLEXCOMM4);
+
 	/* Initialize PLL clock */
 	CLOCK_AttachClk(kFRO12M_to_SYS_PLL);
 	CLOCK_SetPLLFreq(&pllSetup);
 
+	/* I2S clocks */
 	CLOCK_AttachClk(kSYS_PLL_to_FLEXCOMM6);
 	CLOCK_AttachClk(kSYS_PLL_to_FLEXCOMM7);
+
 	/* Attach PLL clock to MCLK for I2S, no divider */
 	CLOCK_AttachClk(kSYS_PLL_to_MCLK);
 	SYSCON->MCLKDIV = SYSCON_MCLKDIV_DIV(0U);
+
+	/* reset FLEXCOMM for I2C */
+	RESET_PeripheralReset(kFC4_RST_SHIFT_RSTn);
+
 	/* reset FLEXCOMM for I2S */
 	RESET_PeripheralReset(kFC6_RST_SHIFT_RSTn);
 	RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn);
 	
 	/* I2S */
-    // Flexcomm 6 I2S Rx
+    /* Flexcomm 6 I2S Rx */
 	IOCON_PinMuxSet(IOCON, 0, 5, IOCON_FUNC1 | IOCON_DIGITAL_EN); /* Flexcomm 6 / SDA */
 	IOCON_PinMuxSet(IOCON, 0, 6, IOCON_FUNC1 | IOCON_DIGITAL_EN); /* Flexcomm 6 / WS */
 	IOCON_PinMuxSet(IOCON, 0, 7, IOCON_FUNC1 | IOCON_DIGITAL_EN); /* Flexcomm 6 / SCK */
-    // Flexcomm 7 I2S Tx
+    /* Flexcomm 7 I2S Tx */
 	IOCON_PinMuxSet(IOCON, 1, 12, IOCON_FUNC4 | IOCON_DIGITAL_EN); /* Flexcomm 7 / SCK */
 	IOCON_PinMuxSet(IOCON, 1, 13, IOCON_FUNC4 | IOCON_DIGITAL_EN);  /* Flexcomm 7 / SDA */
 	IOCON_PinMuxSet(IOCON, 1, 14, IOCON_FUNC4 | IOCON_DIGITAL_EN);  /* Flexcomm 7 / WS */
@@ -141,24 +160,34 @@ uint8_t wm8904_i2s_init(void)
 	/* MCLK output for I2S */
 	IOCON_PinMuxSet(IOCON, 1, 17, IOCON_FUNC4 | IOCON_MODE_INACT | IOCON_DIGITAL_EN);
 	SYSCON->MCLKIO = 1U;
+	
+	/* I2C */
+	IOCON_PinMuxSet(IOCON, 1,  1, IOCON_MODE_PULLUP | IOCON_FUNC5 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+  	IOCON_PinMuxSet(IOCON, 1,  2, IOCON_MODE_PULLUP | IOCON_FUNC5 | IOCON_DIGITAL_EN | IOCON_INPFILT_OFF);
+	
+	PRINTF("Configure I2C\r\n");
+    BOARD_Codec_I2C_Init();
+
+	PRINTF("Configure WM8904 codec\r\n");
 	/*
 	 * enableMaster = true;
 	 * baudRate_Bps = 100000U;
 	 * enableTimeout = false;
 	 */
 	WM8904_GetDefaultConfig(&codecConfig);
+	codecConfig.mclk_HZ = 12000000;
+	boardCodecConfig.codecConfig = (void *)&codecConfig;
 
-	if (WM8904_Init((codec_handle_t *)&codecHandle, &codecConfig) != kStatus_Success)
-	{
-		PRINTF("WM8904_Init failed!\r\n");
-	}
-	else
-	{
-	}
+    if (CODEC_Init(&codecHandle, &boardCodecConfig) != kStatus_Success)
+    {
+        PRINTF("WM8904_Init failed!\r\n");
+    }
+
 	/* Initial volume kept low for hearing safety. */
 	/* Adjust it to your needs, 0x0006 for -51 dB, 0x0039 for 0 dB etc. */
-	WM8904_SetVolume((codec_handle_t *)&codecHandle, 0x0006, 0x0006);
+	WM8904_SetVolume(&codecHandle, 0x0006, 0x0006);
 	
+	PRINTF("Configure I2S\r\n");
 	I2S_TxGetDefaultConfig(&s_TxConfig);
 	s_TxConfig.divider = CLOCK_GetPllOutFreq() / 48000U / 16U / 2U;	
 	I2S_RxGetDefaultConfig(&s_RxConfig);
