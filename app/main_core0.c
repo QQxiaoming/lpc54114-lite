@@ -10,6 +10,11 @@
  */
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "timers.h"
 #include "fsl_common.h"
 #include "fsl_gpio.h"
 #include "fsl_debug_console.h"
@@ -215,6 +220,22 @@ void SystemInitHook(void)
     MCMGR_EarlyInit();
 }
 
+
+/**
+ * @brief 测试任务
+ * 
+ * @param pvParameters 
+ */
+static void hello_task(void *pvParameters)
+{
+    for (;;)
+    {
+        PRINTF("Hello world.\r\n");
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
+
 /**
  * @brief 主函数
  * 
@@ -230,7 +251,7 @@ int main(void)
     CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0);
 
     /* 初始化systick */
-    systick_init();
+    //systick_init();
 
     /* 配置引脚功能*/
     BOARD_InitPins_Core0();
@@ -274,15 +295,16 @@ int main(void)
     {
         PRINTF(">SD卡文件系统挂载成功，可以进行测试。\r\n");
     }
+    // TODO: 以下测试函数稳定性存在问题
     /* FatFs多项功能测试 */
-    f_res = miscellaneous();
+    //f_res = miscellaneous();
 
-    PRINTF("*************** 文件信息获取测试 **************\r\n");
-    f_res = file_check();
+    //PRINTF("*************** 文件信息获取测试 **************\r\n");
+    //f_res = file_check();
 
-    PRINTF("***************** 文件扫描测试 ****************\r\n");
-    strcpy(fpath, driverNumberBuffer);
-    scan_files(fpath);
+    //PRINTF("***************** 文件扫描测试 ****************\r\n");
+    //strcpy(fpath, driverNumberBuffer);
+    //scan_files(fpath);
 
     PRINTF("**************** flash 初始化 ****************\r\n");
     /* flash 初始化 */
@@ -294,12 +316,12 @@ int main(void)
     /* codec初始化 */
     wm8904_i2s_init();
 
-    
-    while (1)
+    if (xTaskCreate(hello_task, "Hello_task", configMINIMAL_STACK_SIZE + 10, NULL, 3, NULL) != pdPASS)
     {
-        /* 延时一段时间 */
-        delay();
-        PRINTF("LED!\r\n");
+        PRINTF("Task creation failed!.\r\n");
+        while (1);
     }
+    vTaskStartScheduler();
+    for (;;);
 #endif
 }

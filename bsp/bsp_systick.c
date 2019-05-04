@@ -14,12 +14,14 @@
 
 volatile uint32_t dwSysTicks = 0;
 
-void SysTick_Handler(void)
+
+void vApplicationTickHook(void)
 {
 	dwSysTicks++;
 }
-
+/*
 void systick_init(void)
 {
     SysTick_Config(SystemCoreClock/1000);
 }
+*/

@@ -32,13 +32,13 @@ SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} \
 
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} \
      -DDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
-     -DMULTICORE_APP=1 -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb \
-     -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
+     -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding \
+     -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
 
 SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} \
      -DNDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
-     -DMULTICORE_APP=1 -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -mthumb \
-     -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
+     -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
+     -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
 
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} \
      -DDEBUG -DCPU_LPC54114J256BD64_cm4 -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
@@ -85,12 +85,16 @@ include_directories(${ProjDirPath}/../../../components/codec/wm8904)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk)
 include_directories(${ProjDirPath}/../../../middleware/multicore/mcmgr/src)
+include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F)
+include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include)
+include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private)
 
 add_executable(core0.elf 
     "${ProjDirPath}/../../../app/main_core0.c"
     "${ProjDirPath}/../../../app/start_core1.c"
     "${ProjDirPath}/../../../app/start_core1.h"
     "${ProjDirPath}/../../../app/incbin.S"
+    "${ProjDirPath}/../../../app/FreeRTOSConfig.h"
     "${ProjDirPath}/../../../bsp/bsp_led.c"
     "${ProjDirPath}/../../../bsp/bsp_led.h"
     "${ProjDirPath}/../../../bsp/bsp_dmic.c"
@@ -192,6 +196,32 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../CMSIS/Include/arm_math.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_iccarm.h"
     "${ProjDirPath}/../../../CMSIS/Include/mpu_armv8.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/MemMang/heap_4.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/event_groups.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/FreeRTOS.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/message_buffer.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/queue.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/semphr.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/stream_buffer.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/task.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/timers.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/freertos_tasks_c_additions.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private/deprecated_definitions.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private/list.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private/mpu_wrappers.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private/portable.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private/projdefs.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private/stack_macros.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/event_groups.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/list.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/queue.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/stream_buffer.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/tasks.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/timers.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/fsl_tickless_generic.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/fsl_tickless_systick.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/port.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h"
 )
 
 
