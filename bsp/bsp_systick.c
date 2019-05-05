@@ -15,13 +15,24 @@
 volatile uint32_t dwSysTicks = 0;
 
 
-void vApplicationTickHook(void)
-{
-	dwSysTicks++;
-}
-/*
+#ifndef FSL_RTOS_FREE_RTOS
 void systick_init(void)
 {
     SysTick_Config(SystemCoreClock/1000);
 }
-*/
+
+void SysTick_Handler(void)
+{
+	dwSysTicks++;
+}
+
+#else
+void systick_init(void)
+{
+}
+
+void vApplicationTickHook(void)
+{
+	dwSysTicks++;
+}
+#endif

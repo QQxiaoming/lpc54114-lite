@@ -55,8 +55,6 @@ int main(void)
 {
     mcmgr_status_t status;
     uint32_t startupData, i;
-    uint8_t count = 0;
-
 
     /* 初始化MCMGR（多核管理系统） */
     MCMGR_Init();
@@ -75,50 +73,18 @@ int main(void)
 
     /* 初始化板级驱动 */
     /* 使能两组gpio时钟 */
-    BOARD_InitPins_Core1();
-    CLOCK_EnableClock(kCLOCK_Gpio0);
-    CLOCK_EnableClock(kCLOCK_Gpio1);
+    //BOARD_InitPins_Core1();
+    //CLOCK_EnableClock(kCLOCK_Gpio0);
+    //CLOCK_EnableClock(kCLOCK_Gpio1);
 
     /* 初始化LED */
-    LEDInit();
+    //LEDInit();
 
     while (1)
     {
-    	switch (count)
-    	{
-    		case 0:
-    	        LED11_TOGGLE();
-    			break;
-			case 1:
-				LED10_TOGGLE();
-				break;
-			case 2:
-				LED9_TOGGLE();
-				break;
-			case 3:
-				LED8_TOGGLE();
-				break;
-			case 4:
-				LED7_TOGGLE();
-				break;
-			case 5:
-				LED6_TOGGLE();
-				break;
-			case 6:
-				LED5_TOGGLE();
-				break;
-			case 7:
-				LED4_TOGGLE();
-				break;
-		}
+    	LED11_TOGGLE();
+
 		/* 延时一段时间 */
 		delay();
-
-		/* 计数增加1 */
-		count++;
-		/* 重新开始计数 */
-		if (count == 8)
-			count = 0;
-
     }
 }

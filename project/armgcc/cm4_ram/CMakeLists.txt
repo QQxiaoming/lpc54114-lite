@@ -31,12 +31,12 @@ SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} \
      -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
 
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} \
-     -DDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
+     -DDEBUG -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
      -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding \
      -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
 
 SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} \
-     -DNDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
+     -DNDEBUG -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
      -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
      -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
 
@@ -57,14 +57,6 @@ SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} \
      --specs=nano.specs --specs=nosys.specs -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
      -mthumb -mapcs -Xlinker --gc-sections -Xlinker -static -Xlinker -z -Xlinker muldefs -Xlinker -Map=output.map \
      -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
-
-if(CMAKE_BUILD_TYPE STREQUAL debug)
-include_directories(${ProjDirPath}/../cm0plus/debug)
-endif(CMAKE_BUILD_TYPE STREQUAL debug)
-
-if(CMAKE_BUILD_TYPE STREQUAL release)
-include_directories(${ProjDirPath}/../cm0plus/release)
-endif(CMAKE_BUILD_TYPE STREQUAL release)
 
 include_directories(${ProjDirPath}/../../..)
 include_directories(${ProjDirPath}/../../../app)
@@ -92,9 +84,6 @@ include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/pri
 add_executable(core0.elf 
     "${ProjDirPath}/../../../app/test/test_fatfs.c"
     "${ProjDirPath}/../../../app/main_core0.c"
-    "${ProjDirPath}/../../../app/start_core1.c"
-    "${ProjDirPath}/../../../app/start_core1.h"
-    "${ProjDirPath}/../../../app/incbin.S"
     "${ProjDirPath}/../../../app/FreeRTOSConfig.h"
     "${ProjDirPath}/../../../bsp/bsp_led.c"
     "${ProjDirPath}/../../../bsp/bsp_led.h"
@@ -226,9 +215,9 @@ add_executable(core0.elf
 )
 
 
-set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -T${ProjDirPath}/LPC54114J256_cm4_flash.ld -static")
+set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} -T${ProjDirPath}/LPC54114J256_cm4_ram.ld -static")
 
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -T${ProjDirPath}/LPC54114J256_cm4_flash.ld -static")
+set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} -T${ProjDirPath}/LPC54114J256_cm4_ram.ld -static")
 
 TARGET_LINK_LIBRARIES(core0.elf -Wl,--start-group)
 target_link_libraries(core0.elf debug m)
