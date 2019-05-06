@@ -28,6 +28,7 @@
 #include "bsp_dmic.h"
 #include "bsp_flash.h"
 #include "bsp_wm8904.h"
+#include "bsp_systick.h"
 #include "pin_mux.h"
 
 #include "start_core1.h"
@@ -75,6 +76,7 @@ int main(void)
 
     /* 初始化时钟 */
     BOARD_BootClockFROHF48M();
+    systick_init();
 
     /* 配置引脚功能*/
     BOARD_InitPins_Core0();
