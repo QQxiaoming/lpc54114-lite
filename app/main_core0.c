@@ -53,9 +53,11 @@ void SystemInitHook(void)
  */
 static void hello_task(void *pvParameters)
 {
+    static int index = 0;
     for (;;)
     {
-        PRINTF("Hello world.\r\n");
+        PRINTF("Hello world. %d\r\n",index++);
+        LED7_TOGGLE();
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
@@ -91,7 +93,7 @@ int main(void)
     /* 初始化LED */
     LEDInit();
     LED7_ON();
-
+    
     /* spisd文件系统初始化 */
     f_mount(&g_fileSystem, driverNumberBuffer, 1);
 
@@ -104,17 +106,16 @@ int main(void)
     /* codec初始化 */
     wm8904_i2s_init();
 
+#ifdef CORE1_IMAGE_COPY_TO_RAM
+	/* 启动m0核心 */
+	start_core1();
+#endif
 
     if (xTaskCreate(hello_task, "Hello_task", configMINIMAL_STACK_SIZE + 10, NULL, 3, NULL) != pdPASS)
     {
         PRINTF("Task creation failed!.\r\n");
         while (1);
     }
-
-#ifdef CORE1_IMAGE_COPY_TO_RAM
-	/* 启动m0核心 */
-	//start_core1();
-#endif
 
     vTaskStartScheduler();
     for (;;);

@@ -23,11 +23,11 @@ SET(ProjDirPath ${CMAKE_CURRENT_SOURCE_DIR})
 
 
 SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG} \
-     -DDEBUG -D__STARTUP_CLEAR_BSS -DSLAVEBOOT -DNO_CRP -g -Wall -fno-common -ffunction-sections \
+     -DDEBUG -DDONT_ENABLE_DISABLED_RAMBANKS -D__STARTUP_CLEAR_BSS -DSLAVEBOOT -DNO_CRP -g -Wall -fno-common -ffunction-sections \
      -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m0plus -mfloat-abi=soft")
 
 SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} \
-     -DNDEBUG -D__STARTUP_CLEAR_BSS -DSLAVEBOOT -DNO_CRP -Wall -fno-common -ffunction-sections \
+     -DNDEBUG -DDONT_ENABLE_DISABLED_RAMBANKS -D__STARTUP_CLEAR_BSS -DSLAVEBOOT -DNO_CRP -Wall -fno-common -ffunction-sections \
      -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m0plus -mfloat-abi=soft")
 
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} \

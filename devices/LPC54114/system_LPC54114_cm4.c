@@ -245,8 +245,8 @@ void SystemInit(void)
 #endif                                                 /* ((__FPU_PRESENT == 1) && (__FPU_USED == 1)) */
     SCB->VTOR = (uint32_t)&__Vectors;
 /* Optionally enable RAM banks that may be off by default at reset */
-#if !defined(DONT_ENABLE_DISABLED_RAMBANKS)
-    SYSCON->AHBCLKCTRLSET[0] = SYSCON_AHBCLKCTRL_SRAM2_MASK;
+#if 0
+    SYSCON->AHBCLKCTRLSET[0] = SYSCON_AHBCLKCTRL_SRAM2_MASK;//qqm
 #endif
 
   SystemInitHook();
