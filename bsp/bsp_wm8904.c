@@ -123,7 +123,7 @@ codec_config_t boardCodecConfig =
 	.op.SetFormat = WM8904_SetAudioFormat
 };
 
-uint8_t wm8904_i2s_init(void)
+status_t wm8904_i2s_init(void)
 {
 	/* I2C clock */
 	CLOCK_AttachClk(kFRO12M_to_FLEXCOMM4);
@@ -164,6 +164,7 @@ uint8_t wm8904_i2s_init(void)
     if (CODEC_Init(&codecHandle, &boardCodecConfig) != kStatus_Success)
     {
         PRINTF("WM8904_Init failed!\r\n");
+		return kStatus_Fail;
     }
 
 	/* Initial volume kept low for hearing safety. */
@@ -187,8 +188,7 @@ uint8_t wm8904_i2s_init(void)
 	DMA_CreateHandle(&s_DmaTxHandle, DMA0, I2S_DMA_TX);
 	DMA_CreateHandle(&s_DmaRxHandle, DMA0, I2S_DMA_RX);
     
-    /*
-	if (true)
+    /*if (true)
 	{
 		StartSoundPlayback();
 	}
@@ -196,5 +196,6 @@ uint8_t wm8904_i2s_init(void)
 	{
 		StartDigitalLoopback();
 	}*/
-    return 0;
+
+	return kStatus_Success;
 }

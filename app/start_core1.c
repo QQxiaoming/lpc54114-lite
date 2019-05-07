@@ -2,7 +2,7 @@
  * @file start_core1.c
  * @author qiaoqiming
  * @brief 
- * @version 0.1
+ * @version 1.0
  * @date 2019-04-14
  * 
  * @copyright Copyright (c) 2019

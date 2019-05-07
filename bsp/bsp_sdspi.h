@@ -2,6 +2,7 @@
 #define _BSP_SDSPI_H_
 
 #include "fsl_sdspi.h"
+#include "fsl_common.h"
 
 extern sdspi_card_t g_card;
 extern sdspi_host_t g_host;

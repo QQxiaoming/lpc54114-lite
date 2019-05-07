@@ -44,13 +44,10 @@ void DMIC0_HWVAD_Callback(void)
     DMIC_CtrlClrIntrHwvad(DMIC0, false);
 }
 
-uint8_t dmic_init(void)
-{	
-	uint8_t ret = 0;
+status_t dmic_init(void)
+{
 	uint32_t i = 0;
 	dmic_channel_config_t dmic_channel_cfg;
-	
-
 	
 	/* DMIC uses 12MHz FRO clock */
     CLOCK_AttachClk(kFRO12M_to_DMIC);
@@ -97,8 +94,5 @@ uint8_t dmic_init(void)
 	NVIC_ClearPendingIRQ(HWVAD0_IRQn);
 	EnableDeepSleepIRQ(HWVAD0_IRQn);
 
-	ret = 1;
-	
-	return ret;
+	return kStatus_Success;
 }
-

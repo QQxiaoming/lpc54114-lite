@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 #include "fsl_i2c.h"
+#include "fsl_common.h"
 
-uint8_t wm8904_i2s_init(void);
+status_t wm8904_i2s_init(void);
 
 #endif /* _BSP_WM8904_H_ */

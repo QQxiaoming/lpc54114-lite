@@ -13,9 +13,9 @@
 #define _BSP_FLASH_H_
 
 #include <stdint.h>
+#include "fsl_common.h"
 
-
-uint8_t spiflash_init(void);
+status_t spiflash_init(void);
 
 #endif /* _BSP_FLASH_H_ */
 

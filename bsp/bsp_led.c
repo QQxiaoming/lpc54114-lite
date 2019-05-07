@@ -7,7 +7,7 @@
 #include "bsp_led.h"
 
 /* 初始化LED引脚 */
-void LEDInit(void)
+status_t LEDInit(void)
 {
     /* 配置使能GPIO0时钟 */
     GPIO_PortInit(GPIO, 0);
@@ -21,4 +21,6 @@ void LEDInit(void)
     LED6_INIT(LOGIC_LED_OFF);
     LED5_INIT(LOGIC_LED_OFF);
     LED4_INIT(LOGIC_LED_OFF);
+
+	return kStatus_Success;
 }

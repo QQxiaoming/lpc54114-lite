@@ -24,7 +24,7 @@ int flash_transfer_cb(void *transfer_prv, uint8_t *tx_data, uint8_t *rx_data, si
     return 0;
 }
 
-uint8_t spiflash_init(void)
+status_t spiflash_init(void)
 {
 	spi_master_config_t masterConfig = {0};
 	struct mx25r_rdid_result gIDResult;
@@ -48,7 +48,7 @@ uint8_t spiflash_init(void)
 	
 	if( (gIDResult.manufacturer == 0x51) && (gIDResult.device[0] == 0x40) && (gIDResult.device[1] == 0x15) )
 	{
-		return 1;
+		return kStatus_Fail;
 	}
-	return 0;
+	return kStatus_Success;
 }

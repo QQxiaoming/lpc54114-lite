@@ -1,8 +1,8 @@
 /**
  * @file main_core1.c
  * @author qiaoqiming
- * @brief 
- * @version 0.1
+ * @brief M0+核主函数
+ * @version 1.0
  * @date 2019-04-14
  * 
  * @copyright Copyright (c) 2019
@@ -70,15 +70,6 @@ int main(void)
 	{
         delay();
 	}
-
-    /* 初始化板级驱动 */
-    /* 使能两组gpio时钟 */
-    //BOARD_InitPins_Core1();
-    //CLOCK_EnableClock(kCLOCK_Gpio0);
-    //CLOCK_EnableClock(kCLOCK_Gpio1);
-
-    /* 初始化LED */
-    //LEDInit();
 
     while (1)
     {

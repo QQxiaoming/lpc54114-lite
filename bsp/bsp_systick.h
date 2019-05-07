@@ -12,8 +12,9 @@
 #define _BSP_SYSTICK_H_
 
 #include <stdint.h>
+#include "fsl_common.h"
 
 extern volatile uint32_t dwSysTicks;
 
-void systick_init(void);
+status_t systick_init(void);
 #endif /* _BSP_SYSTICK_H_ */

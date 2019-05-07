@@ -1,8 +1,8 @@
 /**
  * @file main_core0.c
  * @author qiaoqiming
- * @brief 
- * @version 0.1
+ * @brief M4核主函数
+ * @version 1.0
  * @date 2019-04-14
  * 
  * @copyright Copyright (c) 2019
@@ -52,12 +52,12 @@ void SystemInitHook(void)
  * 
  * @param pvParameters 
  */
-static void hello_task(void *pvParameters)
+static void test_task(void *pvParameters)
 {
     static int index = 0;
     for (;;)
     {
-        PRINTF("Hello world. %d\r\n",index++);
+        PRINTF("Hello world! %d\r\n",index++);
         LED7_TOGGLE();
         vTaskDelay(pdMS_TO_TICKS(500));
     }
@@ -113,11 +113,8 @@ int main(void)
 	start_core1();
 #endif
 
-    if (xTaskCreate(hello_task, "Hello_task", configMINIMAL_STACK_SIZE + 10, NULL, 3, NULL) != pdPASS)
-    {
-        PRINTF("Task creation failed!.\r\n");
-        while (1);
-    }
+    /* 创建任务 */
+    xTaskCreate(test_task, "test_task", 128, NULL, 3, NULL);
 
     vTaskStartScheduler();
     for (;;);

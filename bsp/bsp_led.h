@@ -9,6 +9,7 @@
 #define SRC_BSP_LED_H_
 
 #include "fsl_gpio.h"
+#include "fsl_common.h"
 
 /* 板载LED引脚定义 */
 #define BOARD_LED11_GPIO      GPIO
@@ -129,6 +130,6 @@
 #define LED4_TOGGLE()        GPIO_PortToggle(BOARD_LED4_GPIO, BOARD_LED4_GPIO_PORT, \
                                             1U << BOARD_LED4_GPIO_PIN)
 
-void LEDInit(void);
+status_t LEDInit(void);
 
 #endif /* SRC_BSP_LED_H_ */
