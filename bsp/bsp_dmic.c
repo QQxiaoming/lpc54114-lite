@@ -12,7 +12,8 @@
 #include "fsl_common.h"
 #include "fsl_iocon.h"
 #include "fsl_dmic.h"
-
+#include "bsp_led.h"
+#include "fsl_debug_console.h"
 
 
 #define FIFO_DEPTH 15U
@@ -35,6 +36,7 @@ void DMIC0_HWVAD_Callback(void)
 
     /* reset hwvad internal interrupt */
     DMIC_CtrlClrIntrHwvad(DMIC0, true);
+	PRINTF("Just woke up\r\n");
     /* wait for HWVAD to settle */
     for (i = 0; i <= 500U; i++)
     {

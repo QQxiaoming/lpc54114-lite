@@ -19,8 +19,6 @@
 #include "fsl_i2s.h"
 #include "fsl_i2s_dma.h"
 
-#define I2S_TX  I2S1
-#define I2S_RX  I2S0
 
 #define I2S_DMA_TX  15
 #define I2S_DMA_RX  12
@@ -28,8 +26,8 @@
 #define BOARD_CODEC_I2C_BASEADDR   I2C4
 #define BOARD_CODEC_I2C_CLOCK_FREQ 12000000
 
-static dma_handle_t s_DmaTxHandle;
-static dma_handle_t s_DmaRxHandle;
+dma_handle_t s_DmaTxHandle;
+dma_handle_t s_DmaRxHandle;
 static i2s_config_t s_TxConfig;
 static i2s_config_t s_RxConfig;
 wm8904_config_t codecConfig;
@@ -176,8 +174,8 @@ status_t wm8904_i2s_init(void)
 	s_TxConfig.divider = CLOCK_GetPllOutFreq() / 48000U / 16U / 2U;	
 	I2S_RxGetDefaultConfig(&s_RxConfig);
 	
-	I2S_TxInit(I2S_TX, &s_TxConfig);
-	I2S_RxInit(I2S_RX, &s_RxConfig);
+	I2S_TxInit(WM8904_I2S_TX, &s_TxConfig);
+	I2S_RxInit(WM8904_I2S_RX, &s_RxConfig);
 	
 	DMA_Init(DMA0);
 

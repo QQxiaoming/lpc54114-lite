@@ -91,6 +91,7 @@ include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/pri
 
 add_executable(core0.elf 
     "${ProjDirPath}/../../../app/test/test_fatfs.c"
+    "${ProjDirPath}/../../../app/test/test_wm8904.c"
     "${ProjDirPath}/../../../app/main_core0.c"
     "${ProjDirPath}/../../../app/start_core1.c"
     "${ProjDirPath}/../../../app/start_core1.h"

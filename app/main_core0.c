@@ -54,11 +54,11 @@ void SystemInitHook(void)
  */
 static void test_task(void *pvParameters)
 {
-    static int index = 0;
+    //static int index = 0;
     for (;;)
     {
-        PRINTF("Hello world! %d\r\n",index++);
-        LED7_TOGGLE();
+        //PRINTF("Hello world! %d\r\n",index++);
+        //LED7_TOGGLE();
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 }
