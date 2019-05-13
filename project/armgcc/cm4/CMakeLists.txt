@@ -24,11 +24,11 @@ SET(ProjDirPath ${CMAKE_CURRENT_SOURCE_DIR})
 
 SET(CMAKE_ASM_FLAGS_DEBUG "${CMAKE_ASM_FLAGS_DEBUG} \
      -DDEBUG -D__STARTUP_CLEAR_BSS -g -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
-     -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
+     -mthumb -mapcs -Wa,-mimplicit-it=thumb -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
 
 SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} \
      -DNDEBUG -D__STARTUP_CLEAR_BSS -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
-     -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
+     -mthumb -mapcs -Wa,-mimplicit-it=thumb -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")
 
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} \
      -DDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
@@ -67,6 +67,7 @@ include_directories(${ProjDirPath}/../cm0plus/release)
 endif(CMAKE_BUILD_TYPE STREQUAL release)
 
 include_directories(${ProjDirPath}/../../..)
+include_directories(${ProjDirPath}/../../../app/test)
 include_directories(${ProjDirPath}/../../../app)
 include_directories(${ProjDirPath}/../../../bsp)
 include_directories(${ProjDirPath}/../../../CMSIS/Include)
@@ -85,11 +86,17 @@ include_directories(${ProjDirPath}/../../../components/codec/wm8904)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk)
 include_directories(${ProjDirPath}/../../../middleware/multicore/mcmgr/src)
+include_directories(${ProjDirPath}/../../../middleware/mp3lib/mp3pub)
+include_directories(${ProjDirPath}/../../../middleware/mp3lib/real)
+include_directories(${ProjDirPath}/../../../middleware/aaclib/aacpub)
+include_directories(${ProjDirPath}/../../../middleware/aaclib/real)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private)
 
 add_executable(core0.elf 
+    "${ProjDirPath}/../../../app/test/test_mp3_decode.c"
+    "${ProjDirPath}/../../../app/test/test_aac_decode.c"
     "${ProjDirPath}/../../../app/test/test_fatfs.c"
     "${ProjDirPath}/../../../app/test/test_wm8904.c"
     "${ProjDirPath}/../../../app/main_core0.c"
@@ -128,6 +135,56 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr.h"
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr_internal_core_api.h"
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr_internal_core_api_lpc54114.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/mp3dec.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/mp3play.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/mp3tabs.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/armgcc/asmmisc.S"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/armgcc/asmpoly_thumb2.S"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/bitstream.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/buffers.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/dct32.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/dequant.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/dqchan.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/huffman.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/hufftabs.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/imdct.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/polyphase.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/scalfact.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/stproc.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/subband.c"
+    "${ProjDirPath}/../../../middleware/mp3lib/real/trigtabs.c"
+    "${ProjDirPath}/../../../middleware/aaclib/aacdec.c"
+    "${ProjDirPath}/../../../middleware/aaclib/aactabs.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/armgcc/sbrcov.S"
+    "${ProjDirPath}/../../../middleware/aaclib/real/armgcc/sbrqmfak.S"
+    "${ProjDirPath}/../../../middleware/aaclib/real/armgcc/sbrqmfsk.S"
+    "${ProjDirPath}/../../../middleware/aaclib/real/bitstream.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/buffers.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/dct4.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/decelmnt.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/dequant.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/fft.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/filefmt.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/huffman.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/hufftabs.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/imdct.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/noiseless.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/pns.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbr.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrfft.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrfreq.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrhfadj.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrhfgen.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrhuff.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrimdct.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrmath.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrqmf.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrside.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/sbrtabs.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/stproc.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/tns.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/trigtabs_fltgen.c"
+    "${ProjDirPath}/../../../middleware/aaclib/real/trigtabs.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_mailbox.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_iocon.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_reset.h"

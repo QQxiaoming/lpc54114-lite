@@ -35,6 +35,7 @@ MEMORY
   m_interrupts          (RX)  : ORIGIN = 0x20000000, LENGTH = 0x000000E0
   m_text                (RX)  : ORIGIN = 0x200000E0, LENGTH = 0x0001FF20
   m_data                (RW)  : ORIGIN = 0x20020000, LENGTH = 0x00008000
+  m_heap                (RW)  : ORIGIN = 0x04000000, LENGTH = 0x00008000
 }
 
 /* Define output sections */
@@ -195,5 +196,11 @@ SECTIONS
   .ARM.attributes 0 : { *(.ARM.attributes) }
 
   ASSERT(__StackLimit >= __HeapLimit, "region m_data overflowed with stack and heap")
+
+  .fheap :
+  {
+    . = ALIGN(8);
+  } > m_heap
+
 }
 

@@ -33,6 +33,9 @@
 
 #include "start_core1.h"
 
+#include "test.h"
+
+
 static FATFS g_fileSystem; /* File system object */
 const TCHAR driverNumberBuffer[3U] = {SDSPIDISK + '0', ':', '/'};
 
@@ -75,7 +78,7 @@ int main(void)
     MCMGR_Init();
 
     /* 初始化时钟 */
-    BOARD_BootClockFROHF48M();
+    BOARD_BootClockFROHF96M();
     systick_init();
 
     /* 配置引脚功能*/
@@ -98,6 +101,9 @@ int main(void)
     
     /* spisd文件系统初始化 */
     f_mount(&g_fileSystem, driverNumberBuffer, 1);
+
+    //decode_aac();
+    //decode_mp3();
 
     /* flash 初始化 */
     spiflash_init();

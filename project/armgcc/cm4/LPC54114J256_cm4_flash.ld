@@ -36,6 +36,7 @@ MEMORY
   m_core1_image         (RX)  : ORIGIN = 0x00030000, LENGTH = 0x00010000
   m_data                (RW)  : ORIGIN = 0x20000000, LENGTH = 0x00010000
   rpmsg_sh_mem          (RW)  : ORIGIN = 0x20026800, LENGTH = RPMSG_SHMEM_SIZE
+  m_heap                (RW)  : ORIGIN = 0x04000000, LENGTH = 0x00008000
 }
 
 /* Define output sections */
@@ -211,5 +212,10 @@ SECTIONS
   .ARM.attributes 0 : { *(.ARM.attributes) }
 
   ASSERT(__StackLimit >= __HeapLimit, "region m_data overflowed with stack and heap")
+
+  .fheap :
+  {
+    . = ALIGN(8);
+  } > m_heap
 }
 
