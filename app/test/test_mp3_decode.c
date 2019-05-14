@@ -21,9 +21,10 @@ void decode_mp3(void)
     int ret;
 
     mp3_decoder = MP3InitDecoder();
-    if(mp3_decoder != NULL)
+    if(mp3_decoder == NULL)
     {
-        PRINTF("init ok!\r\n");
+        PRINTF("init err!\r\n");
+        return;
     }
 
     f_res = f_open(&f_pcm, "4:test.pcm",FA_WRITE | FA_CREATE_ALWAYS);
@@ -52,8 +53,8 @@ void decode_mp3(void)
                 else
                 {
                     PRINTF("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
-				    decode_ptr   += 2;
-				    byteleft -= 2;
+				    decode_ptr += 2;
+				    byteleft   -= 2;
                 }
             }
             else
@@ -62,10 +63,7 @@ void decode_mp3(void)
 				byteleft   -= 3800; 
             }
 
-            if(byteleft<4000)   //缓冲区补充数据
-            {
-                memmove(mp3_buf,decode_ptr,byteleft);
-            }
+            memmove(mp3_buf,decode_ptr,byteleft);
         }
         f_close(&f_mp3);
         f_close(&f_pcm);

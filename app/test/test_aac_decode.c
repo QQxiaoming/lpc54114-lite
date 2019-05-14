@@ -23,13 +23,15 @@ void decode_aac(void)
     FRESULT f_res;
     unsigned int br;
     int byteleft = 0;
+    int offset;
     uint8_t *decode_ptr = aac_buf;
     int ret;
 
     aac_decoder = AACInitDecoder();
-    if(aac_decoder != NULL)
+    if(aac_decoder == NULL)
     {
-        PRINTF("init ok!\r\n");
+        PRINTF("init err!\r\n");
+        return;
     }
 
     f_res = f_open(&f_pcm, "4:test.pcm",FA_WRITE | FA_CREATE_ALWAYS);
@@ -43,18 +45,29 @@ void decode_aac(void)
             byteleft = READBUF_SIZE;	
             decode_ptr = aac_buf; 
 
-            ret = AACDecode(aac_decoder, &decode_ptr, &byteleft, pcm_buf);
-            if (ret == ERR_AAC_NONE)
+            offset = AACFindSyncWord(aac_buf,byteleft);
+            if(offset != -1)
             {
+                byteleft -= offset;
+                decode_ptr += offset;
+                ret = AACDecode(aac_decoder, &decode_ptr, &byteleft, pcm_buf);
                 AACGetLastFrameInfo(aac_decoder, &aac_framer);
-                PRINTF("once decode,file size is %d\r\n",f_size(&f_aac)-f_tell(&f_aac));
-                f_write(&f_pcm,pcm_buf,(aac_framer.bitsPerSample/8)*aac_framer.outputSamps,&br);
+                if (ret == ERR_AAC_NONE)
+                {
+                    PRINTF("once decode,file size is %d\r\n",f_size(&f_aac)-f_tell(&f_aac));
+                    f_write(&f_pcm,pcm_buf,(aac_framer.bitsPerSample/8)*aac_framer.outputSamps,&br);
+                }
+                else
+                {
+                    PRINTF("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
+				    decode_ptr += 2;
+				    byteleft   -= 2;
+                }
             }
             else
             {
-                PRINTF("aac_decord err %d,bad frame!\r\n",ret);
-                //decode_ptr += 3800;
-				//byteleft   -= 3800; 
+                decode_ptr += 3800;
+				byteleft   -= 3800; 
             }
             
             memmove(aac_buf,decode_ptr,byteleft);
