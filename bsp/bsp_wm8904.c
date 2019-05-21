@@ -165,20 +165,21 @@ status_t wm8904_i2s_init(void)
 		return kStatus_Fail;
     }
 
+	WM8904_SetAudioFormat(&codecHandle,12000000,44100,16);
+
 	/* Initial volume kept low for hearing safety. */
 	/* Adjust it to your needs, 0x0006 for -51 dB, 0x0039 for 0 dB etc. */
 	WM8904_SetVolume(&codecHandle, 0x0006, 0x0006);
 	
 	PRINTF("Configure I2S\r\n");
 	I2S_TxGetDefaultConfig(&s_TxConfig);
-	s_TxConfig.divider = CLOCK_GetPllOutFreq() / 48000U / 16U / 2U;	
+	s_TxConfig.divider = CLOCK_GetPllOutFreq() / 44100U / 16U / 2U;	
 	I2S_RxGetDefaultConfig(&s_RxConfig);
 	
 	I2S_TxInit(WM8904_I2S_TX, &s_TxConfig);
 	I2S_RxInit(WM8904_I2S_RX, &s_RxConfig);
-	
-	DMA_Init(DMA0);
 
+	/* 配置使能IISDMA */
 	DMA_EnableChannel(DMA0, I2S_DMA_TX);
 	DMA_EnableChannel(DMA0, I2S_DMA_RX);
 	DMA_SetChannelPriority(DMA0, I2S_DMA_TX, kDMA_ChannelPriority3);
@@ -186,14 +187,5 @@ status_t wm8904_i2s_init(void)
 	DMA_CreateHandle(&s_DmaTxHandle, DMA0, I2S_DMA_TX);
 	DMA_CreateHandle(&s_DmaRxHandle, DMA0, I2S_DMA_RX);
     
-    /*if (true)
-	{
-		StartSoundPlayback();
-	}
-	else
-	{
-		StartDigitalLoopback();
-	}*/
-
 	return kStatus_Success;
 }

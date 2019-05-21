@@ -7,12 +7,14 @@
 #include "fsl_debug_console.h"
 #include "fsl_dma.h"
 #include "fsl_i2s_dma.h"
+#include "fsl_wm8904.h"
 
 #define WM8904_I2S_TX  I2S1
 #define WM8904_I2S_RX  I2S0
 
 extern dma_handle_t s_DmaTxHandle;
 extern dma_handle_t s_DmaRxHandle;
+extern codec_handle_t codecHandle;
 
 status_t wm8904_i2s_init(void);
 

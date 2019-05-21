@@ -92,6 +92,7 @@ status_t dmic_init(void)
 	{
 	}
 	/*HWVAD Normal operation */
+	NVIC_SetPriority(HWVAD0_IRQn, 2);
 	DMIC_CtrlClrIntrHwvad(DMIC0, false);
 	NVIC_ClearPendingIRQ(HWVAD0_IRQn);
 	EnableDeepSleepIRQ(HWVAD0_IRQn);

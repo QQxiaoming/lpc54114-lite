@@ -87,6 +87,7 @@ include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private)
 
 add_executable(core0.elf 
+    "${ProjDirPath}/../../../app/test/test_audio_play.c"
     "${ProjDirPath}/../../../app/test/test_mp3_decode.c"
     "${ProjDirPath}/../../../app/test/test_aac_decode.c"
     "${ProjDirPath}/../../../app/test/test_wm8904.c"
@@ -188,6 +189,8 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_dmic.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi.c"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi_dma.h"
+    "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_spi_dma.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2c.h"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2c.c"
     "${ProjDirPath}/../../../devices/LPC54114/drivers/fsl_i2s.h"

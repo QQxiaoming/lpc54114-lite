@@ -21,14 +21,29 @@
 #include "fsl_spi.h"
 #include "bsp_sdspi.h"
 #include "bsp_systick.h"
+#include "fsl_spi_dma.h"
 
 /* SDSPI driver state. */
 sdspi_card_t g_card;
 sdspi_host_t g_host;
 
+#define SPI2_DMA_TX   5
+#define SPI2_DMA_RX   4
+spi_dma_handle_t spi_dma_handle;
+dma_handle_t spi2_TxHandle;
+dma_handle_t spi2_RxHandle;
+volatile bool isTransferCompleted = false;
+
 /*******************************************************************************
  * Code - SPI interface
  ******************************************************************************/
+static void SPI2_Callback(SPI_Type *base, spi_dma_handle_t *handle, status_t status, void *userData)
+{
+    if (status == kStatus_Success)
+    {
+        isTransferCompleted = true;
+    }
+}
 
 void spi_init(void)
 {
@@ -39,7 +54,7 @@ void spi_init(void)
     /* reset FLEXCOMM for SPI */
     RESET_PeripheralReset(kFC2_RST_SHIFT_RSTn);
 	
-
+	/* SPI init */
 	SPI_MasterGetDefaultConfig(&masterConfig);
 	masterConfig.direction = kSPI_MsbFirst;
 	masterConfig.polarity = kSPI_ClockPolarityActiveHigh;
@@ -47,6 +62,17 @@ void spi_init(void)
 	masterConfig.baudRate_Bps = 100000;
 	masterConfig.sselNum = (spi_ssel_t)2; // use GPIO as CS is prefer
 	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFreq(kCLOCK_Flexcomm2));
+
+    /* 配置使能SPI2DMA*/
+    DMA_EnableChannel(DMA0, SPI2_DMA_TX);
+    DMA_EnableChannel(DMA0, SPI2_DMA_RX);
+    DMA_SetChannelPriority(DMA0, SPI2_DMA_TX, kDMA_ChannelPriority3);
+    DMA_SetChannelPriority(DMA0, SPI2_DMA_RX, kDMA_ChannelPriority2);
+    DMA_CreateHandle(&spi2_TxHandle, DMA0, SPI2_DMA_TX);
+    DMA_CreateHandle(&spi2_RxHandle, DMA0, SPI2_DMA_RX);
+
+	SPI_MasterTransferCreateHandleDMA(SPI2, &spi_dma_handle, SPI2_Callback, NULL, &spi2_TxHandle,
+                                      &spi2_RxHandle);
 
 }
 
@@ -68,7 +94,13 @@ status_t spi_exchange(uint8_t *in, uint8_t *out, uint32_t size)
 	xfer.rxData 		= out;
 	xfer.dataSize		= size;
 	xfer.configFlags	= kSPI_FrameAssert;
-	return SPI_MasterTransferBlocking(SPI2, &xfer);	
+
+	SPI_MasterTransferDMA(SPI2, &spi_dma_handle, &xfer);
+
+	while (!isTransferCompleted);
+	isTransferCompleted = false;
+
+	return kStatus_Success;
 }
 
 void timer_init(void)

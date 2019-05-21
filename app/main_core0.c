@@ -36,34 +36,16 @@
 #include "test.h"
 
 
-static FATFS g_fileSystem; /* File system object */
-const TCHAR driverNumberBuffer[3U] = {SDSPIDISK + '0', ':', '/'};
-
 /**
  * @brief 系统初始化钩子函数
  * 
  */
 void SystemInitHook(void)
 {
+    NVIC_SetPriorityGrouping(4);
+
     /* 初始化多核管理器系统，完成后才可调用MCMGR_Init */
     MCMGR_EarlyInit();
-}
-
-
-/**
- * @brief 测试任务
- * 
- * @param pvParameters 
- */
-static void test_task(void *pvParameters)
-{
-    //static int index = 0;
-    for (;;)
-    {
-        //PRINTF("Hello world! %d\r\n",index++);
-        //LED7_TOGGLE();
-        vTaskDelay(pdMS_TO_TICKS(500));
-    }
 }
 
 
@@ -99,11 +81,9 @@ int main(void)
     LEDInit();
     LED7_ON();
     
-    /* spisd文件系统初始化 */
-    f_mount(&g_fileSystem, driverNumberBuffer, 1);
-
-    //decode_aac();
-    //decode_mp3();
+    /* 使能DMA */
+    DMA_Init(DMA0);
+    NVIC_SetPriority(DMA0_IRQn, 2);
 
     /* flash 初始化 */
     spiflash_init();
@@ -119,8 +99,8 @@ int main(void)
 	start_core1();
 #endif
 
-    /* 创建任务 */
-    xTaskCreate(test_task, "test_task", 128, NULL, 3, NULL);
+    /* 播放任务创建 */
+    audio_play_init();
 
     vTaskStartScheduler();
     for (;;);

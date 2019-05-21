@@ -11,6 +11,7 @@
 #include "bsp_systick.h"
 #include "fsl_common.h"
 #include "clock_config.h"
+#include "FreeRTOS.h"
 
 volatile uint32_t dwSysTicks = 0;
 
@@ -35,6 +36,6 @@ status_t systick_init(void)
 
 void vApplicationTickHook(void)
 {
-	dwSysTicks++;
+	dwSysTicks += (1000/configTICK_RATE_HZ);
 }
 #endif
