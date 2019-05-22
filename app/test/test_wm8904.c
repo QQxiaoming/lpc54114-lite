@@ -1,30 +1,20 @@
-
+/**
+ * @file test_wm8904.c
+ * @author qiaoqiming
+ * @brief 测试wm8904
+ * @version 1.0
+ * @date 2019-05-13
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include "bsp_wm8904.h"
 #include "fsl_common.h"
 #include "fsl_dma.h"
 #include "fsl_i2s_dma.h"
+#include "compile.h"
 
-#if defined(__GNUC__) /* GNU Compiler */
-#ifndef __ALIGN_END
-#define __ALIGN_END __attribute__((aligned(4)))
-#endif
-#ifndef __ALIGN_BEGIN
-#define __ALIGN_BEGIN
-#endif
-#else
-#ifndef __ALIGN_END
-#define __ALIGN_END
-#endif
-#ifndef __ALIGN_BEGIN
-#if defined(__CC_ARM) || defined(__ARMCC_VERSION) /* ARM Compiler */
-#define __ALIGN_BEGIN __attribute__((aligned(4)))
-#elif defined(__ICCARM__) /* IAR Compiler */
-#define __ALIGN_BEGIN
-#endif
-#endif
-#endif
-
-/*!
+/**
  * @brief 正弦波
  */
 __ALIGN_BEGIN uint8_t g_Music[] __ALIGN_END = {
@@ -115,4 +105,3 @@ void StartDigitalLoopback(void)
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &s_TxHandle, s_TxTransfer);
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &s_TxHandle, s_TxTransfer);
 }
-

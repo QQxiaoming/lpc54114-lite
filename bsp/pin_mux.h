@@ -1,5 +1,11 @@
 /**
- * @brief 
+ * @file pin_mux.h
+ * @author qiaoqiming
+ * @brief 板级io管脚功能初始化
+ * @version 1.0
+ * @date 2019-04-15
+ * 
+ * @copyright Copyright (c) 2019
  * 
  */
 #ifndef _PIN_MUX_H_

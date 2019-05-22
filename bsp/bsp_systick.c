@@ -1,8 +1,8 @@
 /**
  * @file bsp_systick.c
- * @author 
- * @brief 
- * @version 0.1
+ * @author qiaoqiming
+ * @brief systick初始化
+ * @version 1.0
  * @date 2019-04-16
  * 
  * @copyright Copyright (c) 2019

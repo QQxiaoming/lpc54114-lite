@@ -1,8 +1,8 @@
 /**
  * @file bsp_wm8904.c
  * @author qiaoqiming
- * @brief 
- * @version 0.1
+ * @brief 板载wm8904驱动
+ * @version 1.0
  * @date 2019-04-21
  * 
  * @copyright Copyright (c) 2019
@@ -165,6 +165,7 @@ status_t wm8904_i2s_init(void)
 		return kStatus_Fail;
     }
 
+	/* SYSCLK=MCLK/MCLKDIV=12000000，采样率44100，位宽16 */
 	WM8904_SetAudioFormat(&codecHandle,12000000,44100,16);
 
 	/* Initial volume kept low for hearing safety. */
@@ -173,6 +174,7 @@ status_t wm8904_i2s_init(void)
 	
 	PRINTF("Configure I2S\r\n");
 	I2S_TxGetDefaultConfig(&s_TxConfig);
+	/* 采样率44100，位宽16，双声道 */
 	s_TxConfig.divider = CLOCK_GetPllOutFreq() / 44100U / 16U / 2U;	
 	I2S_RxGetDefaultConfig(&s_RxConfig);
 	

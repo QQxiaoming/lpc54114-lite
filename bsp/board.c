@@ -2,7 +2,7 @@
  * @file board.c
  * @author qiaoqiming
  * @brief 板级初始化
- * @version 0.1
+ * @version 1.0
  * @date 2019-04-14
  * 
  * @copyright Copyright (c) 2019

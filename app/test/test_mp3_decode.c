@@ -1,3 +1,13 @@
+/**
+ * @file test_mp3_decode.c
+ * @author qiaoqiming
+ * @brief mp3解码测试
+ * @version 1.0
+ * @date 2019-05-17
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include "mp3dec.h"
 #include "ff.h"
 #include "fsl_debug_console.h"

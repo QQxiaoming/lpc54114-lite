@@ -1,10 +1,13 @@
-/*
- * bsp_led.h
- *
- *  Created on: 2018年6月12日
- *      Author: qq_xi
+/**
+ * @file bsp_led.h
+ * @author qiaoqiming
+ * @brief 板载led驱动
+ * @version 1.0
+ * @date 2018-06-12
+ * 
+ * @copyright Copyright (c) 2019
+ * 
  */
-
 #ifndef SRC_BSP_LED_H_
 #define SRC_BSP_LED_H_
 

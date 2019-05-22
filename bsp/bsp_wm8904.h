@@ -1,3 +1,13 @@
+/**
+ * @file bsp_wm8904.h
+ * @author qiaoqiming
+ * @brief 板载wm8904驱动
+ * @version 1.0
+ * @date 2019-04-21
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #ifndef _BSP_WM8904_H_
 #define _BSP_WM8904_H_
 

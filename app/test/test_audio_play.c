@@ -1,3 +1,14 @@
+/**
+ * @file test_audio_play.c
+ * @author qiaoqiming
+ * @brief 音频读取解码播放测试
+ * @version 1.0
+ * @date 2019-05-21
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #include <stdint.h>
 #include <string.h>
 #include "FreeRTOS.h"
@@ -8,26 +19,8 @@
 #include "bsp_wm8904.h"
 #include "fsl_debug_console.h"
 #include "mp3dec.h"
+#include "compile.h"
 
-#if defined(__GNUC__) /* GNU Compiler */
-#ifndef __ALIGN_END
-#define __ALIGN_END __attribute__((aligned(4)))
-#endif
-#ifndef __ALIGN_BEGIN
-#define __ALIGN_BEGIN
-#endif
-#else
-#ifndef __ALIGN_END
-#define __ALIGN_END
-#endif
-#ifndef __ALIGN_BEGIN
-#if defined(__CC_ARM) || defined(__ARMCC_VERSION) /* ARM Compiler */
-#define __ALIGN_BEGIN __attribute__((aligned(4)))
-#elif defined(__ICCARM__) /* IAR Compiler */
-#define __ALIGN_BEGIN
-#endif
-#endif
-#endif
 
 #define OUT_SIZE (4608)
 #define BUFF_MAX 3
@@ -65,11 +58,12 @@ static void audio_data_reader(void *pvParameters)
     /* spisd文件系统初始化 */
     f_mount(&g_fileSystem, driverNumberBuffer, 1);
 
+    /* 创建mp3解码器 */
     mp3_decoder = MP3InitDecoder();
     if(mp3_decoder == NULL)
     {
         PRINTF("init err!\r\n");
-        return;
+        goto audio_data_reader_ret;
     }
 
     f_res = f_open(&f_mp3, "4:test128.mp3",FA_OPEN_EXISTING | FA_READ);
@@ -127,45 +121,70 @@ static void audio_data_reader(void *pvParameters)
         f_close(&f_mp3);
         f_close(&f_pcm);
     }
+    else
+    {
+        PRINTF("open file err!\r\n");
+        goto audio_data_reader_ret;
+    }
 
     MP3FreeDecoder(mp3_decoder);
 
     PRINTF("end\r\n");
     
     I2S_TransferAbortDMA(WM8904_I2S_TX,&audio_dma_handle);
-    
+
+audio_data_reader_ret:
     vTaskDelete(NULL);
 }
 
+
+/**
+ * @brief iisdma中断回调函数
+ * 
+ * @param base iis基地址
+ * @param handle iisdma句柄
+ * @param completionStatus 
+ * @param userData 用户数据句柄
+ */
 static void audio_callback(I2S_Type *base, i2s_dma_handle_t *handle, status_t completionStatus, void *userData)
 {
     static bool is_mute = false;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     uint32_t data_addr;
 
+    /* 获取下一包数据地址 */
     if(xQueuePeekFromISR(audio_data_addr, &data_addr) == pdTRUE)
     {
+        /* 数据取得成功,若之前Mute,则关闭Mute */
         if(is_mute)
         {
             WM8904_SetMute(&codecHandle,false,false);
             is_mute = false;
         }
 
+        /* 数据拷贝后释放buf */
         memcpy(audio_voice_buff,(void *)data_addr,OUT_SIZE);
         xQueueReceiveFromISR(audio_data_addr, &data_addr,&xHigherPriorityTaskWoken);
 
+        /* 给dma发送新一包数据 */
         audio_transfer.data = &audio_voice_buff[0];
         audio_transfer.dataSize = sizeof(audio_voice_buff);
         I2S_TxTransferSendDMA(base, handle, audio_transfer);
+
+        portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
     }
     else
     {
+        /* 数据取得失败,解码跟不上播放,直接Mute */
+        /* TODO: 因为dma是乒乓式的,所以其实这时候还有正确的数据,考虑Mute时机 */
         if(!is_mute)
         {
             WM8904_SetMute(&codecHandle,true,true);
             is_mute = true;
         }
         PRINTF("peek err\r\n");
+
+        /* 重发dma数据一次 */
         I2S_TxTransferSendDMA(base, handle, *(i2s_transfer_t *)userData);
     }
 }
@@ -180,15 +199,21 @@ static void audio_play_voice(void *pvParameters)
 {
     uint32_t data_addr;
 
-    vTaskDelay(pdMS_TO_TICKS(1000*2));
+    /* 等待解码 */
+    vTaskDelay(pdMS_TO_TICKS(1000));
 
-    xQueuePeek(audio_data_addr, &data_addr, portMAX_DELAY);
+    /* 从队列取得音频数据buf地址,拷贝数据 */
+    if(xQueuePeek(audio_data_addr, &data_addr, pdMS_TO_TICKS(1000*10)) != pdTRUE)
+    {
+        PRINTF("Peek timeout!\r\n");
+        goto audio_play_voice_ret;
+    }
     memcpy(audio_voice_buff,(void *)data_addr,OUT_SIZE);
     xQueueReceive(audio_data_addr, &data_addr, 0);
 
+    /* 数据分为两份依次发送给dma,这里dma是乒乓式传输 */
     audio_transfer.data = &audio_voice_buff[0];
     audio_transfer.dataSize = sizeof(audio_voice_buff)/2;
-
     I2S_TxTransferCreateHandleDMA(WM8904_I2S_TX, &audio_dma_handle, &s_DmaTxHandle, audio_callback, (void *)&audio_transfer);
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &audio_dma_handle, audio_transfer);
 
@@ -196,10 +221,15 @@ static void audio_play_voice(void *pvParameters)
     audio_transfer.dataSize = sizeof(audio_voice_buff)/2;
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &audio_dma_handle, audio_transfer);
 
+audio_play_voice_ret:
+    /* 任务退出 */
     vTaskDelete(NULL);
 }
 
-
+/**
+ * @brief 创建播放任务
+ * 
+ */
 void audio_play_init(void)
 {
     audio_data_addr = xQueueCreate(BUFF_MAX, sizeof(uint32_t));

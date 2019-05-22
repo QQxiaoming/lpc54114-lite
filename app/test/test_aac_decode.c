@@ -1,3 +1,14 @@
+/**
+ * @file test_aac_decode.c
+ * @author qiaoqiming
+ * @brief aac解码测试
+ * @version 1.0
+ * @date 2019-05-17
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #include "aacdec.h"
 #include "ff.h"
 #include "fsl_debug_console.h"

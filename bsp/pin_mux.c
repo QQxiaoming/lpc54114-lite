@@ -1,8 +1,8 @@
 /**
  * @file pin_mux.c
  * @author qiaoqiming
- * @brief 
- * @version 0.1
+ * @brief 板级io管脚功能初始化
+ * @version 1.0
  * @date 2019-04-15
  * 
  * @copyright Copyright (c) 2019

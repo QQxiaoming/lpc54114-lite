@@ -1,8 +1,8 @@
 /**
  * @file board.h
  * @author qiaoqiming
- * @brief 
- * @version 0.1
+ * @brief 板级初始化
+ * @version 1.0
  * @date 2019-04-14
  * 
  * @copyright Copyright (c) 2019
