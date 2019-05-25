@@ -29,6 +29,8 @@
 #include "bsp_flash.h"
 #include "bsp_wm8904.h"
 #include "bsp_systick.h"
+#include "bsp_pct2075.h"
+#include "bsp_adc.h"
 #include "pin_mux.h"
 
 #include "start_core1.h"
@@ -84,6 +86,9 @@ int main(void)
     /* 使能DMA */
     DMA_Init(DMA0);
     NVIC_SetPriority(DMA0_IRQn, 2);
+
+    /* adc 初始化 */
+    adc_init();
 
     /* flash 初始化 */
     spiflash_init();

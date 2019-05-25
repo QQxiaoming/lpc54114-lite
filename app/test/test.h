@@ -12,9 +12,11 @@
 #define _TEST_H_
 
 
+extern void test_fatfs(void);
+extern void test_pct2075(void);
+extern void test_adc(void);
 extern void decode_aac(void);
 extern void decode_mp3(void);
-extern void test_fatfs(void);
 extern void StartSoundPlayback(void);
 extern void StartDigitalLoopback(void);
 

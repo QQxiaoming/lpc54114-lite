@@ -22,10 +22,10 @@
  * @brief 粗略延时
  * 
  */
-void delay(void)
+static void delay(void)
 {
     volatile uint32_t i = 0;
-    for (i = 0; i < 1000000; ++i)
+    for (i = 0; i < 2000000; ++i)
     {
         __asm("NOP"); /* delay */
     }
