@@ -13,10 +13,18 @@
 
 #include "fsl_common.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 #define ADC_NUM            1
 #define ADC_CHANNEL_NUM    3
 
 status_t adc_init(void);
 uint16_t adc_read(uint16_t num);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* _BSP_ADC_H_ */

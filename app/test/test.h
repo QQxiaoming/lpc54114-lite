@@ -11,15 +11,23 @@
 #ifndef _TEST_H_
 #define _TEST_H_
 
+#if defined(__cplusplus)
+"C" {
+#endif /* __cplusplus */
 
-extern void test_fatfs(void);
-extern void test_pct2075(void);
-extern void test_adc(void);
-extern void decode_aac(void);
-extern void decode_mp3(void);
-extern void StartSoundPlayback(void);
-extern void StartDigitalLoopback(void);
+void test_fatfs(void);
+void test_pct2075(void);
+void test_adc(void);
+void decode_aac(void);
+void decode_mp3(void);
+void StartSoundPlayback(void);
+void StartDigitalLoopback(void);
 
-extern void audio_play_init(void);
+void audio_play_init(void);
+
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* _TEST_H_ */

@@ -13,7 +13,6 @@
 
 #include "mcmgr.h"
 
-#include "board.h"
 #include "bsp_led.h"
 #include "pin_mux.h"
 

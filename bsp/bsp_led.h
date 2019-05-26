@@ -14,6 +14,10 @@
 #include "fsl_gpio.h"
 #include "fsl_common.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 /* 板载LED引脚定义 */
 #define BOARD_LED11_GPIO      GPIO
 #define BOARD_LED11_GPIO_PORT 0U
@@ -134,5 +138,9 @@
                                             1U << BOARD_LED4_GPIO_PIN)
 
 status_t LEDInit(void);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* SRC_BSP_LED_H_ */

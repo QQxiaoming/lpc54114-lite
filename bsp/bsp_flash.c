@@ -49,7 +49,7 @@ status_t spiflash_init(void)
 	masterConfig.polarity = kSPI_ClockPolarityActiveHigh;
 	masterConfig.phase = kSPI_ClockPhaseFirstEdge;
 	masterConfig.baudRate_Bps = 100000;
-	masterConfig.sselNum = (spi_ssel_t)3; // use GPIO as CS is prefer
+	masterConfig.sselNum = kSPI_Ssel3; // use GPIO as CS is prefer
 	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFreq(kCLOCK_Flexcomm2));
 
     mx25r_init(&mx25r, flash_transfer_cb, SPI2);
@@ -57,7 +57,10 @@ status_t spiflash_init(void)
 	
 	if( (gIDResult.manufacturer == 0x51) && (gIDResult.device[0] == 0x40) && (gIDResult.device[1] == 0x15) )
 	{
+		return kStatus_Success;
+	}
+	else
+	{
 		return kStatus_Fail;
 	}
-	return kStatus_Success;
 }

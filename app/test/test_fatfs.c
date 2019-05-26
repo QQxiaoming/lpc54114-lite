@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include "ff.h"
 #include "diskio.h"
-#include "board.h"
 #include "fsl_common.h"
 #include "fsl_debug_console.h"
 

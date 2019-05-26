@@ -34,7 +34,7 @@ status_t pct2075_i2c_read(float *data)
     }
     else
     {
-        *data = 0x800 - ((buf[0]<<8) + buf[1]>>5 );
+        *data = 0x800 - (((buf[0]<<8) + buf[1]) >> 5);
         *data = -(((float)(*data)) * 0.125); 
     }
 

@@ -14,7 +14,15 @@
 #include <stdint.h>
 #include "fsl_common.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 status_t spiflash_init(void);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* _BSP_FLASH_H_ */
 

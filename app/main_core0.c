@@ -16,15 +16,15 @@
 #include "queue.h"
 #include "timers.h"
 #include "fsl_common.h"
-#include "fsl_gpio.h"
 #include "fsl_debug_console.h"
 
 #include "mcmgr.h"
 #include "ff.h"
 #include "diskio.h"
 
-#include "board.h"
+#include "clock_config.h"
 #include "bsp_led.h"
+#include "bsp_uart.h"
 #include "bsp_dmic.h"
 #include "bsp_flash.h"
 #include "bsp_wm8904.h"
@@ -58,6 +58,8 @@ void SystemInitHook(void)
  */
 int main(void)
 {
+    status_t result = kStatus_Fail;
+
     /* 初始化MCMGR（多核管理系统） */
     MCMGR_Init();
 
@@ -70,17 +72,16 @@ int main(void)
     CLOCK_EnableClock(kCLOCK_Gpio0);
     CLOCK_EnableClock(kCLOCK_Gpio1);
     
+
+
     /* 初始化debug串口 */
-    BOARD_InitDebugConsole();
+    result = debug_console_init();
+    assert(kStatus_Success == result);
     PRINTF("Debug Console Init Successful!\r\n");
 
-#ifdef CORE1_IMAGE_COPY_TO_RAM
-    /* 拷贝从核数据到从核启动ram,使用MCUXpresso IDE不需要拷贝 */
-    copy_core1_image_to_ram();
-#endif
-
     /* 初始化LED */
-    LEDInit();
+    result = LEDInit();
+    assert(kStatus_Success == result);
     LED7_ON();
     
     /* 使能DMA */
@@ -88,18 +89,27 @@ int main(void)
     NVIC_SetPriority(DMA0_IRQn, 2);
 
     /* adc 初始化 */
-    adc_init();
+    result = adc_init();
+    assert(kStatus_Success == result);
 
     /* flash 初始化 */
-    spiflash_init();
+    result = spiflash_init();
+    assert(kStatus_Success == result);
 
     /* dmic初始化 */
-    dmic_init();
+    result = dmic_init();
+    assert(kStatus_Success == result);
 
     /* codec初始化 */
-    wm8904_i2s_init();
+    result = wm8904_i2s_init();
+    assert(kStatus_Success == result);
 
-#ifdef CORE1_IMAGE_COPY_TO_RAM
+#if defined(CORE1_IMAGE_COPY_TO_RAM)
+#if !defined(__MCUXPRESSO)
+    /* 拷贝从核数据到从核启动ram,使用MCUXpresso IDE不需要拷贝 */
+    copy_core1_image_to_ram();
+#endif
+
 	/* 启动m0核心 */
 	start_core1();
 #endif

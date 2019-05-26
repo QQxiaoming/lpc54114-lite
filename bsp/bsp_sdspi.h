@@ -14,6 +14,10 @@
 #include "fsl_sdspi.h"
 #include "fsl_common.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 extern sdspi_card_t g_card;
 extern sdspi_host_t g_host;
 
@@ -60,5 +64,9 @@ uint32_t timer_get_current_milliseconds(void);
  * @brief Initializes the host descriptor.
  */
 void sdspi_host_init(void);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* _BSP_SDSPI_H_ */

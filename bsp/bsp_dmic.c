@@ -62,7 +62,7 @@ status_t dmic_init(void)
 	dmic_channel_cfg.preac4coef = kDMIC_CompValueZero;
 	dmic_channel_cfg.dc_cut_level = kDMIC_DcCut155;
 	dmic_channel_cfg.post_dc_gain_reduce = 0U;
-	dmic_channel_cfg.saturate16bit = 1U;
+	dmic_channel_cfg.saturate16bit = true;
 	dmic_channel_cfg.sample_rate = kDMIC_PhyFullSpeed;
 	DMIC_Init(DMIC0);
 	

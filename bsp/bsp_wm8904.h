@@ -20,6 +20,10 @@
 #include "fsl_wm8904.h"
 
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 #define WM8904_I2C         I2C4
 #define WM8904_I2S_TX      I2S1
 #define WM8904_I2S_RX      I2S0
@@ -31,5 +35,9 @@ extern dma_handle_t s_DmaRxHandle;
 extern codec_handle_t codecHandle;
 
 status_t wm8904_i2s_init(void);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* _BSP_WM8904_H_ */

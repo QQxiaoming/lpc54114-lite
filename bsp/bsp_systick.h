@@ -14,7 +14,16 @@
 #include <stdint.h>
 #include "fsl_common.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 extern volatile uint32_t dwSysTicks;
 
 status_t systick_init(void);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
+
 #endif /* _BSP_SYSTICK_H_ */

@@ -10,7 +10,6 @@
  */
 #include "fsl_debug_console.h"
 
-#include "board.h"
 #include "mcmgr.h"
 
 #include "start_core1.h"

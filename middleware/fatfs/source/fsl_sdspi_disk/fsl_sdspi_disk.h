@@ -34,7 +34,6 @@
 #include <stdint.h>
 #include "diskio.h"
 #include "fsl_common.h"
-#include "board.h"
 
 /*!
  * @addtogroup SD Disk over SPI

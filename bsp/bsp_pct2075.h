@@ -14,6 +14,14 @@
 
 #include "fsl_common.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif /* __cplusplus */
+
 status_t pct2075_i2c_read(float *data);
+
+#if defined(__cplusplus)
+}
+#endif /* __cplusplus */
 
 #endif /* _BSP_PCT2075_H_ */

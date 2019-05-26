@@ -80,8 +80,6 @@ add_executable(core1.elf
     "${ProjDirPath}/../../../bsp/bsp_led.h"
     "${ProjDirPath}/../../../bsp/pin_mux.c"
     "${ProjDirPath}/../../../bsp/pin_mux.h"
-    "${ProjDirPath}/../../../bsp/board.c"
-    "${ProjDirPath}/../../../bsp/board.h"
     "${ProjDirPath}/../../../bsp/clock_config.c"
     "${ProjDirPath}/../../../bsp/clock_config.h"
     "${ProjDirPath}/../../../middleware/multicore/mcmgr/src/mcmgr_internal_core_api_lpc54114.c"

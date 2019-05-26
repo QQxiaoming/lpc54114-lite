@@ -60,7 +60,7 @@ void spi_init(void)
 	masterConfig.polarity = kSPI_ClockPolarityActiveHigh;
 	masterConfig.phase = kSPI_ClockPhaseFirstEdge;
 	masterConfig.baudRate_Bps = 100000;
-	masterConfig.sselNum = (spi_ssel_t)2; // use GPIO as CS is prefer
+	masterConfig.sselNum = kSPI_Ssel2; // use GPIO as CS is prefer
 	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFreq(kCLOCK_Flexcomm2));
 
     /* 配置使能SPI2DMA*/
