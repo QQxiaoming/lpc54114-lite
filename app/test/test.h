@@ -24,7 +24,8 @@ void StartSoundPlayback(void);
 void StartDigitalLoopback(void);
 
 void audio_play_init(void);
-
+void vRegisterCLICommands( void );
+void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
 
 #if defined(__cplusplus)
 }

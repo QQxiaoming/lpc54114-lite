@@ -93,8 +93,11 @@ include_directories(${ProjDirPath}/../../../middleware/aaclib/real)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include)
 include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/include/private)
+include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli)
+include_directories(${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/port)
 
 add_executable(core0.elf 
+    "${ProjDirPath}/../../../app/test/test_cli.c"
     "${ProjDirPath}/../../../app/test/test_audio_play.c"
     "${ProjDirPath}/../../../app/test/test_mp3_decode.c"
     "${ProjDirPath}/../../../app/test/test_aac_decode.c"
@@ -294,6 +297,11 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/fsl_tickless_systick.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/port.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/FreeRTOS_CLI.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/FreeRTOS_CLI.h"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/UARTCommandConsole.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/port/serial.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/port/serial.h"
 )
 
 

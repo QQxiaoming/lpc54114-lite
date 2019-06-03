@@ -72,8 +72,6 @@ int main(void)
     CLOCK_EnableClock(kCLOCK_Gpio0);
     CLOCK_EnableClock(kCLOCK_Gpio1);
     
-
-
     /* 初始化debug串口 */
     result = debug_console_init();
     assert(kStatus_Success == result);
@@ -83,7 +81,7 @@ int main(void)
     result = LEDInit();
     assert(kStatus_Success == result);
     LED7_ON();
-    
+
     /* 使能DMA */
     DMA_Init(DMA0);
     NVIC_SetPriority(DMA0_IRQn, 2);
@@ -113,6 +111,9 @@ int main(void)
 	/* 启动m0核心 */
 	start_core1();
 #endif
+
+    vRegisterCLICommands();
+    vUARTCommandConsoleStart(512,3);
 
     /* 播放任务创建 */
     audio_play_init();
