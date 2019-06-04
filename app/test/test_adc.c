@@ -35,7 +35,7 @@ void test_adc(void)
         wADCValue = adc_read(ADC_CHANNEL_NUM);
         if(wADCValue != 0xFFFF)
         {
-            PRINTF("adc Value is %d\r\n", wADCValue);
+            printfk("adc Value is %d\r\n", wADCValue);
         }
         delay();
     }

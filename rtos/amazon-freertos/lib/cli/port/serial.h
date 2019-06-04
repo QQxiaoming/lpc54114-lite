@@ -28,6 +28,11 @@
 #ifndef SERIAL_COMMS_H
 #define SERIAL_COMMS_H
 
+#include "FreeRTOS.h"
+#include "fsl_common.h"
+#include "fsl_debug_console.h"
+
+
 typedef void * xComPortHandle;
 
 typedef enum
@@ -93,6 +98,28 @@ signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedC
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime );
 portBASE_TYPE xSerialWaitForSemaphore( xComPortHandle xPort );
 void vSerialClose( xComPortHandle xPort );
+
+
+#define printfk(fmt, args...)           do \
+                                        { \
+											xComPortHandle xPort; \
+											extern const char * const pcEndOfOutputMessage; \
+											int index = strlen(pcEndOfOutputMessage)-11; \
+                                            for(int i = index;i > 0;i--) \
+                                            { \
+                                                xSerialPutChar( xPort, '\b',portMAX_DELAY); \
+                                            } \
+                                            for(int i = index;i > 0;i--) \
+                                            { \
+                                                xSerialPutChar( xPort, ' ',portMAX_DELAY); \
+                                            } \
+                                            for(int i = index;i > 0;i--) \
+                                            { \
+                                                xSerialPutChar( xPort, '\b',portMAX_DELAY); \
+                                            } \
+                                            DbgConsole_Printf(fmt,## args); \
+                                            vSerialPutString( xPort, ( signed char * ) (pcEndOfOutputMessage+2), (unsigned short)(strlen(pcEndOfOutputMessage)-2)); \
+                                        }while(0)
 
 #endif
 

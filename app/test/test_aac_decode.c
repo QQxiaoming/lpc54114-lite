@@ -41,7 +41,7 @@ void decode_aac(void)
     aac_decoder = AACInitDecoder();
     if(aac_decoder == NULL)
     {
-        PRINTF("init err!\r\n");
+        printfk("init err!\r\n");
         return;
     }
 
@@ -49,7 +49,7 @@ void decode_aac(void)
     f_res = f_open(&f_aac, "4:test128.aac",FA_OPEN_EXISTING | FA_READ);
     if (f_res == FR_OK)
     {
-        PRINTF("open aac file ok!\r\n");
+        printfk("open aac file ok!\r\n");
         while(f_size(&f_aac)-f_tell(&f_aac) >= byteleft)
         {
             f_read(&f_aac,aac_buf+byteleft,READBUF_SIZE-byteleft,&br);
@@ -65,12 +65,12 @@ void decode_aac(void)
                 AACGetLastFrameInfo(aac_decoder, &aac_framer);
                 if (ret == ERR_AAC_NONE)
                 {
-                    PRINTF("once decode,file size is %d\r\n",f_size(&f_aac)-f_tell(&f_aac));
+                    printfk("once decode,file size is %d\r\n",f_size(&f_aac)-f_tell(&f_aac));
                     f_write(&f_pcm,pcm_buf,(aac_framer.bitsPerSample/8)*aac_framer.outputSamps,&br);
                 }
                 else
                 {
-                    PRINTF("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
+                    printfk("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
 				    decode_ptr += 2;
 				    byteleft   -= 2;
                 }
@@ -90,5 +90,5 @@ void decode_aac(void)
 
     AACFreeDecoder(aac_decoder);
 
-    PRINTF("end\r\n");
+    printfk("end\r\n");
 }

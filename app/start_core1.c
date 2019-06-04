@@ -52,7 +52,7 @@ void copy_core1_image_to_ram(void)
 {
     uint32_t core1_image_size;
     core1_image_size = get_core1_image_size();
-    PRINTF("Copy Secondary core image to address: 0x%x, size: %d\r\n", CORE1_BOOT_ADDRESS, core1_image_size);
+    printfk("Copy Secondary core image to address: 0x%x, size: %d\r\n", CORE1_BOOT_ADDRESS, core1_image_size);
 
     /* Copy Secondary core application from FLASH to the target memory. */
     memcpy(CORE1_BOOT_ADDRESS, (void *)CORE1_IMAGE_START, core1_image_size);
@@ -60,8 +60,8 @@ void copy_core1_image_to_ram(void)
 
 void start_core1(void)
 {
-    PRINTF("Starting Secondary core.\r\n");
+    printfk("Starting Secondary core.\r\n");
     /* 启动m0+核，启动参数5传递给m0+核使用 */
     MCMGR_StartCore(kMCMGR_Core1, CORE1_BOOT_ADDRESS, 5, kMCMGR_Start_Synchronous);
-    PRINTF("The secondary core application has been started.\r\n");
+    printfk("The secondary core application has been started.\r\n");
 }

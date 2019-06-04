@@ -70,7 +70,7 @@ static void RxCallback(I2S_Type *base, i2s_dma_handle_t *handle, status_t comple
 
 void StartSoundPlayback(void)
 {
-    PRINTF("Setup looping playback of sine wave\r\n");
+    printfk("Setup looping playback of sine wave\r\n");
 
     s_TxTransfer.data = &g_Music[0];
     s_TxTransfer.dataSize = sizeof(g_Music);
@@ -84,7 +84,7 @@ void StartSoundPlayback(void)
 
 void StartDigitalLoopback(void)
 {
-    PRINTF("Setup digital loopback\r\n");
+    printfk("Setup digital loopback\r\n");
 
     s_TxTransfer.data = &s_Buffer[0];
     s_TxTransfer.dataSize = sizeof(s_Buffer);

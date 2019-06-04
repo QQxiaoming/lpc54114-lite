@@ -34,10 +34,6 @@
 #include "queue.h"
 #include "semphr.h"
 
-/* Library includes. */
-#include "fsl_common.h"
-#include "fsl_usart.h"
-
 /* Demo application includes. */
 #include "serial.h"
 /*-----------------------------------------------------------*/
@@ -46,163 +42,66 @@
 #define serINVALID_QUEUE				( ( QueueHandle_t ) 0 )
 #define serNO_BLOCK						( ( TickType_t ) 0 )
 #define serTX_BLOCK_TIME				( 40 / portTICK_PERIOD_MS )
-
 /*-----------------------------------------------------------*/
 
-/* The queue used to hold received characters. */
-static QueueHandle_t xRxedChars;
-static QueueHandle_t xCharsForTx;
 
-
-/*-----------------------------------------------------------*/
-
-/*
- * See the serial2.h header file.
- */
 xComPortHandle xSerialPortInitMinimal( unsigned long ulWantedBaud, unsigned portBASE_TYPE uxQueueLength )
 {
 xComPortHandle xReturn;
-usart_config_t cli_config;
+status_t result;
 
-	/* Create the queues used to hold Rx/Tx characters. */
-	xRxedChars = xQueueCreate( uxQueueLength, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	xCharsForTx = xQueueCreate( uxQueueLength + 1, ( unsigned portBASE_TYPE ) sizeof( signed char ) );
-	
-	/* If the queue/semaphore was created correctly then setup the serial port
-	hardware. */
-	if( ( xRxedChars != serINVALID_QUEUE ) && ( xCharsForTx != serINVALID_QUEUE ) )
+    CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0);
+    RESET_PeripheralReset(kFC0_RST_SHIFT_RSTn);
+    result = DbgConsole_Init(0U, 115200, kSerialPort_Uart,CLOCK_GetFreq(kCLOCK_Flexcomm0));
+
+	if( result == kStatus_Success)
 	{
-		/*
-		 * cli_config.baudRate_Bps = 115200U;
-		 * cli_config.parityMode = kUSART_ParityDisabled;
-		 * cli_config.stopBitCount = kUSART_OneStopBit;
-		 * cli_config.loopback = false;
-		 * cli_config.enableTxFifo = false;
-		 * cli_config.enableRxFifo = false;
-		 */
-		CLOCK_AttachClk(kFRO12M_to_FLEXCOMM5);
-		USART_GetDefaultConfig(&cli_config);
-		cli_config.baudRate_Bps = 115200;
-		cli_config.enableTx = true;
-		cli_config.enableRx = true;
-
-		USART_Init(USART5, &cli_config, CLOCK_GetFreq(kCLOCK_Flexcomm5));
-
-		USART_EnableInterrupts(USART5, kUSART_RxLevelInterruptEnable | kUSART_RxErrorInterruptEnable);
-    	
-		NVIC_SetPriority(FLEXCOMM5_IRQn, 2);
-		EnableIRQ(FLEXCOMM5_IRQn);
+		xReturn = ( xComPortHandle ) 0x5a5a5a5a;
 	}
 	else
 	{
 		xReturn = ( xComPortHandle ) 0;
 	}
 
-	/* This demo file only supports a single port but we have to return
-	something to comply with the standard demo header file. */
 	return xReturn;
 }
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialGetChar( xComPortHandle pxPort, signed char *pcRxedChar, TickType_t xBlockTime )
 {
-	/* The port handle is not required as this driver only supports one port. */
 	( void ) pxPort;
 
-	/* Get the next character from the buffer.  Return false if no characters
-	are available, or arrive before xBlockTime expires. */
-	if( xQueueReceive( xRxedChars, pcRxedChar, xBlockTime ) )
-	{
-		return pdTRUE;
-	}
-	else
-	{
-		return pdFALSE;
-	}
+	*pcRxedChar = (signed char)DbgConsole_Getchar();
+
+	return pdTRUE;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialPutString( xComPortHandle pxPort, const signed char * const pcString, unsigned short usStringLength )
 {
-signed char *pxNext;
-
-	/* A couple of parameters that this port does not use. */
-	( void ) usStringLength;
 	( void ) pxPort;
 
-	/* NOTE: This implementation does not handle the queue being full as no
-	block time is used! */
-
-	/* The port handle is not required as this driver only supports UART1. */
-	( void ) pxPort;
-
-	/* Send each character in the string, one at a time. */
-	pxNext = ( signed char * ) pcString;
-	while( *pxNext )
+	if(usStringLength != 0)
 	{
-		xSerialPutChar( pxPort, *pxNext, serNO_BLOCK );
-		pxNext++;
+		DbgConsole_Printf((const char *)pcString);
 	}
 }
 /*-----------------------------------------------------------*/
 
 signed portBASE_TYPE xSerialPutChar( xComPortHandle pxPort, signed char cOutChar, TickType_t xBlockTime )
 {
-signed portBASE_TYPE xReturn;
+	( void ) pxPort;
+	( void ) xBlockTime;
 
-	if( xQueueSend( xCharsForTx, &cOutChar, xBlockTime ) == pdPASS )
-	{
-		xReturn = pdPASS;
-		USART_EnableInterrupts(USART5, kUSART_TxLevelInterruptEnable);
-	}
-	else
-	{
-		xReturn = pdFAIL;
-	}
+	DbgConsole_Putchar((int)cOutChar);
 
-	return xReturn;
+	return pdPASS;
 }
 /*-----------------------------------------------------------*/
 
 void vSerialClose( xComPortHandle xPort )
 {
-	/* Not supported as not required by the demo application. */
+	DbgConsole_Deinit();
 }
 /*-----------------------------------------------------------*/
 
-
-#define vUARTInterruptHandler FLEXCOMM5_IRQHandler  
-void vUARTInterruptHandler( void )
-{
-portBASE_TYPE xHigherPriorityTaskWoken = pdFALSE;
-char cChar;
-uint32_t status;
-
-	status = USART_GetStatusFlags(USART5);
-    if(kUSART_TxFifoNotFullFlag & status)
-	{
-		/* The interrupt was caused by the THR becoming empty.  Are there any
-		more characters to transmit? */
-		if( xQueueReceiveFromISR( xCharsForTx, &cChar, &xHigherPriorityTaskWoken ) == pdTRUE )
-		{
-			/* A character was retrieved from the queue so can be sent to the
-			THR now. */
-			USART_WriteByte(USART5, cChar);
-		}
-		else
-		{
-			USART_DisableInterrupts(USART5, kUSART_TxLevelInterruptEnable);
-		}
-		USART_ClearStatusFlags(USART5,kUSART_TxFifoNotFullFlag);
-	}
-
-	if((kUSART_RxFifoNotEmptyFlag | kUSART_RxError) & status)
-	{
-		cChar = USART_ReadByte(USART5);
-		xQueueSendFromISR( xRxedChars, &cChar, &xHigherPriorityTaskWoken ); 
-		USART_ClearStatusFlags(USART5,kUSART_RxFifoNotEmptyFlag | kUSART_RxError);
-	}
-	
-	
-	portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
-}

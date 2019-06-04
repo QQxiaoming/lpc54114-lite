@@ -33,7 +33,7 @@ void decode_mp3(void)
     mp3_decoder = MP3InitDecoder();
     if(mp3_decoder == NULL)
     {
-        PRINTF("init err!\r\n");
+        printfk("init err!\r\n");
         return;
     }
 
@@ -41,7 +41,7 @@ void decode_mp3(void)
     f_res = f_open(&f_mp3, "4:test128.mp3",FA_OPEN_EXISTING | FA_READ);
     if (f_res == FR_OK)
     {
-        PRINTF("open mp3 file ok!\r\n");
+        printfk("open mp3 file ok!\r\n");
         while(f_size(&f_mp3)-f_tell(&f_mp3) >= byteleft)
         {
             f_read(&f_mp3,mp3_buf+byteleft,4000-byteleft,&br);
@@ -57,12 +57,12 @@ void decode_mp3(void)
                 MP3GetLastFrameInfo(mp3_decoder, &mp3_framer);
                 if(ret == ERR_MP3_NONE && mp3_framer.samprate == 44100)
                 {
-                    PRINTF("once decode,file size is %d\r\n",f_size(&f_mp3)-f_tell(&f_mp3));
+                    printfk("once decode,file size is %d\r\n",f_size(&f_mp3)-f_tell(&f_mp3));
                     f_write(&f_pcm,pcm_buf,2304*sizeof(short),&br);
                 }
                 else
                 {
-                    PRINTF("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
+                    printfk("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
 				    decode_ptr += 2;
 				    byteleft   -= 2;
                 }
@@ -81,5 +81,5 @@ void decode_mp3(void)
 
     MP3FreeDecoder(mp3_decoder);
 
-    PRINTF("end\r\n");
+    printfk("end\r\n");
 }

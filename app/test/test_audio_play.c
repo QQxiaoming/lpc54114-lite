@@ -20,6 +20,7 @@
 #include "fsl_debug_console.h"
 #include "mp3dec.h"
 #include "compile.h"
+#include "bsp_uart.h"
 
 
 #define OUT_SIZE (4608)
@@ -62,7 +63,7 @@ static void audio_data_reader(void *pvParameters)
     mp3_decoder = MP3InitDecoder();
     if(mp3_decoder == NULL)
     {
-        PRINTF("init err!\r\n");
+        printfk("init err!\r\n");
         goto audio_data_reader_ret;
     }
 
@@ -70,7 +71,7 @@ static void audio_data_reader(void *pvParameters)
     //f_res = f_open(&f_pcm, "4:test.pcm",FA_WRITE | FA_CREATE_ALWAYS);
     if (f_res == FR_OK)
     {
-        PRINTF("open mp3 file ok!\r\n");
+        printfk("open mp3 file ok!\r\n");
         while(f_size(&f_mp3)-f_tell(&f_mp3) >= byteleft)
         {
             f_read(&f_mp3,mp3_buf+byteleft,4000-byteleft,&br);
@@ -91,7 +92,7 @@ static void audio_data_reader(void *pvParameters)
                 MP3GetLastFrameInfo(mp3_decoder, &mp3_framer);
                 if(ret == ERR_MP3_NONE && mp3_framer.samprate == 44100)
                 {
-                    //PRINTF("once decode,file size is %d\r\n",f_size(&f_mp3)-f_tell(&f_mp3));
+                    //printfk("once decode,file size is %d\r\n",f_size(&f_mp3)-f_tell(&f_mp3));
 
                     xQueueSend(audio_data_addr,&buff_addr,portMAX_DELAY);
                     buf_count++;
@@ -105,7 +106,7 @@ static void audio_data_reader(void *pvParameters)
                 }
                 else
                 {
-                    PRINTF("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
+                    printfk("mp3_decord err %d,bad frame!,remove 2byte,detect next\r\n",ret);
 				    decode_ptr += 2;
 				    byteleft   -= 2;
                 }
@@ -123,13 +124,13 @@ static void audio_data_reader(void *pvParameters)
     }
     else
     {
-        PRINTF("open file err!\r\n");
+        printfk("open file err!\r\n");
         goto audio_data_reader_ret;
     }
 
     MP3FreeDecoder(mp3_decoder);
 
-    PRINTF("end\r\n");
+    printfk("end\r\n");
     
     I2S_TransferAbortDMA(WM8904_I2S_TX,&audio_dma_handle);
 
@@ -182,7 +183,7 @@ static void audio_callback(I2S_Type *base, i2s_dma_handle_t *handle, status_t co
             WM8904_SetMute(&codecHandle,true,true);
             is_mute = true;
         }
-        PRINTF("peek err\r\n");
+        printfk("peek err\r\n");
 
         /* 重发dma数据一次 */
         I2S_TxTransferSendDMA(base, handle, *(i2s_transfer_t *)userData);
@@ -205,7 +206,7 @@ static void audio_play_voice(void *pvParameters)
     /* 从队列取得音频数据buf地址,拷贝数据 */
     if(xQueuePeek(audio_data_addr, &data_addr, pdMS_TO_TICKS(1000*10)) != pdTRUE)
     {
-        PRINTF("Peek timeout!\r\n");
+        printfk("Peek timeout!\r\n");
         goto audio_play_voice_ret;
     }
     memcpy(audio_voice_buff,(void *)data_addr,OUT_SIZE);

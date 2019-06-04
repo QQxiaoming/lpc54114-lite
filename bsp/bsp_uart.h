@@ -12,6 +12,7 @@
 #define _BSP_UART_H_
 
 #include "fsl_common.h"
+#include "serial.h"
 
 
 #if defined(__cplusplus)

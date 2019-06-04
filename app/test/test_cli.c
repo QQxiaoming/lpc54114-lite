@@ -19,7 +19,7 @@ static BaseType_t prvUnameCommand( char *pcWriteBuffer, size_t xWriteBufferLen, 
 static const CLI_Command_Definition_t xUname =
 {
 	"uname",
-	"\r\n uname :\r\nEchos uname in turn\r\n",
+	"\r\nuname :\r\nEchos uname in turn\r\n",
 	prvUnameCommand,
 	0
 };
@@ -44,7 +44,7 @@ static BaseType_t prvEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, c
 static const CLI_Command_Definition_t xEcho =
 {
 	"echo",
-	"\r\n echo <param> :\r\nEchos each in turn\r\n",
+	"\r\necho <param> :\r\nEchos each in turn\r\n",
 	prvEchoCommand,
 	1
 };

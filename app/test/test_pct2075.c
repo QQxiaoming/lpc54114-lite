@@ -37,11 +37,11 @@ void test_pct2075(void)
         assert(result == kStatus_Success);
         if(fPCTValue>=0)
         {
-            PRINTF("Temperature Value is +%d.%d oC.\r\n", (int)(fPCTValue*100)/100, (int)(fPCTValue*100)%100);
+            printfk("Temperature Value is +%d.%d oC.\r\n", (int)(fPCTValue*100)/100, (int)(fPCTValue*100)%100);
         }
         else
         {
-            PRINTF("Temperature Value is -%d.%d oC.\r\n", (int)((0-fPCTValue)*100)/100, (int)((0-fPCTValue)*100)%100);
+            printfk("Temperature Value is -%d.%d oC.\r\n", (int)((0-fPCTValue)*100)/100, (int)((0-fPCTValue)*100)%100);
         }
         delay();
     }

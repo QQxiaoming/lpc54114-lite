@@ -18,7 +18,7 @@
 #include "fsl_i2c.h"
 #include "fsl_i2s.h"
 #include "fsl_i2s_dma.h"
-
+#include "bsp_uart.h"
 
 dma_handle_t s_DmaTxHandle;
 dma_handle_t s_DmaRxHandle;
@@ -140,10 +140,10 @@ status_t wm8904_i2s_init(void)
 	RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn);
 	
 	
-	PRINTF("Configure I2C\r\n");
+	printfk("Configure I2C\r\n");
     WM8904_Codec_I2C_Init();
 
-	PRINTF("Configure WM8904 codec\r\n");
+	printfk("Configure WM8904 codec\r\n");
 	/*
 	 * enableMaster = true;
 	 * baudRate_Bps = 100000U;
@@ -155,7 +155,7 @@ status_t wm8904_i2s_init(void)
 
     if (CODEC_Init(&codecHandle, &boardCodecConfig) != kStatus_Success)
     {
-        PRINTF("WM8904_Init failed!\r\n");
+        printfk("WM8904_Init failed!\r\n");
 		return kStatus_Fail;
     }
 
@@ -166,7 +166,7 @@ status_t wm8904_i2s_init(void)
 	/* Adjust it to your needs, 0x0006 for -51 dB, 0x0039 for 0 dB etc. */
 	WM8904_SetVolume(&codecHandle, 0x0006, 0x0006);
 	
-	PRINTF("Configure I2S\r\n");
+	printfk("Configure I2S\r\n");
 	I2S_TxGetDefaultConfig(&s_TxConfig);
 	/* 采样率44100，位宽16，双声道 */
 	s_TxConfig.divider = CLOCK_GetPllOutFreq() / 44100U / 16U / 2U;	

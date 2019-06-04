@@ -91,11 +91,9 @@ static const char * const pcWelcomeMessage =
  | | |_) | (__ ___) |__   _| | |__   _|\r\n\
  |_| .__/ \\___|____/   |_| |_|_|  |_|  \r\n\
    |_|   \r\n\
-2019 by 2014500726@smail.xtu.edu.cn\r\n\
-\033[32mLPC54114@FreeRTOS>\033[0m\
-";
-static const char * const pcEndOfOutputMessage = "\r\n\033[32mLPC54114@FreeRTOS>\033[0m";
-static const char * const pcNewLine = "\r\n";
+2019 by 2014500726@smail.xtu.edu.cn";
+const char * const pcEndOfOutputMessage = "\r\n\033[32mLPC54114@FreeRTOS>\033[0m";
+const char * const pcNewLine = "\r\n";
 
 /* Used to guard access to the UART in case messages are sent to the UART from
 more than one task. */
@@ -108,6 +106,23 @@ static char cHistoryInputString[configMAX_HISTORY_NUM][ cmdMAX_INPUT_SIZE ] = {0
 
 char cCompletionString[cmdMAX_INPUT_SIZE*configMAX_COMPLETION_NUM];
 
+/*-----------------------------------------------------------*/
+
+void vUARTCommandConsoleInit( void )
+{
+    /* Initialise the UART. */
+    xPort = xSerialPortInitMinimal( configCLI_BAUD_RATE, cmdQUEUE_LENGTH );
+
+    /* Send the welcome message. */
+    vSerialPutString( xPort, ( signed char * ) pcWelcomeMessage, ( unsigned short ) strlen( pcWelcomeMessage ) );
+    
+    vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, ( unsigned short ) strlen( pcEndOfOutputMessage ) );
+    
+    for (volatile uint32_t i = 0; i < 20000000; ++i)
+    {
+        __asm("NOP");
+    }
+}
 /*-----------------------------------------------------------*/
 
 void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority )
@@ -123,7 +138,6 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority )
                     NULL,						/* The parameter is not used, so NULL is passed. */
                     uxPriority,					/* The priority allocated to the task. */
                     NULL );						/* A handle is not required, so just pass NULL. */
-
 }
 /*-----------------------------------------------------------*/
 static void prvUARTCommandConsoleTask( void *pvParameters )
@@ -147,12 +161,6 @@ uint8_t ucFindCompletionNum = 0;
     exclusion on this buffer as it is assumed only one command console interface
     will be used at any one time. */
     pcOutputString = FreeRTOS_CLIGetOutputBuffer();
-
-    /* Initialise the UART. */
-    xPort = xSerialPortInitMinimal( configCLI_BAUD_RATE, cmdQUEUE_LENGTH );
-
-    /* Send the welcome message. */
-    vSerialPutString( xPort, ( signed char * ) pcWelcomeMessage, ( unsigned short ) strlen( pcWelcomeMessage ) );
 
     for( ;; )
     {
@@ -281,7 +289,7 @@ uint8_t ucFindCompletionNum = 0;
                     {
                         xSerialPutChar( xPort, '\b', portMAX_DELAY );
                     }
-                                        ucInputStringBackIndex = 0;
+                    ucInputStringBackIndex = 0;
                     ucFindCompletionNum = configMAX_COMPLETION_NUM;
                     FreeRTOS_CLICompletionCommand(cInputString,ucInputIndex,cCompletionString,&ucFindCompletionNum);
                     if(ucFindCompletionNum == 0)
@@ -309,7 +317,10 @@ uint8_t ucFindCompletionNum = 0;
                         }
 
                         vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, ( unsigned short ) strlen( pcEndOfOutputMessage ) );
-                        vSerialPutString( xPort, ( signed char * ) cInputString, ( unsigned short ) strlen( cInputString ) );
+                        if(ucInputIndex != 0)
+                        {
+                            vSerialPutString( xPort, ( signed char * ) cInputString, ( unsigned short ) strlen( cInputString ) );
+                        }
                     }
                     
                 }

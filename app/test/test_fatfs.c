@@ -30,7 +30,7 @@ static FRESULT miscellaneous(void)
     FATFS *pfs;
     DWORD fre_clust, fre_sect, tot_sect;
 
-    PRINTF("*************** 设备信息获取 ***************\r\n");
+    printfk("*************** 设备信息获取 ***************\r\n");
     /* 获取设备信息和空簇大小 */
     f_res = f_getfree("4:", &fre_clust, &pfs);
 
@@ -39,9 +39,9 @@ static FRESULT miscellaneous(void)
     fre_sect = fre_clust * pfs->csize;
 
     /* 打印信息(4096 字节/扇区) */
-    PRINTF(">设备总空间：%d KB。\r\n>可用空间：  %d KB。\r\n", tot_sect * 4, fre_sect * 4);
+    printfk(">设备总空间：%d KB。\r\n>可用空间：  %d KB。\r\n", tot_sect * 4, fre_sect * 4);
 
-    PRINTF("******** 文件定位和格式化写入功能测试 ********\r\n");
+    printfk("******** 文件定位和格式化写入功能测试 ********\r\n");
     f_res = f_open(&file, "4:readme.TXT",
                    FA_OPEN_EXISTING | FA_WRITE | FA_READ);
     if (f_res == FR_OK)
@@ -59,12 +59,12 @@ static FRESULT miscellaneous(void)
             f_res = f_read(&file, readbuffer, f_size(&file), &fnum);
             if (f_res == FR_OK)
             {
-                PRINTF(">文件内容：\r\n%s\r\n", readbuffer);
+                printfk(">文件内容：\r\n%s\r\n", readbuffer);
             }
         }
         f_close(&file);
 
-        PRINTF("\r\n********** 目录创建和重命名功能测试 **********\r\n");
+        printfk("\r\n********** 目录创建和重命名功能测试 **********\r\n");
         /* 尝试打开目录 */
         f_res = f_opendir(&dir, "4:TestDir");
         if (f_res != FR_OK)
@@ -87,8 +87,8 @@ static FRESULT miscellaneous(void)
     }
     else
     {
-        PRINTF("!! 打开文件失败：%d\r\n", f_res);
-        PRINTF("!! 或许需要再次运行“FatFs移植与读写测试”工程\r\n");
+        printfk("!! 打开文件失败：%d\r\n", f_res);
+        printfk("!! 或许需要再次运行“FatFs移植与读写测试”工程\r\n");
     }
     return f_res;
 }
@@ -103,11 +103,11 @@ static FRESULT file_check(void)
     f_res = f_stat("4:readme.TXT", &finfo);
     if (f_res == FR_OK)
     {
-        PRINTF("readme.txt文件信息：\r\n");
-        PRINTF(">文件大小: %d(字节)\r\n", finfo.fsize);
-        PRINTF(">时间戳: %u/%02u/%02u, %02u:%02u\r\n",
+        printfk("readme.txt文件信息：\r\n");
+        printfk(">文件大小: %d(字节)\r\n", finfo.fsize);
+        printfk(">时间戳: %u/%02u/%02u, %02u:%02u\r\n",
                (finfo.fdate >> 9) + 1980, finfo.fdate >> 5 & 15, finfo.fdate & 31, finfo.ftime >> 11, finfo.ftime >> 5 & 63);
-        PRINTF(">属性: %c%c%c%c%c\r\n\r\n",
+        printfk(">属性: %c%c%c%c%c\r\n\r\n",
                (finfo.fattrib & AM_DIR) ? 'D' : '-',  // 是一个目录
                (finfo.fattrib & AM_RDO) ? 'R' : '-',  // 只读文件
                (finfo.fattrib & AM_HID) ? 'H' : '-',  // 隐藏文件
@@ -171,7 +171,7 @@ static FRESULT scan_files(char *path)
             }
             else
             {
-                PRINTF("%s/%s\r\n", path, fn); //输出文件名
+                printfk("%s/%s\r\n", path, fn); //输出文件名
                                              /* 可以在这里提取特定格式的文件路径 */
             }                                //else
         }                                    //for
@@ -183,13 +183,13 @@ static FRESULT scan_files(char *path)
 void test_fatfs(void)
 {
     // TODO: 以下测试函数稳定性存在问题
-    PRINTF("*************** FatFs多项功能测试 **************\r\n");
+    printfk("*************** FatFs多项功能测试 **************\r\n");
     miscellaneous();
 
-    PRINTF("*************** 文件信息获取测试 **************\r\n");
+    printfk("*************** 文件信息获取测试 **************\r\n");
     file_check();
 
-    PRINTF("***************** 文件扫描测试 ****************\r\n");
+    printfk("***************** 文件扫描测试 ****************\r\n");
     strcpy(fpath, driverNumberBuffer);
     scan_files(fpath);
 }

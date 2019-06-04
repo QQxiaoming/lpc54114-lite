@@ -73,9 +73,7 @@ int main(void)
     CLOCK_EnableClock(kCLOCK_Gpio1);
     
     /* 初始化debug串口 */
-    result = debug_console_init();
-    assert(kStatus_Success == result);
-    PRINTF("Debug Console Init Successful!\r\n");
+    vUARTCommandConsoleInit();
 
     /* 初始化LED */
     result = LEDInit();
@@ -112,6 +110,7 @@ int main(void)
 	start_core1();
 #endif
 
+    /* CLI 任务注册 */
     vRegisterCLICommands();
     vUARTCommandConsoleStart(512,3);
 
