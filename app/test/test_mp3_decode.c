@@ -12,6 +12,7 @@
 #include "ff.h"
 #include "fsl_debug_console.h"
 #include <stdint.h>
+#include "UARTCommandConsole.h"
 
 
 FIL f_mp3; 

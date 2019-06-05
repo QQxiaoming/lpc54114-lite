@@ -13,6 +13,7 @@
 #include "fsl_dma.h"
 #include "fsl_i2s_dma.h"
 #include "compile.h"
+#include "UARTCommandConsole.h"
 
 /**
  * @brief 正弦波

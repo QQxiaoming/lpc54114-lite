@@ -20,7 +20,7 @@
 #include "fsl_debug_console.h"
 #include "mp3dec.h"
 #include "compile.h"
-#include "bsp_uart.h"
+#include "UARTCommandConsole.h"
 
 
 #define OUT_SIZE (4608)

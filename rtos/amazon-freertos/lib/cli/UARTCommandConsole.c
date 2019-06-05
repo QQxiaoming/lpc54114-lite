@@ -43,6 +43,7 @@
 
 /* Demo application includes. */
 #include "serial.h"
+#include "UARTCommandConsole.h"
 
 /* Dimensions the buffer into which input characters are placed. */
 #define cmdMAX_INPUT_SIZE		50
@@ -151,7 +152,6 @@ static uint8_t ucInputStringBackIndex = 0;
 static uint8_t ucHistoryInputStringIndex = 0;
 static uint8_t ucCtlInputStringIndex = 1;
 BaseType_t xReturned;
-xComPortHandle xPort;
 int retcmp;
 uint8_t ucFindCompletionNum = 0;
 

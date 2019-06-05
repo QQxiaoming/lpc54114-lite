@@ -10,6 +10,7 @@
  */
 #include "bsp_adc.h"
 #include "fsl_debug_console.h"
+#include "UARTCommandConsole.h"
 
 
 /**

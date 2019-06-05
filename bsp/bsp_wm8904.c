@@ -18,7 +18,7 @@
 #include "fsl_i2c.h"
 #include "fsl_i2s.h"
 #include "fsl_i2s_dma.h"
-#include "bsp_uart.h"
+#include "UARTCommandConsole.h"
 
 dma_handle_t s_DmaTxHandle;
 dma_handle_t s_DmaRxHandle;

@@ -13,6 +13,7 @@
 #include "ff.h"
 #include "fsl_debug_console.h"
 #include <stdint.h>
+#include "UARTCommandConsole.h"
 
 
 #ifdef AAC_ENABLE_SBR

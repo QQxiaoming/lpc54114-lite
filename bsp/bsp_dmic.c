@@ -14,7 +14,7 @@
 #include "fsl_dmic.h"
 #include "bsp_led.h"
 #include "fsl_debug_console.h"
-#include "bsp_uart.h"
+#include "UARTCommandConsole.h"
 
 
 #define FIFO_DEPTH 15U

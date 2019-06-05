@@ -11,6 +11,7 @@
 #include "bsp_pct2075.h"
 #include "fsl_debug_console.h"
 #include "assert.h"
+#include "UARTCommandConsole.h"
 
 /**
  * @brief 粗略延时

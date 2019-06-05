@@ -15,6 +15,7 @@
 #include "diskio.h"
 #include "fsl_common.h"
 #include "fsl_debug_console.h"
+#include "UARTCommandConsole.h"
 
 extern const TCHAR driverNumberBuffer[3U];
 FIL file;             /* 文件对象 */

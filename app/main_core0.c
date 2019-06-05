@@ -17,6 +17,7 @@
 #include "timers.h"
 #include "fsl_common.h"
 #include "fsl_debug_console.h"
+#include "UARTCommandConsole.h"
 
 #include "mcmgr.h"
 #include "ff.h"
@@ -24,7 +25,6 @@
 
 #include "clock_config.h"
 #include "bsp_led.h"
-#include "bsp_uart.h"
 #include "bsp_dmic.h"
 #include "bsp_flash.h"
 #include "bsp_wm8904.h"

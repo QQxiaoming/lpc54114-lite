@@ -126,8 +126,6 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../bsp/bsp_wm8904.h"
     "${ProjDirPath}/../../../bsp/bsp_sdspi.c"
     "${ProjDirPath}/../../../bsp/bsp_sdspi.h"
-    "${ProjDirPath}/../../../bsp/bsp_uart.c"
-    "${ProjDirPath}/../../../bsp/bsp_uart.h"
     "${ProjDirPath}/../../../bsp/bsp_key.c"
     "${ProjDirPath}/../../../bsp/bsp_key.h"
     "${ProjDirPath}/../../../bsp/pin_mux.c"
@@ -300,6 +298,7 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/FreeRTOS_CLI.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/FreeRTOS_CLI.h"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/UARTCommandConsole.c"
+    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/UARTCommandConsole.h"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/port/serial.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/port/serial.h"
 )
