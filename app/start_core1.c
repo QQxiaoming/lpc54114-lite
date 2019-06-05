@@ -9,9 +9,8 @@
  * 
  */
 #include "fsl_debug_console.h"
-
+#include "UARTCommandConsole.h"
 #include "mcmgr.h"
-
 #include "start_core1.h"
 
 /* Address of RAM, where the image for core1 should be copied */
