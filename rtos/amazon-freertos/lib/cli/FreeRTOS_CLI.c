@@ -68,7 +68,7 @@ of the list of registered commands. */
 static const CLI_Command_Definition_t xHelpCommand =
 {
 	"help",
-	"help:\r\nLists all the registered commands\r\n",
+	"help:\t\t\t\tLists all the registered commands\r\n",
 	prvHelpCommand,
 	0
 };
@@ -243,10 +243,7 @@ uint8_t ucFindCommandNum = 0;
 		}
 	}
 	
-	if(ucFindCommandNum == 1)
-	{
-		*(strchr(pcWriteBuffer, '\r')) = '\0';
-	}
+	pcWriteBuffer[strlen(pcWriteBuffer)-2] = '\0';
 	*xFindNum = ucFindCommandNum;
 
 	return xReturn;
@@ -337,6 +334,7 @@ BaseType_t xReturn;
 	{
 		/* There are no more commands in the list, so there will be no more
 		strings to return after this one and pdFALSE should be returned. */
+		pcWriteBuffer[strlen(pcWriteBuffer)-2] = '\0';
 		xReturn = pdFALSE;
 	}
 	else

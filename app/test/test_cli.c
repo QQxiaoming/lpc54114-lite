@@ -19,7 +19,7 @@ static BaseType_t prvUnameCommand( char *pcWriteBuffer, size_t xWriteBufferLen, 
 static const CLI_Command_Definition_t xUname =
 {
 	"uname",
-	"\r\nuname :\r\nEchos uname in turn\r\n",
+	"uname:\t\t\t\tEchos uname in turn\r\n",
 	prvUnameCommand,
 	0
 };
@@ -44,9 +44,30 @@ static BaseType_t prvEchoCommand( char *pcWriteBuffer, size_t xWriteBufferLen, c
 static const CLI_Command_Definition_t xEcho =
 {
 	"echo",
-	"\r\necho <param> :\r\nEchos each in turn\r\n",
+	"echo <param>:\t\t\tEchos each in turn\r\n",
 	prvEchoCommand,
 	1
+};
+
+
+static BaseType_t prvPsCommand( char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString )
+{
+	const char *const pcHeader = "Task                    State  Priority Stack	#\r\n*************************************************\r\n";
+
+	strcpy( pcWriteBuffer, pcHeader );
+	vTaskList( pcWriteBuffer + strlen( pcHeader ) );
+	pcWriteBuffer[strlen(pcWriteBuffer)-2] = '\0';
+
+	return pdFALSE;
+}
+
+
+static const CLI_Command_Definition_t xTaskPs =
+{
+	"ps",
+	"\ps:\t\t\t\tshowing the state of each FreeRTOS task\r\n",
+	prvPsCommand,
+	0
 };
 
 
@@ -54,4 +75,5 @@ void vRegisterCLICommands( void )
 {
 	FreeRTOS_CLIRegisterCommand( &xUname );	
 	FreeRTOS_CLIRegisterCommand( &xEcho );
+	FreeRTOS_CLIRegisterCommand( &xTaskPs );
 }

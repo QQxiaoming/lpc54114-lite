@@ -118,11 +118,6 @@ void vUARTCommandConsoleInit( void )
     vSerialPutString( xPort, ( signed char * ) pcWelcomeMessage, ( unsigned short ) strlen( pcWelcomeMessage ) );
     
     vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, ( unsigned short ) strlen( pcEndOfOutputMessage ) );
-    
-    for (volatile uint32_t i = 0; i < 20000000; ++i)
-    {
-        __asm("NOP");
-    }
 }
 /*-----------------------------------------------------------*/
 

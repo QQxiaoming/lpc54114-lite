@@ -40,7 +40,6 @@
 
 void vUARTCommandConsoleInit( void );
 void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
-void vRegisterCLICommands( void );
 
 #if defined(__cplusplus)
 }

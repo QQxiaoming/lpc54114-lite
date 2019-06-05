@@ -24,6 +24,7 @@ void StartSoundPlayback(void);
 void StartDigitalLoopback(void);
 
 void audio_play_init(void);
+void vRegisterCLICommands( void );
 
 #if defined(__cplusplus)
 }
