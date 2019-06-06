@@ -38,42 +38,15 @@
 #include "test.h"
 
 
-/**
- * @brief 系统初始化钩子函数
- * 
- */
-void SystemInitHook(void)
-{
-    NVIC_SetPriorityGrouping(4);
-
-    /* 初始化多核管理器系统，完成后才可调用MCMGR_Init */
-    MCMGR_EarlyInit();
-}
-
 
 /**
  * @brief 主函数
  * 
  * @return int 
  */
-int main(void)
+int user_main()
 {
     status_t result = kStatus_Fail;
-
-    /* 初始化MCMGR（多核管理系统） */
-    MCMGR_Init();
-
-    /* 初始化时钟 */
-    BOARD_BootClockFROHF96M();
-    systick_init();
-
-    /* 配置引脚功能*/
-    BOARD_InitPins_Core0();
-    CLOCK_EnableClock(kCLOCK_Gpio0);
-    CLOCK_EnableClock(kCLOCK_Gpio1);
-    
-    /* 初始化debug串口 */
-    vUARTCommandConsoleInit();
 
     /* 初始化LED */
     result = LEDInit();
@@ -100,6 +73,51 @@ int main(void)
     result = wm8904_i2s_init();
     assert(kStatus_Success == result);
 
+    /* CLI 任务注册 */
+    vRegisterCLICommands();
+    vUARTCommandConsoleStart(512,3);
+    
+    /* 播放任务创建 */
+    //audio_play_init();
+
+    vTaskDelete( NULL );
+}
+
+
+/**
+ * @brief 系统初始化钩子函数
+ * 
+ */
+void SystemInitHook(void)
+{
+    NVIC_SetPriorityGrouping(4);
+
+    /* 初始化多核管理器系统，完成后才可调用MCMGR_Init */
+    MCMGR_EarlyInit();
+}
+
+
+/**
+ * @brief 主函数
+ * 
+ * @return int 
+ */
+int main(void)
+{
+    /* 初始化MCMGR（多核管理系统） */
+    MCMGR_Init();
+
+    /* 初始化时钟 */
+    BOARD_BootClockFROHF96M();
+    systick_init();
+
+    /* 配置引脚功能*/
+    BOARD_InitPins_Core0();
+    CLOCK_EnableClock(kCLOCK_Gpio0);
+    CLOCK_EnableClock(kCLOCK_Gpio1);
+    
+
+
 #if defined(CORE1_IMAGE_COPY_TO_RAM)
 #if !defined(__MCUXPRESSO)
     /* 拷贝从核数据到从核启动ram,使用MCUXpresso IDE不需要拷贝 */
@@ -110,13 +128,12 @@ int main(void)
 	start_core1();
 #endif
 
-    /* CLI 任务注册 */
-    vRegisterCLICommands();
-    vUARTCommandConsoleStart(512,3);
+    /* 初始化debug串口 */
+    vUARTCommandConsoleInit();
 
-    /* 播放任务创建 */
-    audio_play_init();
+    xTaskCreate(user_main, "user_main", 256, NULL, 4, NULL);
 
     vTaskStartScheduler();
     for (;;);
 }
+

@@ -37,7 +37,7 @@ void DMIC0_HWVAD_Callback(void)
 
     /* reset hwvad internal interrupt */
     DMIC_CtrlClrIntrHwvad(DMIC0, true);
-	//printfk("Just woke up\r\n");
+	printfk("Just woke up\r\n");
     /* wait for HWVAD to settle */
     for (i = 0; i <= 500U; i++)
     {

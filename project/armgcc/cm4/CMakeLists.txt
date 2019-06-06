@@ -32,13 +32,13 @@ SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} \
 
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} \
      -DDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
-     -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding \
-     -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
+     -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING -g -O0 -Wall -fno-common -ffunction-sections \
+     -fdata-sections -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
 
 SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} \
      -DNDEBUG -DCORE1_IMAGE_COPY_TO_RAM -DCPU_LPC54114J256BD64_cm4 -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
-     -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
-     -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
+     -DMULTICORE_APP=1 -DFSL_RTOS_FREE_RTOS -DDEBUG_CONSOLE_TRANSFER_NON_BLOCKING -Os -Wall -fno-common -ffunction-sections -fdata-sections \
+     -ffreestanding -fno-builtin -mthumb -mapcs -std=gnu99 -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -MMD -MP")
 
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} \
      -DDEBUG -DCPU_LPC54114J256BD64_cm4 -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \

@@ -84,7 +84,7 @@ void vUARTCommandConsoleStart( uint16_t usStackSize, UBaseType_t uxPriority );
 /*-----------------------------------------------------------*/
 
 /* Const messages output by the command console. */
-static const char * const pcWelcomeMessage = 
+const char * const pcWelcomeMessage = 
 "\r\n\
   _            ____  _  _   _ _ _  _   \r\n\
  | |_ __   ___| ___|| || | / / | || |  \r\n\
@@ -308,7 +308,7 @@ uint8_t ucFindCompletionNum = 0;
                         vSerialPutString(xPort,(signed char *)cCompletionString, (unsigned short) strlen(cCompletionString));
                         if(ucFindCompletionNum >= configMAX_COMPLETION_NUM)
                         {
-                            vSerialPutString( xPort, (signed char *)"No more matches can be displayed, Please add configMAX_COMPLETION_NUM val!\r\n", ( unsigned short ) strlen( "No more matches can be displayed, Please add configMAX_COMPLETION_NUM val!\r\n" ) );
+                            vSerialPutString( xPort, (signed char *)"\r\nNo more matches can be displayed, Please add configMAX_COMPLETION_NUM val!", ( unsigned short ) strlen( "\r\nNo more matches can be displayed, Please add configMAX_COMPLETION_NUM val!" ) );
                         }
 
                         vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, ( unsigned short ) strlen( pcEndOfOutputMessage ) );

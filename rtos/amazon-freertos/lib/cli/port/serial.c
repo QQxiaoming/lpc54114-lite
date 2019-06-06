@@ -52,6 +52,7 @@ status_t result;
 
     CLOCK_AttachClk(kFRO12M_to_FLEXCOMM0);
     RESET_PeripheralReset(kFC0_RST_SHIFT_RSTn);
+	NVIC_SetPriority(FLEXCOMM0_IRQn, 2);
     result = DbgConsole_Init(0U, 115200, kSerialPort_Uart,CLOCK_GetFreq(kCLOCK_Flexcomm0));
 
 	if( result == kStatus_Success)
