@@ -12,7 +12,7 @@
 #define _TEST_H_
 
 #if defined(__cplusplus)
-"C" {
+extern "C" {
 #endif /* __cplusplus */
 
 void test_fatfs(void);

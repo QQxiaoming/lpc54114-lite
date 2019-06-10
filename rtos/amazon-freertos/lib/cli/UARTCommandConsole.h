@@ -1,5 +1,5 @@
 /**
- * @file bsp_uart.c
+ * @file UARTCommandConsole.h
  * @author qiaoqiming
  * @brief 
  * @version 1.0
@@ -14,7 +14,7 @@
 #include "serial.h"
 
 #if defined(__cplusplus)
-"C" {
+extern "C" {
 #endif /* __cplusplus */
 
 #define printfk(fmt, args...)                                         \
