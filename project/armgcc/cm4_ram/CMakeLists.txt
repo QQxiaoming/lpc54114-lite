@@ -315,3 +315,6 @@ link_directories(${ProjDirPath}/../../../devices/LPC54114/gcc)
 target_link_libraries(core0.elf optimized ${ProjDirPath}/../../../devices/LPC54114/gcc/libpower_cm4_hardabi.a)
 
 TARGET_LINK_LIBRARIES(core0.elf -Wl,--end-group)
+
+ADD_CUSTOM_COMMAND(TARGET core0.elf POST_BUILD COMMAND ${CMAKE_OBJCOPY}
+-Obinary ${EXECUTABLE_OUTPUT_PATH}/core0.elf ${EXECUTABLE_OUTPUT_PATH}/core0_image.bin)

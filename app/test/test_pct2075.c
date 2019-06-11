@@ -32,6 +32,8 @@ void test_pct2075(void)
     status_t result = kStatus_Fail;
     volatile float fPCTValue;
 
+    (void)result;
+    
     for(;;)
     {
         result = pct2075_i2c_read((float *)&fPCTValue);

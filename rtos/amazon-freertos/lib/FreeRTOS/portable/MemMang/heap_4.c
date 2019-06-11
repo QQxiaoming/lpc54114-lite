@@ -34,6 +34,7 @@
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
 #include <stdlib.h>
+#include <string.h>
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
 all the API functions to use the MPU wrappers.  That should only be done when
@@ -61,7 +62,8 @@ task.h is included from an application file. */
 	heap - probably so it can be placed in a special segment or address. */
 	extern uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
 #else
-	static __attribute__((section(".fheap"))) uint8_t ucHeap[ configTOTAL_HEAP_SIZE ];
+	//static __attribute__((section(".fheap")))  uint8_t ucHeap[ configTOTAL_HEAP_SIZE ] = {0};
+	static uint8_t *ucHeap = (uint8_t *)0x04000000;
 #endif /* configAPPLICATION_ALLOCATED_HEAP */
 
 /* Define the linked list structure.  This is used to link free blocks in order
@@ -333,6 +335,7 @@ uint8_t *pucAlignedHeap;
 size_t uxAddress;
 size_t xTotalHeapSize = configTOTAL_HEAP_SIZE;
 
+	memset(ucHeap,0x0,configTOTAL_HEAP_SIZE);
 	/* Ensure the heap starts on a correctly aligned boundary. */
 	uxAddress = ( size_t ) ucHeap;
 

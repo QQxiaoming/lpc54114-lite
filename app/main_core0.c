@@ -48,6 +48,8 @@ void user_main()
 {
     status_t result = kStatus_Fail;
 
+    (void)result;
+    
     /* 初始化LED */
     result = LEDInit();
     assert(kStatus_Success == result);
