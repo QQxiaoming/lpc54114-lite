@@ -448,6 +448,8 @@ int PrepareRawBlock(AACDecInfo *aacDecInfo)
 {
 	PSInfoBase *psi;
 
+	(void)psi;
+
 	/* validate pointers */
 	if (!aacDecInfo || !aacDecInfo->psInfoBase)
 		return ERR_AAC_NULL_POINTER;

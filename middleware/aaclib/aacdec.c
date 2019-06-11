@@ -276,6 +276,8 @@ int AACDecode(HAACDecoder hAACDecoder, unsigned char **inbuf, int *bytesLeft, sh
 	int elementChansSBR;
 #endif
 
+	(void)baseChanSBR;
+
 	if (!aacDecInfo)
 		return ERR_AAC_NULL_POINTER;
 

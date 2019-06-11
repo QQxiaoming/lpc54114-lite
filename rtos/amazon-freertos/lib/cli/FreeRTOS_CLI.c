@@ -191,7 +191,7 @@ size_t xCommandStringLength;
 	{
 		/* The command was found, but the number of parameters with the command
 		was incorrect. */
-		strncpy( pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.\r\n", xWriteBufferLen );
+		strncpy( pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.", xWriteBufferLen );
 		pxCommand = NULL;
 	}
 	else if( pxCommand != NULL )
@@ -210,7 +210,7 @@ size_t xCommandStringLength;
 	else
 	{
 		/* pxCommand was NULL, the command was not found. */
-		strncpy( pcWriteBuffer, "Command not recognised.  Enter 'help' to view a list of available commands.\r\n", xWriteBufferLen );
+		strncpy( pcWriteBuffer, "Command not recognised.  Enter \"help\" to view a list of available commands.", xWriteBufferLen );
 		xReturn = pdFALSE;
 	}
 

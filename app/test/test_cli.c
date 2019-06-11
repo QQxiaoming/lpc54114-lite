@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VERSION "0.9.1"
+#define VERSION "0.9.2"
 
 static BaseType_t prvUnameCommand(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
@@ -109,7 +109,7 @@ static const CLI_Command_Definition_t xFree =
 static BaseType_t prvVersionCommand(char *pcWriteBuffer, size_t xWriteBufferLen, const char *pcCommandString)
 {
 	extern const char *const pcWelcomeMessage;
-	strcpy(pcWriteBuffer, pcWelcomeMessage+2);
+	strcpy(pcWriteBuffer, pcWelcomeMessage);
 	strcat(pcWriteBuffer, "\r\n");
 	sprintf(pcWriteBuffer+strlen(pcWriteBuffer),"verison %s  ",VERSION);
 	sprintf(pcWriteBuffer+strlen(pcWriteBuffer),"build in %s",__DATE__);

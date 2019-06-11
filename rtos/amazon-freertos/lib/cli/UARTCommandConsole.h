@@ -17,25 +17,11 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define printfk(fmt, args...)                                         \
-	do                                                                \
-	{                                                                 \
-		extern const char *const pcEndOfOutputMessage;                \
-		int index = strlen(pcEndOfOutputMessage) - 11;                \
-		for (int i = index; i > 0; i--)                               \
-		{                                                             \
-			DbgConsole_Putchar('\b');                                 \
-		}                                                             \
-		for (int i = index; i > 0; i--)                               \
-		{                                                             \
-			DbgConsole_Putchar(' ');                                  \
-		}                                                             \
-		for (int i = index; i > 0; i--)                               \
-		{                                                             \
-			DbgConsole_Putchar('\b');                                 \
-		}                                                             \
-		DbgConsole_Printf(fmt, ##args);                               \
-		DbgConsole_Printf(pcEndOfOutputMessage + 2); \
+#define printfk(fmt, ...)                                                               \
+	do                                                                                  \
+	{                                                                                   \
+		extern const char *const pcEndOfOutputMessage;                                  \
+		DbgConsole_Printf("\r\033[K"fmt"%s", ##__VA_ARGS__, pcEndOfOutputMessage + 2);  \
 	} while (0)
 
 void vUARTCommandConsoleInit( void );

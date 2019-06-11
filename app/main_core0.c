@@ -44,7 +44,7 @@
  * 
  * @return int 
  */
-int user_main()
+void user_main()
 {
     status_t result = kStatus_Fail;
 

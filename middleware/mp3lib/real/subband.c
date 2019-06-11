@@ -64,6 +64,8 @@ int Subband(MP3DecInfo *mp3DecInfo, short *pcmBuf)
 	IMDCTInfo *mi;
 	SubbandInfo *sbi;
 
+	(void)hi;
+	
 	/* validate pointers */
 	if (!mp3DecInfo || !mp3DecInfo->HuffmanInfoPS || !mp3DecInfo->IMDCTInfoPS || !mp3DecInfo->SubbandInfoPS)
 		return -1;

@@ -98,6 +98,10 @@
 
 /* FreeRTOS CLI */
 #define configCOMMAND_INT_MAX_OUTPUT_SIZE       1024
+#define configMAX_HISTORY_NUM      5
+#define configMAX_COMPLETION_NUM   8
+#define configERR_KEY_SEND_RING    1
+#define configSUPPOST_XTERM        0
 
 /* Define to trap errors during development. */
 #define configASSERT(x) if(( x) == 0) {taskDISABLE_INTERRUPTS(); for (;;);}

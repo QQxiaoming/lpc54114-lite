@@ -212,6 +212,7 @@ static void UnpackSFMPEG2(BitStreamInfo *bsi, SideInfoSub *sis, ScaleFactorInfoS
 	int slen[4], nr[4];
 	int sfCompress, preFlag, intensityScale;
 	
+	(void)iipTest;
 	sfCompress = sis->sfCompress;
 	preFlag = 0;
 	intensityScale = 0;

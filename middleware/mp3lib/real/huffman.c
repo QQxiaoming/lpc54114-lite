@@ -386,6 +386,7 @@ int DecodeHuffman(MP3DecInfo *mp3DecInfo, unsigned char *buf, int *bitOffset, in
 	ScaleFactorInfo *sfi;
 	HuffmanInfo *hi;
 
+	(void)sfi;
 	/* validate pointers */
 	if (!mp3DecInfo || !mp3DecInfo->FrameHeaderPS || !mp3DecInfo->SideInfoPS || !mp3DecInfo->ScaleFactorInfoPS || !mp3DecInfo->HuffmanInfoPS)
 		return -1;

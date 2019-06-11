@@ -251,6 +251,8 @@ int DequantChannel(int *sampleBuf, int *workBuf, int *nonZeroBound, FrameHeader 
 	int cbMax[3];
 	ARRAY3 *buf;    /* short block reorder */
 	
+	(void)cbStartL;
+	
 	/* set default start/end points for short/long blocks - will update with non-zero cb info */
 	if (sis->blockType == 2) {
 		cbStartL = 0;
