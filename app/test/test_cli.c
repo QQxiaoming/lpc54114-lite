@@ -29,7 +29,8 @@ static BaseType_t prvUnameCommand(char *pcWriteBuffer, size_t xWriteBufferLen, c
 static const CLI_Command_Definition_t xUname =
 {
 	"uname",
-	"uname:\t\t\t\tEchos uname in turn\r\n",
+	"uname:\t\t\tEchos uname in turn\r\n",
+    NULL,
 	prvUnameCommand,
 	0
 };
@@ -52,7 +53,9 @@ static BaseType_t prvEchoCommand(char *pcWriteBuffer, size_t xWriteBufferLen, co
 static const CLI_Command_Definition_t xEcho =
 {
 	"echo",
-	"echo <param>:\t\t\tEchos each in turn\r\n",
+	"echo:\t\t\tEchos each in turn\r\n",
+	"echo\r\n\
+	<param>:\t\techos string\r\n",
 	prvEchoCommand,
 	1
 };
@@ -83,7 +86,8 @@ static BaseType_t prvPsCommand(char *pcWriteBuffer, size_t xWriteBufferLen, cons
 static const CLI_Command_Definition_t xPs =
 {
 	"ps",
-	"ps:\t\t\t\tshowing the state of each FreeRTOS task\r\n",
+	"ps:\t\t\tshowing the state of each FreeRTOS task\r\n",
+    NULL,
 	prvPsCommand,
 	0
 };
@@ -101,7 +105,8 @@ static BaseType_t prvFreeCommand(char *pcWriteBuffer, size_t xWriteBufferLen, co
 static const CLI_Command_Definition_t xFree =
 {
 	"free",
-	"free:\t\t\t\tshowing the mem of each FreeRTOS heap\r\n",
+	"free:\t\t\tshowing the mem of each FreeRTOS heap\r\n",
+    NULL,
 	prvFreeCommand,
 	0
 };
@@ -119,7 +124,8 @@ static BaseType_t prvVersionCommand(char *pcWriteBuffer, size_t xWriteBufferLen,
 static const CLI_Command_Definition_t xVersion =
 {
 	"version",
-	"version:\t\t\tshowing version\r\n",
+	"version:\t\tshowing version\r\n",
+    NULL,
 	prvVersionCommand,
 	0
 };

@@ -68,7 +68,8 @@ of the list of registered commands. */
 static const CLI_Command_Definition_t xHelpCommand =
 {
 	"help",
-	"help:\t\t\t\tLists all the registered commands\r\n",
+	"help:\t\t\tLists all the registered commands\r\n",
+	NULL,
 	prvHelpCommand,
 	0
 };
@@ -169,6 +170,22 @@ size_t xCommandStringLength;
 			{
 				if( strncmp( pcCommandInput, pcRegisteredCommandString, xCommandStringLength ) == 0 )
 				{
+					if(NULL != strstr(pcCommandInput, " --help"))
+					{
+						if( NULL != pxCommand->pxCommandLineDefinition->pcHelpString)
+						{
+							strncpy( pcWriteBuffer, pxCommand->pxCommandLineDefinition->pcHelpString, xWriteBufferLen );
+							pcWriteBuffer[strlen(pcWriteBuffer)-2] = '\0';
+						}
+						else
+						{
+							strncpy( pcWriteBuffer, "Command not have help page.",xWriteBufferLen );
+						}
+						
+						pxCommand = NULL;
+						return pdFALSE;
+					}
+					
 					/* The command has been found.  Check it has the expected
 					number of parameters.  If cExpectedNumberOfParameters is -1,
 					then there could be a variable number of parameters and no
@@ -191,7 +208,7 @@ size_t xCommandStringLength;
 	{
 		/* The command was found, but the number of parameters with the command
 		was incorrect. */
-		strncpy( pcWriteBuffer, "Incorrect command parameter(s).  Enter \"help\" to view a list of available commands.", xWriteBufferLen );
+		strncpy( pcWriteBuffer, "Incorrect command parameter(s).  use \"--help\" to view a list of this commands.", xWriteBufferLen );
 		pxCommand = NULL;
 	}
 	else if( pxCommand != NULL )
@@ -327,7 +344,7 @@ BaseType_t xReturn;
 
 	/* Return the next command help string, before moving the pointer on to
 	the next command in the list. */
-	strncpy( pcWriteBuffer, pxCommand->pxCommandLineDefinition->pcHelpString, xWriteBufferLen );
+	strncpy( pcWriteBuffer, pxCommand->pxCommandLineDefinition->pcBriefString, xWriteBufferLen );
 	pxCommand = pxCommand->pxNext;
 
 	if( pxCommand == NULL )
