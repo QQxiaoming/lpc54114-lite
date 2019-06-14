@@ -172,6 +172,7 @@ static uint8_t ucCtlInputStringIndex = 1;
 BaseType_t xReturned;
 int retcmp;
 uint8_t ucFindCompletionNum = 0;
+uint8_t ucCompletionlen = 0xff;
 uint8_t ucTempIndex;
 
     ( void ) pvParameters;
@@ -295,7 +296,7 @@ uint8_t ucTempIndex;
                     vSerialPutString( xPort, (signed char *)"\033[K", ( unsigned short ) strlen( "\033[K" ) );	
 
                     ucFindCompletionNum = configMAX_COMPLETION_NUM;
-                    FreeRTOS_CLICompletionCommand(cInputString,ucInputIndex,cCompletionString,&ucFindCompletionNum);
+                    FreeRTOS_CLICompletionCommand(cInputString,ucInputIndex,cCompletionString,&ucFindCompletionNum,&ucCompletionlen);
                     if(ucFindCompletionNum == 0)
                     {
                         #if configERR_KEY_SEND_RING
@@ -326,7 +327,10 @@ uint8_t ucTempIndex;
                         vSerialPutString( xPort, ( signed char * ) pcEndOfOutputMessage, ( unsigned short ) strlen( pcEndOfOutputMessage ) );
                         if(ucInputIndex != 0)
                         {
-                            vSerialPutString( xPort, ( signed char * ) cInputString, ( unsigned short ) strlen( cInputString ) );
+                            cCompletionString[ucCompletionlen] = '\0';
+                            strcpy( cInputString, cCompletionString );
+                            vSerialPutString(xPort, (signed char *)cInputString, (unsigned short) strlen(cInputString));
+                            ucInputIndex = strlen(cInputString);
                         }
                     }
                     

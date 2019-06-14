@@ -73,7 +73,7 @@ BaseType_t FreeRTOS_CLIProcessCommand( const char * const pcCommandInput, char *
 /*
  * FreeRTOS_CLICompletionCommand 
  */
-BaseType_t FreeRTOS_CLICompletionCommand(const char *const pcCommandInput, size_t xInputLen, char *pcWriteBuffer, uint8_t *xFindNum);
+BaseType_t FreeRTOS_CLICompletionCommand( const char * const pcCommandInput, size_t xInputLen, char * pcWriteBuffer, uint8_t *xFindNum,uint8_t *xCompletionLen  );
 
 /*-----------------------------------------------------------*/
 

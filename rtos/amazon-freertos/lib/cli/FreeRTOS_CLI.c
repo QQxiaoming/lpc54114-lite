@@ -235,11 +235,13 @@ size_t xCommandStringLength;
 }
 /*-----------------------------------------------------------*/
 
-BaseType_t FreeRTOS_CLICompletionCommand( const char * const pcCommandInput, size_t xInputLen, char * pcWriteBuffer, uint8_t *xFindNum  )
+BaseType_t FreeRTOS_CLICompletionCommand( const char * const pcCommandInput, size_t xInputLen, char * pcWriteBuffer, uint8_t *xFindNum,uint8_t *xCompletionLen  )
 {
 const CLI_Definition_List_Item_t *pxCommand = &xRegisteredCommands;
 BaseType_t xReturn = pdTRUE;
 const char *pcRegisteredCommandString;
+char pcCompletionCommandString[50]={0};
+uint8_t ucCompletionLen = 0xff;
 uint8_t ucFindCommandNum = 0;
 
 	*pcWriteBuffer = '\0';
@@ -253,6 +255,24 @@ uint8_t ucFindCommandNum = 0;
 			strcat(pcWriteBuffer, "\r\n");
 
 			ucFindCommandNum++;
+			if(ucCompletionLen == 0xff)
+			{
+				strcpy(pcCompletionCommandString, pcRegisteredCommandString);
+				ucCompletionLen = strlen(pcCompletionCommandString);
+			}
+			else
+			{
+				for(int i = ucCompletionLen;i > 0; i--)
+				{
+					if(strncmp(pcCompletionCommandString,pcRegisteredCommandString,i) == 0)
+					{
+						break;
+					}
+					pcCompletionCommandString[i-1] = '\0';
+					ucCompletionLen = strlen(pcCompletionCommandString);
+				}
+			}
+			
 			if(ucFindCommandNum >= (*xFindNum) )
 			{
 				break;
@@ -261,6 +281,15 @@ uint8_t ucFindCommandNum = 0;
 	}
 	
 	pcWriteBuffer[strlen(pcWriteBuffer)-2] = '\0';
+	if(ucFindCommandNum < (*xFindNum) )
+	{
+		*xCompletionLen = ucCompletionLen;
+	}
+	else
+	{
+		*xCompletionLen = xInputLen;
+	}
+	
 	*xFindNum = ucFindCommandNum;
 
 	return xReturn;
