@@ -31,9 +31,9 @@
  */
 enum _iap_status
 {
-    kStatus_IAP_Success = kStatus_Success,                          /*!< Api is executed successfully */
+    kStatus_IAP_Success        = kStatus_Success,                   /*!< Api is executed successfully */
     kStatus_IAP_InvalidCommand = MAKE_STATUS(kStatusGroup_IAP, 1U), /*!< Invalid command */
-    kStatus_IAP_SrcAddrError = MAKE_STATUS(kStatusGroup_IAP, 2U),   /*!< Source address is not on word boundary */
+    kStatus_IAP_SrcAddrError   = MAKE_STATUS(kStatusGroup_IAP, 2U), /*!< Source address is not on word boundary */
     kStatus_IAP_DstAddrError =
         MAKE_STATUS(kStatusGroup_IAP, 3U), /*!< Destination address is not on a correct boundary */
     kStatus_IAP_SrcAddrNotMapped =
@@ -52,9 +52,9 @@ enum _iap_status
     kStatus_IAP_Busy = MAKE_STATUS(kStatusGroup_IAP, 11U), /*!< Flash programming hardware interface is busy */
     kStatus_IAP_ParamError =
         MAKE_STATUS(kStatusGroup_IAP, 12U), /*!< Insufficient number of parameters or invalid parameter */
-    kStatus_IAP_AddrError = MAKE_STATUS(kStatusGroup_IAP, 13U),     /*!< Address is not on word boundary */
+    kStatus_IAP_AddrError     = MAKE_STATUS(kStatusGroup_IAP, 13U), /*!< Address is not on word boundary */
     kStatus_IAP_AddrNotMapped = MAKE_STATUS(kStatusGroup_IAP, 14U), /*!< Address is not mapped in the memory map */
-    kStatus_IAP_NoPower = MAKE_STATUS(kStatusGroup_IAP, 24U),       /*!< Flash memory block is powered down */
+    kStatus_IAP_NoPower       = MAKE_STATUS(kStatusGroup_IAP, 24U), /*!< Flash memory block is powered down */
     kStatus_IAP_NoClock = MAKE_STATUS(kStatusGroup_IAP, 27U), /*!< Flash memory block or controller is not clocked */
     kStatus_IAP_ReinvokeISPConfig = MAKE_STATUS(kStatusGroup_IAP, 0x1CU), /*!< Reinvoke configuration error */
 };
@@ -64,21 +64,21 @@ enum _iap_status
  */
 enum _iap_commands
 {
-    kIapCmd_IAP_ReadFactorySettings = 40U,   /*!< Read the factory settings */
+    kIapCmd_IAP_ReadFactorySettings   = 40U, /*!< Read the factory settings */
     kIapCmd_IAP_PrepareSectorforWrite = 50U, /*!< Prepare Sector for write */
-    kIapCmd_IAP_CopyRamToFlash = 51U,        /*!< Copy RAM to flash */
-    kIapCmd_IAP_EraseSector = 52U,           /*!< Erase Sector */
-    kIapCmd_IAP_BlankCheckSector = 53U,      /*!< Blank check sector */
-    kIapCmd_IAP_ReadPartId = 54U,            /*!< Read part id */
-    kIapCmd_IAP_Read_BootromVersion = 55U,   /*!< Read bootrom version */
-    kIapCmd_IAP_Compare = 56U,               /*!< Compare */
-    kIapCmd_IAP_ReinvokeISP = 57U,           /*!< Reinvoke ISP */
-    kIapCmd_IAP_ReadUid = 58U,               /*!< Read Uid */
-    kIapCmd_IAP_ErasePage = 59U,             /*!< Erase Page */
-    kIapCmd_IAP_ReadSignature = 70U,         /*!< Read Signature */
+    kIapCmd_IAP_CopyRamToFlash        = 51U, /*!< Copy RAM to flash */
+    kIapCmd_IAP_EraseSector           = 52U, /*!< Erase Sector */
+    kIapCmd_IAP_BlankCheckSector      = 53U, /*!< Blank check sector */
+    kIapCmd_IAP_ReadPartId            = 54U, /*!< Read part id */
+    kIapCmd_IAP_Read_BootromVersion   = 55U, /*!< Read bootrom version */
+    kIapCmd_IAP_Compare               = 56U, /*!< Compare */
+    kIapCmd_IAP_ReinvokeISP           = 57U, /*!< Reinvoke ISP */
+    kIapCmd_IAP_ReadUid               = 58U, /*!< Read Uid */
+    kIapCmd_IAP_ErasePage             = 59U, /*!< Erase Page */
+    kIapCmd_IAP_ReadSignature         = 70U, /*!< Read Signature */
     kIapCmd_IAP_ExtendedReadSignature = 73U, /*!< Extended Read Signature */
-    kIapCmd_IAP_ReadEEPROMPage = 80U,        /*!< Read EEPROM page */
-    kIapCmd_IAP_WriteEEPROMPage = 81U        /*!< Write EEPROM page */
+    kIapCmd_IAP_ReadEEPROMPage        = 80U, /*!< Read EEPROM page */
+    kIapCmd_IAP_WriteEEPROMPage       = 81U  /*!< Write EEPROM page */
 };
 
 /*******************************************************************************

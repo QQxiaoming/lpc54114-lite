@@ -222,10 +222,10 @@ static ARM_USART_MODEM_STATUS USARTx_GetModemStatus(void)
 {
     ARM_USART_MODEM_STATUS modem_status;
 
-    modem_status.cts = 0U;
-    modem_status.dsr = 0U;
-    modem_status.ri = 0U;
-    modem_status.dcd = 0U;
+    modem_status.cts      = 0U;
+    modem_status.dsr      = 0U;
+    modem_status.ri       = 0U;
+    modem_status.dcd      = 0U;
     modem_status.reserved = 0U;
 
     return modem_status;
@@ -263,7 +263,7 @@ static int32_t USART_DmaInitialize(ARM_USART_SignalEvent_t cb_event, cmsis_usart
     if (!(usart->flags & USART_FLAG_INIT))
     {
         usart->cb_event = cb_event;
-        usart->flags = USART_FLAG_INIT;
+        usart->flags    = USART_FLAG_INIT;
     }
 
     return ARM_DRIVER_OK;
@@ -337,7 +337,7 @@ static int32_t USART_DmaSend(const void *data, uint32_t num, cmsis_usart_dma_dri
     status_t status;
     usart_transfer_t xfer;
 
-    xfer.data = (uint8_t *)data;
+    xfer.data     = (uint8_t *)data;
     xfer.dataSize = num;
 
     status = USART_TransferSendDMA(usart->resource->base, usart->handle, &xfer);
@@ -367,7 +367,7 @@ static int32_t USART_DmaReceive(void *data, uint32_t num, cmsis_usart_dma_driver
     status_t status;
     usart_transfer_t xfer;
 
-    xfer.data = data;
+    xfer.data     = data;
     xfer.dataSize = num;
 
     status = USART_TransferReceiveDMA(usart->resource->base, usart->handle, &xfer);
@@ -458,13 +458,13 @@ static ARM_USART_STATUS USART_DmaGetStatus(cmsis_usart_dma_driver_state_t *usart
     stat.rx_busy = ((kUSART_RxBusy == usart->handle->rxState) ? (1U) : (0U));
 
     stat.tx_underflow = 0U;
-    stat.rx_overflow = 0U;
+    stat.rx_overflow  = 0U;
 
     stat.rx_break = (!(!(ksdk_usart_status & USART_STAT_RXBRK_MASK)));
 
     stat.rx_framing_error = (!(!(ksdk_usart_status & USART_STAT_FRAMERRINT_MASK)));
-    stat.rx_parity_error = (!(!(ksdk_usart_status & USART_STAT_PARITYERRINT_MASK)));
-    stat.reserved = 0U;
+    stat.rx_parity_error  = (!(!(ksdk_usart_status & USART_STAT_PARITYERRINT_MASK)));
+    stat.reserved         = 0U;
 
     return stat;
 }
@@ -503,7 +503,7 @@ static int32_t USART_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event,
     if (!(usart->flags & USART_FLAG_INIT))
     {
         usart->cb_event = cb_event;
-        usart->flags = USART_FLAG_INIT;
+        usart->flags    = USART_FLAG_INIT;
     }
 
     return ARM_DRIVER_OK;
@@ -566,7 +566,7 @@ static int32_t USART_NonBlockingSend(const void *data, uint32_t num, cmsis_usart
     status_t status;
     usart_transfer_t xfer;
 
-    xfer.data = (uint8_t *)data;
+    xfer.data     = (uint8_t *)data;
     xfer.dataSize = num;
 
     status = USART_TransferSendNonBlocking(usart->resource->base, usart->handle, &xfer);
@@ -596,7 +596,7 @@ static int32_t USART_NonBlockingReceive(void *data, uint32_t num, cmsis_usart_no
     status_t status;
     usart_transfer_t xfer;
 
-    xfer.data = data;
+    xfer.data     = data;
     xfer.dataSize = num;
 
     status = USART_TransferReceiveNonBlocking(usart->resource->base, usart->handle, &xfer, NULL);
@@ -682,14 +682,14 @@ static int32_t USART_NonBlockingControl(uint32_t control, uint32_t arg, cmsis_us
         case ARM_USART_ABORT_SEND:
             usart->resource->base->FIFOINTENSET &= ~USART_FIFOINTENSET_TXLVL_MASK;
             usart->handle->txDataSize = 0;
-            usart->handle->txState = kUSART_TxIdle;
+            usart->handle->txState    = kUSART_TxIdle;
             return ARM_DRIVER_OK;
 
         /* Abort receive */
         case ARM_USART_ABORT_RECEIVE:
             usart->resource->base->FIFOINTENSET &= ~USART_FIFOINTENSET_RXLVL_MASK;
             usart->handle->rxDataSize = 0U;
-            usart->handle->rxState = kUSART_RxIdle;
+            usart->handle->rxState    = kUSART_RxIdle;
             return ARM_DRIVER_OK;
 
         default:
@@ -708,13 +708,13 @@ static ARM_USART_STATUS USART_NonBlockingGetStatus(cmsis_usart_non_blocking_driv
     stat.rx_busy = ((kUSART_RxBusy == usart->handle->rxState) ? (1U) : (0U));
 
     stat.tx_underflow = 0U;
-    stat.rx_overflow = 0U;
+    stat.rx_overflow  = 0U;
 
     stat.rx_break = (!(!(ksdk_usart_status & USART_STAT_RXBRK_MASK)));
 
     stat.rx_framing_error = (!(!(ksdk_usart_status & USART_STAT_FRAMERRINT_MASK)));
-    stat.rx_parity_error = (!(!(ksdk_usart_status & USART_STAT_PARITYERRINT_MASK)));
-    stat.reserved = 0U;
+    stat.rx_parity_error  = (!(!(ksdk_usart_status & USART_STAT_PARITYERRINT_MASK)));
+    stat.reserved         = 0U;
 
     return stat;
 }
@@ -738,7 +738,10 @@ cmsis_usart_resource_t usart0_Resource = {USART0, USART0_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart0_DmaResource = {
-    RTE_USART0_DMA_TX_DMA_BASE, RTE_USART0_DMA_TX_CH, RTE_USART0_DMA_RX_DMA_BASE, RTE_USART0_DMA_RX_CH,
+    RTE_USART0_DMA_TX_DMA_BASE,
+    RTE_USART0_DMA_TX_CH,
+    RTE_USART0_DMA_RX_DMA_BASE,
+    RTE_USART0_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART0_DmaHandle;
@@ -821,7 +824,8 @@ cmsis_usart_non_blocking_driver_state_t usart0_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart0_NonBlockingDriverState = {
 #endif
-    &usart0_Resource, &USART0_Handle,
+    &usart0_Resource,
+    &USART0_Handle,
 };
 
 static int32_t USART0_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -936,7 +940,10 @@ cmsis_usart_resource_t usart1_Resource = {USART1, USART1_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart1_DmaResource = {
-    RTE_USART1_DMA_TX_DMA_BASE, RTE_USART1_DMA_TX_CH, RTE_USART1_DMA_RX_DMA_BASE, RTE_USART1_DMA_RX_CH,
+    RTE_USART1_DMA_TX_DMA_BASE,
+    RTE_USART1_DMA_TX_CH,
+    RTE_USART1_DMA_RX_DMA_BASE,
+    RTE_USART1_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART1_DmaHandle;
@@ -1019,7 +1026,8 @@ cmsis_usart_non_blocking_driver_state_t usart1_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart1_NonBlockingDriverState = {
 #endif
-    &usart1_Resource, &USART1_Handle,
+    &usart1_Resource,
+    &USART1_Handle,
 };
 
 static int32_t USART1_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -1136,7 +1144,10 @@ cmsis_usart_resource_t usart2_Resource = {USART2, USART2_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart2_DmaResource = {
-    RTE_USART2_DMA_TX_DMA_BASE, RTE_USART2_DMA_TX_CH, RTE_USART2_DMA_RX_DMA_BASE, RTE_USART2_DMA_RX_CH,
+    RTE_USART2_DMA_TX_DMA_BASE,
+    RTE_USART2_DMA_TX_CH,
+    RTE_USART2_DMA_RX_DMA_BASE,
+    RTE_USART2_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART2_DmaHandle;
@@ -1219,7 +1230,8 @@ cmsis_usart_non_blocking_driver_state_t usart2_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart2_NonBlockingDriverState = {
 #endif
-    &usart2_Resource, &USART2_Handle,
+    &usart2_Resource,
+    &USART2_Handle,
 };
 
 static int32_t USART2_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -1335,7 +1347,10 @@ cmsis_usart_resource_t usart3_Resource = {USART3, USART3_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart3_DmaResource = {
-    RTE_USART3_DMA_TX_DMA_BASE, RTE_USART3_DMA_TX_CH, RTE_USART3_DMA_RX_DMA_BASE, RTE_USART3_DMA_RX_CH,
+    RTE_USART3_DMA_TX_DMA_BASE,
+    RTE_USART3_DMA_TX_CH,
+    RTE_USART3_DMA_RX_DMA_BASE,
+    RTE_USART3_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART3_DmaHandle;
@@ -1418,7 +1433,8 @@ cmsis_usart_non_blocking_driver_state_t usart3_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart3_NonBlockingDriverState = {
 #endif
-    &usart3_Resource, &USART3_Handle,
+    &usart3_Resource,
+    &USART3_Handle,
 };
 
 static int32_t USART3_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -1533,7 +1549,10 @@ cmsis_usart_resource_t usart4_Resource = {USART4, USART4_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart4_DmaResource = {
-    RTE_USART4_DMA_TX_DMA_BASE, RTE_USART4_DMA_TX_CH, RTE_USART4_DMA_RX_DMA_BASE, RTE_USART4_DMA_RX_CH,
+    RTE_USART4_DMA_TX_DMA_BASE,
+    RTE_USART4_DMA_TX_CH,
+    RTE_USART4_DMA_RX_DMA_BASE,
+    RTE_USART4_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART4_DmaHandle;
@@ -1616,7 +1635,8 @@ cmsis_usart_non_blocking_driver_state_t usart4_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart4_NonBlockingDriverState = {
 #endif
-    &usart4_Resource, &USART4_Handle,
+    &usart4_Resource,
+    &USART4_Handle,
 };
 
 static int32_t USART4_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -1731,7 +1751,10 @@ cmsis_usart_resource_t usart5_Resource = {USART5, USART5_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart5_DmaResource = {
-    RTE_USART5_DMA_TX_DMA_BASE, RTE_USART5_DMA_TX_CH, RTE_USART5_DMA_RX_DMA_BASE, RTE_USART5_DMA_RX_CH,
+    RTE_USART5_DMA_TX_DMA_BASE,
+    RTE_USART5_DMA_TX_CH,
+    RTE_USART5_DMA_RX_DMA_BASE,
+    RTE_USART5_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART5_DmaHandle;
@@ -1814,7 +1837,8 @@ cmsis_usart_non_blocking_driver_state_t usart5_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart5_NonBlockingDriverState = {
 #endif
-    &usart5_Resource, &USART5_Handle,
+    &usart5_Resource,
+    &USART5_Handle,
 };
 
 static int32_t USART5_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -1929,7 +1953,10 @@ cmsis_usart_resource_t usart6_Resource = {USART6, USART6_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart6_DmaResource = {
-    RTE_USART6_DMA_TX_DMA_BASE, RTE_USART6_DMA_TX_CH, RTE_USART6_DMA_RX_DMA_BASE, RTE_USART6_DMA_RX_CH,
+    RTE_USART6_DMA_TX_DMA_BASE,
+    RTE_USART6_DMA_TX_CH,
+    RTE_USART6_DMA_RX_DMA_BASE,
+    RTE_USART6_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART6_DmaHandle;
@@ -2012,7 +2039,8 @@ cmsis_usart_non_blocking_driver_state_t usart6_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart6_NonBlockingDriverState = {
 #endif
-    &usart6_Resource, &USART6_Handle,
+    &usart6_Resource,
+    &USART6_Handle,
 };
 
 static int32_t USART6_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -2127,7 +2155,10 @@ cmsis_usart_resource_t usart7_Resource = {USART7, USART7_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart7_DmaResource = {
-    RTE_USART7_DMA_TX_DMA_BASE, RTE_USART7_DMA_TX_CH, RTE_USART7_DMA_RX_DMA_BASE, RTE_USART7_DMA_RX_CH,
+    RTE_USART7_DMA_TX_DMA_BASE,
+    RTE_USART7_DMA_TX_CH,
+    RTE_USART7_DMA_RX_DMA_BASE,
+    RTE_USART7_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART7_DmaHandle;
@@ -2210,7 +2241,8 @@ cmsis_usart_non_blocking_driver_state_t usart7_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart7_NonBlockingDriverState = {
 #endif
-    &usart7_Resource, &USART7_Handle,
+    &usart7_Resource,
+    &USART7_Handle,
 };
 
 static int32_t USART7_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -2325,7 +2357,10 @@ cmsis_usart_resource_t usart8_Resource = {USART8, USART8_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart8_DmaResource = {
-    RTE_USART8_DMA_TX_DMA_BASE, RTE_USART8_DMA_TX_CH, RTE_USART8_DMA_RX_DMA_BASE, RTE_USART8_DMA_RX_CH,
+    RTE_USART8_DMA_TX_DMA_BASE,
+    RTE_USART8_DMA_TX_CH,
+    RTE_USART8_DMA_RX_DMA_BASE,
+    RTE_USART8_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART8_DmaHandle;
@@ -2408,7 +2443,8 @@ cmsis_usart_non_blocking_driver_state_t usart8_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart8_NonBlockingDriverState = {
 #endif
-    &usart8_Resource, &USART8_Handle,
+    &usart8_Resource,
+    &USART8_Handle,
 };
 
 static int32_t USART8_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)
@@ -2525,7 +2561,10 @@ cmsis_usart_resource_t usart9_Resource = {USART9, USART9_GetFreq};
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
 cmsis_usart_dma_resource_t usart9_DmaResource = {
-    RTE_USART9_DMA_TX_DMA_BASE, RTE_USART9_DMA_TX_CH, RTE_USART9_DMA_RX_DMA_BASE, RTE_USART9_DMA_RX_CH,
+    RTE_USART9_DMA_TX_DMA_BASE,
+    RTE_USART9_DMA_TX_CH,
+    RTE_USART9_DMA_RX_DMA_BASE,
+    RTE_USART9_DMA_RX_CH,
 };
 
 usart_dma_handle_t USART9_DmaHandle;
@@ -2608,7 +2647,8 @@ cmsis_usart_non_blocking_driver_state_t usart9_NonBlockingDriverState = {
 #else
 cmsis_usart_non_blocking_driver_state_t usart9_NonBlockingDriverState = {
 #endif
-    &usart9_Resource, &USART9_Handle,
+    &usart9_Resource,
+    &USART9_Handle,
 };
 
 static int32_t USART9_NonBlockingInitialize(ARM_USART_SignalEvent_t cb_event)

@@ -2,7 +2,7 @@
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
  * Copyright 2016-2017 NXP
  * All rights reserved.
- * 
+ *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
@@ -16,7 +16,7 @@
 mx25r_err_t mx25r_init(struct mx25r_instance *instance, transfer_cb_t callback, void *callback_prv)
 {
     instance->callback = callback;
-    instance->prv = callback_prv;
+    instance->prv      = callback_prv;
     return mx25r_err_ok;
 }
 

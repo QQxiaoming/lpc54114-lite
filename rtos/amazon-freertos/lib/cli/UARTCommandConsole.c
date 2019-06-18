@@ -58,26 +58,36 @@ buffer at all. */
 
 /* The maximum time to wait for the mutex that guards the UART to become
 available. */
-#define cmdMAX_MUTEX_WAIT		pdMS_TO_TICKS( 300 )
+#define cmdMAX_MUTEX_WAIT		             pdMS_TO_TICKS( 300 )
 
 #ifndef configCLI_BAUD_RATE
-    #define configCLI_BAUD_RATE	115200
+    #define configCLI_BAUD_RATE              115200
 #endif
 
 #ifndef configMAX_HISTORY_NUM
-    #define  configMAX_HISTORY_NUM     5
+    #define  configMAX_HISTORY_NUM           5
+#else
+    #if (configMAX_HISTORY_NUM < 1)
+        #undef configMAX_HISTORY_NUM
+        #define  configMAX_HISTORY_NUM       1
+    #endif
 #endif
 
 #ifndef configMAX_COMPLETION_NUM
-    #define configMAX_COMPLETION_NUM   5
+    #define configMAX_COMPLETION_NUM         5
+#else
+    #if (configMAX_COMPLETION_NUM < 1)
+        #undef configMAX_COMPLETION_NUM
+        #define configMAX_COMPLETION_NUM     1
+    #endif
 #endif
 
-#ifndef configERR_KEY_SEND_RING
-    #define configERR_KEY_SEND_RING    0
+#ifndef configUSE_ERR_KEY_SEND_RING
+    #define configUSE_ERR_KEY_SEND_RING      0
 #endif
 
-#ifndef configSUPPOST_XTERM
-    #define configSUPPOST_XTERM        0
+#ifndef configUSE_SUPPOST_XTERM
+    #define configUSE_SUPPOST_XTERM          0
 #endif
 
 /*-----------------------------------------------------------*/
@@ -172,7 +182,7 @@ static uint8_t ucCtlInputStringIndex = 1;
 BaseType_t xReturned;
 int retcmp;
 uint8_t ucFindCompletionNum = 0;
-uint8_t ucCompletionlen = 0xff;
+uint8_t ucCompletionlen;
 uint8_t ucTempIndex;
 
     ( void ) pvParameters;
@@ -284,7 +294,7 @@ uint8_t ucTempIndex;
                     }
                     else
                     {
-                        #if configERR_KEY_SEND_RING
+                        #if configUSE_ERR_KEY_SEND_RING
                         xSerialPutChar( xPort, '\a', portMAX_DELAY );
                         #endif
                     }
@@ -299,7 +309,7 @@ uint8_t ucTempIndex;
                     FreeRTOS_CLICompletionCommand(cInputString,ucInputIndex,cCompletionString,&ucFindCompletionNum,&ucCompletionlen);
                     if(ucFindCompletionNum == 0)
                     {
-                        #if configERR_KEY_SEND_RING
+                        #if configUSE_ERR_KEY_SEND_RING
                         xSerialPutChar( xPort, '\a', portMAX_DELAY );
                         #endif
                     }
@@ -408,7 +418,7 @@ uint8_t ucTempIndex;
                                 }
                                 else
                                 {
-                                    #if configERR_KEY_SEND_RING
+                                    #if configUSE_ERR_KEY_SEND_RING
                                     xSerialPutChar( xPort, '\a', portMAX_DELAY );
                                     #endif
                                 }
@@ -427,7 +437,7 @@ uint8_t ucTempIndex;
                                 }
                                 else
                                 {
-                                    #if configERR_KEY_SEND_RING
+                                    #if configUSE_ERR_KEY_SEND_RING
                                     xSerialPutChar( xPort, '\a', portMAX_DELAY );
                                     #endif
                                 }
@@ -455,7 +465,7 @@ uint8_t ucTempIndex;
                                 }
                                 else
                                 {
-                                    #if configERR_KEY_SEND_RING
+                                    #if configUSE_ERR_KEY_SEND_RING
                                     xSerialPutChar( xPort, '\a', portMAX_DELAY );
                                     #endif
                                 }
@@ -466,7 +476,7 @@ uint8_t ucTempIndex;
                             {
                                 while( xSerialGetChar( xPort, &cRxedChar, portMAX_DELAY ) != pdPASS );
                             }
-                            #if configSUPPOST_XTERM
+                            #if configUSE_SUPPOST_XTERM
                             case 'H':
                             #endif
                             {
@@ -483,7 +493,7 @@ uint8_t ucTempIndex;
                                 }
                                 else
                                 {
-                                    #if configERR_KEY_SEND_RING
+                                    #if configUSE_ERR_KEY_SEND_RING
                                     xSerialPutChar( xPort, '\a', portMAX_DELAY );
                                     #endif
                                 }
@@ -494,7 +504,7 @@ uint8_t ucTempIndex;
                             {
                                 while( xSerialGetChar( xPort, &cRxedChar, portMAX_DELAY ) != pdPASS );
                             }
-                            #if configSUPPOST_XTERM
+                            #if configUSE_SUPPOST_XTERM
                             case 'F':
                             #endif
                             {
@@ -511,7 +521,7 @@ uint8_t ucTempIndex;
                                 }
                                 else
                                 {
-                                    #if configERR_KEY_SEND_RING
+                                    #if configUSE_ERR_KEY_SEND_RING
                                     xSerialPutChar( xPort, '\a', portMAX_DELAY );
                                     #endif
                                 }
@@ -519,7 +529,7 @@ uint8_t ucTempIndex;
                             }
                             default:
                             {
-                                #if configERR_KEY_SEND_RING
+                                #if configUSE_ERR_KEY_SEND_RING
                                 xSerialPutChar( xPort, '\a', portMAX_DELAY );
                                 #endif
                                 break;

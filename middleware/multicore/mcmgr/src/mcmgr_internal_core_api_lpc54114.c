@@ -1,15 +1,14 @@
 /*
  * Copyright (c) 2014-2016, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include "mcmgr.h"
 #include "mcmgr_internal_core_api.h"
-#include <stdio.h>
-#include <string.h>
 #include "fsl_device_registers.h"
 #include "fsl_mailbox.h"
 
@@ -32,22 +31,16 @@ const mcmgr_system_info_t g_mcmgrSystem = {
 
 mcmgr_status_t mcmgr_early_init_internal(mcmgr_core_t coreNum)
 {
-    switch (coreNum)
+    if(coreNum < g_mcmgrSystem.coreCount)
     {
-        case kMCMGR_Core0:
-            MAILBOX_Init(MAILBOX);
-            break;
-        case kMCMGR_Core1:
-            MAILBOX_Init(MAILBOX);
-            break;
-        default:
-            return kStatus_MCMGR_Error;
+        MAILBOX_Init(MAILBOX);
+        
+        /* Trigger core up event here, core is starting! */
+        MCMGR_TriggerEvent(kMCMGR_RemoteCoreUpEvent, 0);
+
+        return kStatus_MCMGR_Success;
     }
-
-    /* Trigger core up event here, core is starting! */
-    MCMGR_TriggerEvent(kMCMGR_RemoteCoreUpEvent, 0);
-
-    return kStatus_MCMGR_Success;
+    return kStatus_MCMGR_Error;
 }
 
 mcmgr_status_t mcmgr_late_init_internal(mcmgr_core_t coreNum)
@@ -179,16 +172,20 @@ void MAILBOX_IRQHandler(void)
     uint16_t eventData;
 
     data = MAILBOX_GetValue(MAILBOX, cpu_id);
-    MAILBOX_ClearValueBits(MAILBOX, cpu_id, data);
-
-    eventType = data >> 16;
-    eventData = data & 0xFFFF;
-
-    if (eventType < kMCMGR_EventTableLength)
+    /* To be MISRA compliant, return value needs to be checked even it could not never be 0 */
+    if(0 != data)
     {
-        if (MCMGR_eventTable[eventType].callback != NULL)
+        MAILBOX_ClearValueBits(MAILBOX, cpu_id, data);
+
+        eventType = data >> 16;
+        eventData = data & 0xFFFF;
+
+        if ((eventType >= kMCMGR_RemoteCoreUpEvent) && (eventType < kMCMGR_EventTableLength))
         {
-            MCMGR_eventTable[eventType].callback(eventData, MCMGR_eventTable[eventType].callbackData);
+            if (MCMGR_eventTable[eventType].callback != NULL)
+            {
+                MCMGR_eventTable[eventType].callback(eventData, MCMGR_eventTable[eventType].callbackData);
+            }
         }
     }
 

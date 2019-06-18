@@ -38,7 +38,7 @@ static void USART_RTOS_Callback(USART_Type *base, usart_handle_t *state, status_
     BaseType_t xHigherPriorityTaskWoken, xResult;
 
     xHigherPriorityTaskWoken = pdFALSE;
-    xResult = pdFAIL;
+    xResult                  = pdFAIL;
 
     if (status == kStatus_USART_RxIdle)
     {
@@ -102,7 +102,7 @@ int USART_RTOS_Init(usart_rtos_handle_t *handle, usart_handle_t *t_handle, const
         return kStatus_InvalidArgument;
     }
 
-    handle->base = cfg->base;
+    handle->base    = cfg->base;
     handle->t_state = t_handle;
 
     handle->txSemaphore = xSemaphoreCreateMutex();
@@ -134,9 +134,9 @@ int USART_RTOS_Init(usart_rtos_handle_t *handle, usart_handle_t *t_handle, const
     USART_GetDefaultConfig(&defcfg);
 
     defcfg.baudRate_Bps = cfg->baudrate;
-    defcfg.parityMode = cfg->parity;
-    defcfg.enableTx = true;
-    defcfg.enableRx = true;
+    defcfg.parityMode   = cfg->parity;
+    defcfg.enableTx     = true;
+    defcfg.enableRx     = true;
 
     USART_Init(handle->base, &defcfg, cfg->srcclk);
     USART_TransferCreateHandle(handle->base, handle->t_state, USART_RTOS_Callback, handle);
@@ -174,7 +174,7 @@ int USART_RTOS_Deinit(usart_rtos_handle_t *handle)
     vSemaphoreDelete(handle->rxSemaphore);
 
     /* Invalidate the handle */
-    handle->base = NULL;
+    handle->base    = NULL;
     handle->t_state = NULL;
 
     return 0;
@@ -221,7 +221,7 @@ int USART_RTOS_Send(usart_rtos_handle_t *handle, const uint8_t *buffer, uint32_t
         return kStatus_Fail;
     }
 
-    handle->txTransfer.data = (uint8_t *)buffer;
+    handle->txTransfer.data     = (uint8_t *)buffer;
     handle->txTransfer.dataSize = (uint32_t)length;
 
     /* Non-blocking call */
@@ -262,8 +262,8 @@ int USART_RTOS_Send(usart_rtos_handle_t *handle, const uint8_t *buffer, uint32_t
 int USART_RTOS_Receive(usart_rtos_handle_t *handle, uint8_t *buffer, uint32_t length, size_t *received)
 {
     EventBits_t ev;
-    size_t n = 0;
-    int retval = kStatus_Fail;
+    size_t n              = 0;
+    int retval            = kStatus_Fail;
     size_t local_received = 0;
 
     if (NULL == handle->base)
@@ -291,7 +291,7 @@ int USART_RTOS_Receive(usart_rtos_handle_t *handle, uint8_t *buffer, uint32_t le
         return kStatus_Fail;
     }
 
-    handle->rxTransfer.data = buffer;
+    handle->rxTransfer.data     = buffer;
     handle->rxTransfer.dataSize = (uint32_t)length;
 
     /* Non-blocking call */
@@ -306,12 +306,12 @@ int USART_RTOS_Receive(usart_rtos_handle_t *handle, uint8_t *buffer, uint32_t le
         /* Prevent false indication of successful transfer in next call of USART_RTOS_Receive.
            RTOS_USART_COMPLETE flag could be set meanwhile overrun is handled */
         xEventGroupClearBits(handle->rxEvent, RTOS_USART_COMPLETE);
-        retval = kStatus_USART_RxRingBufferOverrun;
+        retval         = kStatus_USART_RxRingBufferOverrun;
         local_received = 0;
     }
     else if (ev & RTOS_USART_COMPLETE)
     {
-        retval = kStatus_Success;
+        retval         = kStatus_Success;
         local_received = length;
     }
 

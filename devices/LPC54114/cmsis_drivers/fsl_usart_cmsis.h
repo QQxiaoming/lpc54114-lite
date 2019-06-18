@@ -18,7 +18,6 @@
  * limitations under the License.
  */
 
-
 #ifndef _FSL_USART_CMSIS_H_
 #define _FSL_USART_CMSIS_H_
 

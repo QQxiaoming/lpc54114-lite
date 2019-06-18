@@ -18,6 +18,7 @@
 #include "fsl_dma.h"
 #include "fsl_i2s_dma.h"
 #include "fsl_wm8904.h"
+#include "fsl_codec_common.h"
 
 
 #if defined(__cplusplus)

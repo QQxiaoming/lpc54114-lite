@@ -82,7 +82,10 @@ include_directories(${ProjDirPath}/../../../components/lists)
 include_directories(${ProjDirPath}/../../../components/sdmmc/sdmmc_2.1.1/inc)
 include_directories(${ProjDirPath}/../../../components/mx25r_flash)
 include_directories(${ProjDirPath}/../../../components/codec)
+include_directories(${ProjDirPath}/../../../components/codec/port)
 include_directories(${ProjDirPath}/../../../components/codec/wm8904)
+include_directories(${ProjDirPath}/../../../components/codec/i2c)
+include_directories(${ProjDirPath}/../../../components/i2c)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source)
 include_directories(${ProjDirPath}/../../../middleware/fatfs/source/fsl_sdspi_disk)
 include_directories(${ProjDirPath}/../../../middleware/multicore/mcmgr/src)
@@ -253,8 +256,14 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../components/mx25r_flash/mx25r_flash.h"
     "${ProjDirPath}/../../../components/codec/fsl_codec_common.c"
     "${ProjDirPath}/../../../components/codec/fsl_codec_common.h"
+    "${ProjDirPath}/../../../components/codec/port/fsl_codec_adapter.h"
+    "${ProjDirPath}/../../../components/codec/port/wm8904/fsl_codec_adapter.c"
     "${ProjDirPath}/../../../components/codec/wm8904/fsl_wm8904.c"
     "${ProjDirPath}/../../../components/codec/wm8904/fsl_wm8904.h"
+    "${ProjDirPath}/../../../components/codec/i2c/fsl_codec_i2c.c"
+    "${ProjDirPath}/../../../components/codec/i2c/fsl_codec_i2c.h"
+    "${ProjDirPath}/../../../components/i2c/flexcomm_i2c_adapter.c"
+    "${ProjDirPath}/../../../components/i2c/i2c.h"
     "${ProjDirPath}/../../../CMSIS/Include/core_cm4.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_armcc.h"
     "${ProjDirPath}/../../../CMSIS/Include/cmsis_armclang.h"
@@ -291,8 +300,6 @@ add_executable(core0.elf
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/stream_buffer.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/tasks.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/timers.c"
-    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/fsl_tickless_generic.h"
-    "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/fsl_tickless_systick.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/port.c"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/FreeRTOS/portable/GCC/ARM_CM4F/portmacro.h"
     "${ProjDirPath}/../../../rtos/amazon-freertos/lib/cli/FreeRTOS_CLI.c"

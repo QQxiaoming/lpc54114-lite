@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014-2016, Freescale Semiconductor, Inc.
- * Copyright 2016 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  *
@@ -11,7 +11,7 @@
 #include "mcmgr.h"
 #include "mcmgr_internal_core_api.h"
 
-mcmcg_event_t MCMGR_eventTable[kMCMGR_EventTableLength] = {0};
+mcmgr_event_t MCMGR_eventTable[kMCMGR_EventTableLength] = {0};
 
 mcmgr_status_t MCMGR_RegisterEvent(mcmgr_event_type_t type, mcmgr_event_callback_t callback, void *callbackData)
 {
@@ -62,7 +62,6 @@ static void MCMGR_StartupDataEventHandler(uint16_t startupDataChunk, void *conte
 
     switch (coreContext->state)
     {
-        default:
         case kMCMGR_StartupGettingLowCoreState:
             coreContext->startupData = startupDataChunk; /* Receive the low part */
             coreContext->state = kMCMGR_StartupGettingHighCoreState;
@@ -74,6 +73,10 @@ static void MCMGR_StartupDataEventHandler(uint16_t startupDataChunk, void *conte
             coreContext->state = kMCMGR_RunningCoreState;
             MCMGR_TriggerEvent(kMCMGR_FeedStartupDataEvent, kMCMGR_RunningCoreState);
             break;
+
+        default:
+            /* All the cases have been listed above, the default clause should not be reached. */
+            break;
     }
 }
 
@@ -83,7 +86,6 @@ static void MCMGR_FeedStartupDataEventHandler(uint16_t startupDataChunk, void *c
 
     switch ((mcmgr_core_state_t)startupDataChunk)
     {
-        default:
         case kMCMGR_StartupGettingLowCoreState:
             MCMGR_TriggerEvent(kMCMGR_StartupDataEvent, (uint16_t)(coreContext->startupData & 0xFFFF));
             coreContext->state = (mcmgr_core_state_t)startupDataChunk;
@@ -96,6 +98,10 @@ static void MCMGR_FeedStartupDataEventHandler(uint16_t startupDataChunk, void *c
 
         case kMCMGR_RunningCoreState:
             coreContext->state = (mcmgr_core_state_t)startupDataChunk;
+            break;
+
+        default:
+            /* All the cases have been listed above, the default clause should not be reached. */
             break;
     }
 }

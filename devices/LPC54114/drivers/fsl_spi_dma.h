@@ -40,7 +40,7 @@ struct _spi_dma_handle
     volatile bool rxInProgress;  /*!< Receive transfer finished */
     dma_handle_t *txHandle;      /*!< DMA handler for SPI send */
     dma_handle_t *rxHandle;      /*!< DMA handler for SPI receive */
-    uint8_t bytesPerFrame;       /*!< Bytes in a frame for SPI tranfer */
+    uint8_t bytesPerFrame;       /*!< Bytes in a frame for SPI transfer */
     spi_dma_callback_t callback; /*!< Callback for SPI DMA transfer */
     void *userData;              /*!< User Data for SPI DMA callback */
     uint32_t state;              /*!< Internal state of SPI DMA transfer */

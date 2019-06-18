@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2018 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -13,6 +13,7 @@
 #define FSL_COMPONENT_ID "platform.drivers.wwdt"
 #endif
 
+#define FREQUENCY_3MHZ (3000000U)
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -71,7 +72,7 @@ static uint32_t WWDT_GetInstance(WWDT_Type *base)
  ******************************************************************************/
 
 /*!
- * brief Initializes WWDT configure sturcture.
+ * brief Initializes WWDT configure structure.
  *
  * This function initializes the WWDT configure structure to default value. The default
  * value are:
@@ -101,8 +102,10 @@ void WWDT_GetDefaultConfig(wwdt_config_t *config)
     config->enableWatchdogReset = false;
     /* Disable the watchdog protection for updating the timeout value */
     config->enableWatchdogProtect = false;
+#if !(defined(FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK) && FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK)
     /* Do not lock the watchdog oscillator */
     config->enableLockOscillator = false;
+#endif
     /* Windowing is not in effect */
     config->windowValue = 0xFFFFFFU;
     /* Set the timeout value to the max */
@@ -136,9 +139,7 @@ void WWDT_Init(WWDT_Type *base, const wwdt_config_t *config)
     assert(config->clockFreq_Hz);
 
     uint32_t value = 0U;
-    uint32_t timeDelay = 0U;
-
-    timeDelay = (SystemCoreClock / config->clockFreq_Hz + 1) * 3;
+    uint32_t DelayUs = 0U;
 
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
     /* Enable the WWDT clock */
@@ -152,22 +153,25 @@ void WWDT_Init(WWDT_Type *base, const wwdt_config_t *config)
 #endif
 #endif /* FSL_SDK_DISABLE_DRIVER_RESET_CONTROL */
 
+#if !(defined(FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK) && FSL_FEATURE_WWDT_HAS_NO_OSCILLATOR_LOCK)
     value = WWDT_MOD_WDEN(config->enableWwdt) | WWDT_MOD_WDRESET(config->enableWatchdogReset) |
             WWDT_MOD_LOCK(config->enableLockOscillator);
-    /* Set configruation */
+#else
+    value = WWDT_MOD_WDEN(config->enableWwdt) | WWDT_MOD_WDRESET(config->enableWatchdogReset);
+#endif
+    /* Set configuration */
     base->TC = WWDT_TC_COUNT(config->timeoutValue);
     base->MOD |= value;
-    base->WINDOW = WWDT_WINDOW_WINDOW(config->windowValue);
+    base->WINDOW  = WWDT_WINDOW_WINDOW(config->windowValue);
     base->WARNINT = WWDT_WARNINT_WARNINT(config->warningValue);
     WWDT_Refresh(base);
     /*  This WDPROTECT bit can be set once by software and is only cleared by a reset */
     if ((base->MOD & WWDT_MOD_WDPROTECT_MASK) == 0U)
     {
         /* Set the WDPROTECT bit after the Feed Sequence (0xAA, 0x55) with 3 WDCLK delay */
-        while (timeDelay--)
-        {
-            __NOP();
-        }
+        DelayUs = FREQUENCY_3MHZ / config->clockFreq_Hz + 1U;
+        SDK_DelayAtLeastUs(DelayUs);
+
         base->MOD |= WWDT_MOD_WDPROTECT(config->enableWatchdogProtect);
     }
 }
@@ -203,8 +207,8 @@ void WWDT_Refresh(WWDT_Type *base)
 
     /* Disable the global interrupt to protect refresh sequence */
     primaskValue = DisableGlobalIRQ();
-    base->FEED = WWDT_FIRST_WORD_OF_REFRESH;
-    base->FEED = WWDT_SECOND_WORD_OF_REFRESH;
+    base->FEED   = WWDT_FIRST_WORD_OF_REFRESH;
+    base->FEED   = WWDT_SECOND_WORD_OF_REFRESH;
     EnableGlobalIRQ(primaskValue);
 }
 
@@ -230,6 +234,10 @@ void WWDT_ClearStatusFlags(WWDT_Type *base, uint32_t mask)
     if (mask & kWWDT_TimeoutFlag)
     {
         reg &= ~WWDT_MOD_WDTOF_MASK;
+#if defined(FSL_FEATURE_WWDT_WDTRESET_FROM_PMC) && (FSL_FEATURE_WWDT_WDTRESET_FROM_PMC)
+        /* PMC RESETCAUSE: set bit to clear it */
+        PMC->RESETCAUSE |= PMC_RESETCAUSE_WDTRESET_MASK;
+#endif /*FSL_FEATURE_WWDT_WDTRESET_FROM_PMC*/
     }
 
     /* Clear warning interrupt flag by writing a one */

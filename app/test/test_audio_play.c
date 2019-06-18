@@ -159,7 +159,7 @@ static void audio_callback(I2S_Type *base, i2s_dma_handle_t *handle, status_t co
         /* 数据取得成功,若之前Mute,则关闭Mute */
         if(is_mute)
         {
-            WM8904_SetMute(&codecHandle,false,false);
+            CODEC_SetMute(&codecHandle,kCODEC_PlayChannelHeadphoneLeft | kCODEC_PlayChannelHeadphoneRight,false);
             is_mute = false;
         }
 
@@ -180,7 +180,7 @@ static void audio_callback(I2S_Type *base, i2s_dma_handle_t *handle, status_t co
         /* TODO: 因为dma是乒乓式的,所以其实这时候还有正确的数据,考虑Mute时机 */
         if(!is_mute)
         {
-            WM8904_SetMute(&codecHandle,true,true);
+            CODEC_SetMute(&codecHandle,kCODEC_PlayChannelHeadphoneLeft | kCODEC_PlayChannelHeadphoneRight,true);
             is_mute = true;
         }
         printfk("peek err\r\n");

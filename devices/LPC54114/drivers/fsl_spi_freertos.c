@@ -115,7 +115,10 @@ status_t SPI_RTOS_Transfer(spi_rtos_handle_t *handle, spi_transfer_t *transfer)
     }
 
     /* Wait for transfer to finish */
-    xSemaphoreTake(handle->event, portMAX_DELAY);
+    if (xSemaphoreTake(handle->event, portMAX_DELAY) != pdTRUE)
+    {
+        return kStatus_SPI_Error;
+    }
 
     /* Retrieve status before releasing mutex */
     status = handle->async_status;

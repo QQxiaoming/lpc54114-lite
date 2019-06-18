@@ -214,22 +214,22 @@ void SPI_MasterCommonControl(uint32_t control,
     {
         case ARM_SPI_CPOL0_CPHA0:
             masterConfig->polarity = kSPI_ClockPolarityActiveHigh;
-            masterConfig->phase = kSPI_ClockPhaseFirstEdge;
+            masterConfig->phase    = kSPI_ClockPhaseFirstEdge;
             break;
 
         case ARM_SPI_CPOL0_CPHA1:
             masterConfig->polarity = kSPI_ClockPolarityActiveHigh;
-            masterConfig->phase = kSPI_ClockPhaseSecondEdge;
+            masterConfig->phase    = kSPI_ClockPhaseSecondEdge;
             break;
 
         case ARM_SPI_CPOL1_CPHA0:
             masterConfig->polarity = kSPI_ClockPolarityActiveLow;
-            masterConfig->phase = kSPI_ClockPhaseFirstEdge;
+            masterConfig->phase    = kSPI_ClockPhaseFirstEdge;
             break;
 
         case ARM_SPI_CPOL1_CPHA1:
             masterConfig->polarity = kSPI_ClockPolarityActiveLow;
-            masterConfig->phase = kSPI_ClockPhaseSecondEdge;
+            masterConfig->phase    = kSPI_ClockPhaseSecondEdge;
             break;
 
         default:
@@ -334,22 +334,22 @@ void SPI_SlaveCommonControl(uint32_t control,
     {
         case ARM_SPI_CPOL0_CPHA0:
             slaveConfig->polarity = kSPI_ClockPolarityActiveHigh;
-            slaveConfig->phase = kSPI_ClockPhaseFirstEdge;
+            slaveConfig->phase    = kSPI_ClockPhaseFirstEdge;
             break;
 
         case ARM_SPI_CPOL0_CPHA1:
             slaveConfig->polarity = kSPI_ClockPolarityActiveHigh;
-            slaveConfig->phase = kSPI_ClockPhaseSecondEdge;
+            slaveConfig->phase    = kSPI_ClockPhaseSecondEdge;
             break;
 
         case ARM_SPI_CPOL1_CPHA0:
             slaveConfig->polarity = kSPI_ClockPolarityActiveLow;
-            slaveConfig->phase = kSPI_ClockPhaseFirstEdge;
+            slaveConfig->phase    = kSPI_ClockPhaseFirstEdge;
             break;
 
         case ARM_SPI_CPOL1_CPHA1:
             slaveConfig->polarity = kSPI_ClockPolarityActiveLow;
-            slaveConfig->phase = kSPI_ClockPhaseSecondEdge;
+            slaveConfig->phase    = kSPI_ClockPhaseSecondEdge;
             break;
 
         default:
@@ -439,7 +439,7 @@ static int32_t SPI_DMAInitialize(ARM_SPI_SignalEvent_t cb_event, cmsis_spi_dma_d
     if (!(spi->flags & SPI_FLAG_INIT))
     {
         spi->cb_event = cb_event;
-        spi->flags = SPI_FLAG_INIT;
+        spi->flags    = SPI_FLAG_INIT;
     }
     return ARM_DRIVER_OK;
 }
@@ -502,8 +502,8 @@ static int32_t SPI_DMASend(const void *data, uint32_t num, cmsis_spi_dma_driver_
     status_t status;
     spi_transfer_t xfer = {0};
 
-    xfer.rxData = NULL;
-    xfer.txData = (uint8_t *)data;
+    xfer.rxData   = NULL;
+    xfer.txData   = (uint8_t *)data;
     xfer.dataSize = num;
     if (spi->flags & SPI_FLAG_MASTER)
     {
@@ -544,8 +544,8 @@ static int32_t SPI_DMAReceive(void *data, uint32_t num, cmsis_spi_dma_driver_sta
     status_t status;
     spi_transfer_t xfer = {0};
 
-    xfer.txData = NULL;
-    xfer.rxData = (uint8_t *)data;
+    xfer.txData   = NULL;
+    xfer.rxData   = (uint8_t *)data;
     xfer.dataSize = num;
     if (spi->flags & SPI_FLAG_MASTER)
     {
@@ -586,8 +586,8 @@ static int32_t SPI_DMATransfer(const void *data_out, void *data_in, uint32_t num
     status_t status;
     spi_transfer_t xfer = {0};
 
-    xfer.txData = (uint8_t *)data_out;
-    xfer.rxData = (uint8_t *)data_in;
+    xfer.txData   = (uint8_t *)data_out;
+    xfer.rxData   = (uint8_t *)data_in;
     xfer.dataSize = num;
     if (spi->flags & SPI_FLAG_MASTER)
     {
@@ -815,7 +815,7 @@ ARM_SPI_STATUS SPI_DMAGetStatus(cmsis_spi_dma_driver_state_t *spi)
         stat.data_lost = (kStatus_SPI_Error == spi->handle->slaveHandle.state) ? (1U) : (0U);
     }
     stat.mode_fault = 0U;
-    stat.reserved = 0U;
+    stat.reserved   = 0U;
 
     return stat;
 }
@@ -875,7 +875,7 @@ static int32_t SPI_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event, cmsis_spi
     if (!(spi->flags & SPI_FLAG_INIT))
     {
         spi->cb_event = cb_event;
-        spi->flags = SPI_FLAG_INIT;
+        spi->flags    = SPI_FLAG_INIT;
     }
 
     return ARM_DRIVER_OK;
@@ -934,8 +934,8 @@ static int32_t SPI_InterruptSend(const void *data, uint32_t num, cmsis_spi_inter
     status_t status;
     spi_transfer_t xfer = {0};
 
-    xfer.rxData = NULL;
-    xfer.txData = (uint8_t *)data;
+    xfer.rxData   = NULL;
+    xfer.txData   = (uint8_t *)data;
     xfer.dataSize = num;
     if (spi->flags & SPI_FLAG_MASTER)
     {
@@ -976,8 +976,8 @@ static int32_t SPI_InterruptReceive(void *data, uint32_t num, cmsis_spi_interrup
     status_t status;
     spi_transfer_t xfer = {0};
 
-    xfer.txData = NULL;
-    xfer.rxData = (uint8_t *)data;
+    xfer.txData   = NULL;
+    xfer.rxData   = (uint8_t *)data;
     xfer.dataSize = num;
     if (spi->flags & SPI_FLAG_MASTER)
     {
@@ -1021,8 +1021,8 @@ static int32_t SPI_InterruptTransfer(const void *data_out,
     status_t status;
     spi_transfer_t xfer = {0};
 
-    xfer.txData = (uint8_t *)data_out;
-    xfer.rxData = (uint8_t *)data_in;
+    xfer.txData   = (uint8_t *)data_out;
+    xfer.rxData   = (uint8_t *)data_in;
     xfer.dataSize = num;
     if (spi->flags & SPI_FLAG_MASTER)
     {
@@ -1229,7 +1229,7 @@ ARM_SPI_STATUS SPI_InterruptGetStatus(cmsis_spi_interrupt_driver_state_t *spi)
         stat.data_lost = (kStatus_SPI_Error == spi->handle->slaveHandle.state) ? (1U) : (0U);
     }
     stat.mode_fault = 0U;
-    stat.reserved = 0U;
+    stat.reserved   = 0U;
 
     return stat;
 }
@@ -1326,7 +1326,8 @@ static cmsis_spi_interrupt_driver_state_t SPI0_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI0_InterruptDriverState = {
 #endif
-    &SPI0_Resource, &SPI0_Handle,
+    &SPI0_Resource,
+    &SPI0_Handle,
 };
 
 static int32_t SPI0_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -1384,9 +1385,15 @@ ARM_DRIVER_SPI Driver_SPI0 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI0_DMAReceive,    SPI0_DMATransfer,     SPI0_DMAGetCount,     SPI0_DMAControl,
                               SPI0_DMAGetStatus
 #else
-                              SPI0_InterruptInitialize, SPI0_InterruptUninitialize, SPI0_InterruptPowerControl,
-                              SPI0_InterruptSend, SPI0_InterruptReceive, SPI0_InterruptTransfer, SPI0_InterruptGetCount,
-                              SPI0_InterruptControl, SPI0_InterruptGetStatus
+                              SPI0_InterruptInitialize,
+                              SPI0_InterruptUninitialize,
+                              SPI0_InterruptPowerControl,
+                              SPI0_InterruptSend,
+                              SPI0_InterruptReceive,
+                              SPI0_InterruptTransfer,
+                              SPI0_InterruptGetCount,
+                              SPI0_InterruptControl,
+                              SPI0_InterruptGetStatus
 #endif
 };
 
@@ -1479,7 +1486,8 @@ static cmsis_spi_interrupt_driver_state_t SPI1_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI1_InterruptDriverState = {
 #endif
-    &SPI1_Resource, &SPI1_Handle,
+    &SPI1_Resource,
+    &SPI1_Handle,
 };
 
 static int32_t SPI1_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -1537,9 +1545,15 @@ ARM_DRIVER_SPI Driver_SPI1 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI1_DMAReceive,    SPI1_DMATransfer,     SPI1_DMAGetCount,     SPI1_DMAControl,
                               SPI1_DMAGetStatus
 #else
-                              SPI1_InterruptInitialize, SPI1_InterruptUninitialize, SPI1_InterruptPowerControl,
-                              SPI1_InterruptSend, SPI1_InterruptReceive, SPI1_InterruptTransfer, SPI1_InterruptGetCount,
-                              SPI1_InterruptControl, SPI1_InterruptGetStatus
+                              SPI1_InterruptInitialize,
+                              SPI1_InterruptUninitialize,
+                              SPI1_InterruptPowerControl,
+                              SPI1_InterruptSend,
+                              SPI1_InterruptReceive,
+                              SPI1_InterruptTransfer,
+                              SPI1_InterruptGetCount,
+                              SPI1_InterruptControl,
+                              SPI1_InterruptGetStatus
 #endif
 };
 
@@ -1634,7 +1648,8 @@ static cmsis_spi_interrupt_driver_state_t SPI2_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI2_InterruptDriverState = {
 #endif
-    &SPI2_Resource, &SPI2_Handle,
+    &SPI2_Resource,
+    &SPI2_Handle,
 };
 
 static int32_t SPI2_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -1692,9 +1707,15 @@ ARM_DRIVER_SPI Driver_SPI2 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI2_DMAReceive,    SPI2_DMATransfer,     SPI2_DMAGetCount,     SPI2_DMAControl,
                               SPI2_DMAGetStatus
 #else
-                              SPI2_InterruptInitialize, SPI2_InterruptUninitialize, SPI2_InterruptPowerControl,
-                              SPI2_InterruptSend, SPI2_InterruptReceive, SPI2_InterruptTransfer, SPI2_InterruptGetCount,
-                              SPI2_InterruptControl, SPI2_InterruptGetStatus
+                              SPI2_InterruptInitialize,
+                              SPI2_InterruptUninitialize,
+                              SPI2_InterruptPowerControl,
+                              SPI2_InterruptSend,
+                              SPI2_InterruptReceive,
+                              SPI2_InterruptTransfer,
+                              SPI2_InterruptGetCount,
+                              SPI2_InterruptControl,
+                              SPI2_InterruptGetStatus
 #endif
 };
 
@@ -1789,7 +1810,8 @@ static cmsis_spi_interrupt_driver_state_t SPI3_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI3_InterruptDriverState = {
 #endif
-    &SPI3_Resource, &SPI3_Handle,
+    &SPI3_Resource,
+    &SPI3_Handle,
 };
 
 static int32_t SPI3_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -1847,9 +1869,15 @@ ARM_DRIVER_SPI Driver_SPI3 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI3_DMAReceive,    SPI3_DMATransfer,     SPI3_DMAGetCount,     SPI3_DMAControl,
                               SPI3_DMAGetStatus
 #else
-                              SPI3_InterruptInitialize, SPI3_InterruptUninitialize, SPI3_InterruptPowerControl,
-                              SPI3_InterruptSend, SPI3_InterruptReceive, SPI3_InterruptTransfer, SPI3_InterruptGetCount,
-                              SPI3_InterruptControl, SPI3_InterruptGetStatus
+                              SPI3_InterruptInitialize,
+                              SPI3_InterruptUninitialize,
+                              SPI3_InterruptPowerControl,
+                              SPI3_InterruptSend,
+                              SPI3_InterruptReceive,
+                              SPI3_InterruptTransfer,
+                              SPI3_InterruptGetCount,
+                              SPI3_InterruptControl,
+                              SPI3_InterruptGetStatus
 #endif
 };
 
@@ -1944,7 +1972,8 @@ static cmsis_spi_interrupt_driver_state_t SPI4_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI4_InterruptDriverState = {
 #endif
-    &SPI4_Resource, &SPI4_Handle,
+    &SPI4_Resource,
+    &SPI4_Handle,
 };
 
 static int32_t SPI4_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -2002,9 +2031,15 @@ ARM_DRIVER_SPI Driver_SPI4 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI4_DMAReceive,    SPI4_DMATransfer,     SPI4_DMAGetCount,     SPI4_DMAControl,
                               SPI4_DMAGetStatus
 #else
-                              SPI4_InterruptInitialize, SPI4_InterruptUninitialize, SPI4_InterruptPowerControl,
-                              SPI4_InterruptSend, SPI4_InterruptReceive, SPI4_InterruptTransfer, SPI4_InterruptGetCount,
-                              SPI4_InterruptControl, SPI4_InterruptGetStatus
+                              SPI4_InterruptInitialize,
+                              SPI4_InterruptUninitialize,
+                              SPI4_InterruptPowerControl,
+                              SPI4_InterruptSend,
+                              SPI4_InterruptReceive,
+                              SPI4_InterruptTransfer,
+                              SPI4_InterruptGetCount,
+                              SPI4_InterruptControl,
+                              SPI4_InterruptGetStatus
 #endif
 };
 
@@ -2099,7 +2134,8 @@ static cmsis_spi_interrupt_driver_state_t SPI5_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI5_InterruptDriverState = {
 #endif
-    &SPI5_Resource, &SPI5_Handle,
+    &SPI5_Resource,
+    &SPI5_Handle,
 };
 
 static int32_t SPI5_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -2157,9 +2193,15 @@ ARM_DRIVER_SPI Driver_SPI5 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI5_DMAReceive,    SPI5_DMATransfer,     SPI5_DMAGetCount,     SPI5_DMAControl,
                               SPI5_DMAGetStatus
 #else
-                              SPI5_InterruptInitialize, SPI5_InterruptUninitialize, SPI5_InterruptPowerControl,
-                              SPI5_InterruptSend, SPI5_InterruptReceive, SPI5_InterruptTransfer, SPI5_InterruptGetCount,
-                              SPI5_InterruptControl, SPI5_InterruptGetStatus
+                              SPI5_InterruptInitialize,
+                              SPI5_InterruptUninitialize,
+                              SPI5_InterruptPowerControl,
+                              SPI5_InterruptSend,
+                              SPI5_InterruptReceive,
+                              SPI5_InterruptTransfer,
+                              SPI5_InterruptGetCount,
+                              SPI5_InterruptControl,
+                              SPI5_InterruptGetStatus
 #endif
 };
 
@@ -2254,7 +2296,8 @@ static cmsis_spi_interrupt_driver_state_t SPI6_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI6_InterruptDriverState = {
 #endif
-    &SPI6_Resource, &SPI6_Handle,
+    &SPI6_Resource,
+    &SPI6_Handle,
 };
 
 static int32_t SPI6_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -2312,9 +2355,15 @@ ARM_DRIVER_SPI Driver_SPI6 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI6_DMAReceive,    SPI6_DMATransfer,     SPI6_DMAGetCount,     SPI6_DMAControl,
                               SPI6_DMAGetStatus
 #else
-                              SPI6_InterruptInitialize, SPI6_InterruptUninitialize, SPI6_InterruptPowerControl,
-                              SPI6_InterruptSend, SPI6_InterruptReceive, SPI6_InterruptTransfer, SPI6_InterruptGetCount,
-                              SPI6_InterruptControl, SPI6_InterruptGetStatus
+                              SPI6_InterruptInitialize,
+                              SPI6_InterruptUninitialize,
+                              SPI6_InterruptPowerControl,
+                              SPI6_InterruptSend,
+                              SPI6_InterruptReceive,
+                              SPI6_InterruptTransfer,
+                              SPI6_InterruptGetCount,
+                              SPI6_InterruptControl,
+                              SPI6_InterruptGetStatus
 #endif
 };
 
@@ -2409,7 +2458,8 @@ static cmsis_spi_interrupt_driver_state_t SPI7_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI7_InterruptDriverState = {
 #endif
-    &SPI7_Resource, &SPI7_Handle,
+    &SPI7_Resource,
+    &SPI7_Handle,
 };
 
 static int32_t SPI7_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -2467,9 +2517,15 @@ ARM_DRIVER_SPI Driver_SPI7 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI7_DMAReceive,    SPI7_DMATransfer,     SPI7_DMAGetCount,     SPI7_DMAControl,
                               SPI7_DMAGetStatus
 #else
-                              SPI7_InterruptInitialize, SPI7_InterruptUninitialize, SPI7_InterruptPowerControl,
-                              SPI7_InterruptSend, SPI7_InterruptReceive, SPI7_InterruptTransfer, SPI7_InterruptGetCount,
-                              SPI7_InterruptControl, SPI7_InterruptGetStatus
+                              SPI7_InterruptInitialize,
+                              SPI7_InterruptUninitialize,
+                              SPI7_InterruptPowerControl,
+                              SPI7_InterruptSend,
+                              SPI7_InterruptReceive,
+                              SPI7_InterruptTransfer,
+                              SPI7_InterruptGetCount,
+                              SPI7_InterruptControl,
+                              SPI7_InterruptGetStatus
 #endif
 };
 
@@ -2564,7 +2620,8 @@ static cmsis_spi_interrupt_driver_state_t SPI8_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI8_InterruptDriverState = {
 #endif
-    &SPI8_Resource, &SPI8_Handle,
+    &SPI8_Resource,
+    &SPI8_Handle,
 };
 
 static int32_t SPI8_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -2622,9 +2679,15 @@ ARM_DRIVER_SPI Driver_SPI8 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI8_DMAReceive,    SPI8_DMATransfer,     SPI8_DMAGetCount,     SPI8_DMAControl,
                               SPI8_DMAGetStatus
 #else
-                              SPI8_InterruptInitialize, SPI8_InterruptUninitialize, SPI8_InterruptPowerControl,
-                              SPI8_InterruptSend, SPI8_InterruptReceive, SPI8_InterruptTransfer, SPI8_InterruptGetCount,
-                              SPI8_InterruptControl, SPI8_InterruptGetStatus
+                              SPI8_InterruptInitialize,
+                              SPI8_InterruptUninitialize,
+                              SPI8_InterruptPowerControl,
+                              SPI8_InterruptSend,
+                              SPI8_InterruptReceive,
+                              SPI8_InterruptTransfer,
+                              SPI8_InterruptGetCount,
+                              SPI8_InterruptControl,
+                              SPI8_InterruptGetStatus
 #endif
 };
 
@@ -2719,7 +2782,8 @@ static cmsis_spi_interrupt_driver_state_t SPI9_InterruptDriverState = {
 #else
 static cmsis_spi_interrupt_driver_state_t SPI9_InterruptDriverState = {
 #endif
-    &SPI9_Resource, &SPI9_Handle,
+    &SPI9_Resource,
+    &SPI9_Handle,
 };
 
 static int32_t SPI9_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
@@ -2777,9 +2841,15 @@ ARM_DRIVER_SPI Driver_SPI9 = {SPIx_GetVersion,    SPIx_GetCapabilities,
                               SPI9_DMAReceive,    SPI9_DMATransfer,     SPI9_DMAGetCount,     SPI9_DMAControl,
                               SPI9_DMAGetStatus
 #else
-                              SPI9_InterruptInitialize, SPI9_InterruptUninitialize, SPI9_InterruptPowerControl,
-                              SPI9_InterruptSend, SPI9_InterruptReceive, SPI9_InterruptTransfer, SPI9_InterruptGetCount,
-                              SPI9_InterruptControl, SPI9_InterruptGetStatus
+                              SPI9_InterruptInitialize,
+                              SPI9_InterruptUninitialize,
+                              SPI9_InterruptPowerControl,
+                              SPI9_InterruptSend,
+                              SPI9_InterruptReceive,
+                              SPI9_InterruptTransfer,
+                              SPI9_InterruptGetCount,
+                              SPI9_InterruptControl,
+                              SPI9_InterruptGetStatus
 #endif
 };
 

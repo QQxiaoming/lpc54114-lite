@@ -148,13 +148,13 @@ int32_t I2C_Master_DmaTransmit(
         return ARM_DRIVER_ERROR_BUSY;
     }
 
-    masterXfer.slaveAddress = addr;              /*7-bit slave address.*/
-    masterXfer.direction = kI2C_Write;           /*Transfer direction.*/
-    masterXfer.subaddress = 0;                   /*Sub address*/
-    masterXfer.subaddressSize = 0;               /*Size of command buffer.*/
-    masterXfer.data = (uint8_t *)data;           /*Transfer buffer.*/
-    masterXfer.dataSize = num;                   /*Transfer size.*/
-    masterXfer.flags = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
+    masterXfer.slaveAddress   = addr;                     /*7-bit slave address.*/
+    masterXfer.direction      = kI2C_Write;               /*Transfer direction.*/
+    masterXfer.subaddress     = 0;                        /*Sub address*/
+    masterXfer.subaddressSize = 0;                        /*Size of command buffer.*/
+    masterXfer.data           = (uint8_t *)data;          /*Transfer buffer.*/
+    masterXfer.dataSize       = num;                      /*Transfer size.*/
+    masterXfer.flags          = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
 
     if (xfer_pending)
     {
@@ -191,13 +191,13 @@ int32_t I2C_Master_DmaReceive(
         return ARM_DRIVER_ERROR_BUSY;
     }
 
-    masterXfer.slaveAddress = addr;              /*7-bit slave address.*/
-    masterXfer.direction = kI2C_Read;            /*Transfer direction.*/
-    masterXfer.subaddress = 0;                   /*Sub address*/
-    masterXfer.subaddressSize = 0;               /*Size of command buffer.*/
-    masterXfer.data = data;                      /*Transfer buffer.*/
-    masterXfer.dataSize = num;                   /*Transfer size.*/
-    masterXfer.flags = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
+    masterXfer.slaveAddress   = addr;                     /*7-bit slave address.*/
+    masterXfer.direction      = kI2C_Read;                /*Transfer direction.*/
+    masterXfer.subaddress     = 0;                        /*Sub address*/
+    masterXfer.subaddressSize = 0;                        /*Size of command buffer.*/
+    masterXfer.data           = data;                     /*Transfer buffer.*/
+    masterXfer.dataSize       = num;                      /*Transfer size.*/
+    masterXfer.flags          = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
 
     if (xfer_pending)
     {
@@ -264,8 +264,8 @@ int32_t I2C_Master_DmaControl(uint32_t control, uint32_t arg, cmsis_i2c_dma_driv
             /*disable dma*/
             I2C_MasterTransferAbortDMA(i2c->resource->base, i2c->master_dma_handle);
 
-            i2c->master_dma_handle->transferCount = 0;
-            i2c->master_dma_handle->transfer.data = NULL;
+            i2c->master_dma_handle->transferCount     = 0;
+            i2c->master_dma_handle->transfer.data     = NULL;
             i2c->master_dma_handle->transfer.dataSize = 0;
             return ARM_DRIVER_OK;
         default:
@@ -321,9 +321,9 @@ ARM_I2C_STATUS I2C_Master_DmaGetStatus(cmsis_i2c_dma_driver_state_t *i2c)
     ARM_I2C_STATUS stat;
     uint32_t ksdk_i2c_status = I2C_GetStatusFlags(i2c->resource->base);
 
-    stat.busy = !(ksdk_i2c_status & I2C_STAT_MSTPENDING_MASK);   /*Busy flag.*/
-    stat.direction = i2c->master_dma_handle->transfer.direction; /*Direction: 0=Transmitter, 1=Receiver.*/
-    stat.mode = 1;                                               /*Mode: 0=Slave, 1=Master.*/
+    stat.busy             = !(ksdk_i2c_status & I2C_STAT_MSTPENDING_MASK); /*Busy flag.*/
+    stat.direction        = i2c->master_dma_handle->transfer.direction;    /*Direction: 0=Transmitter, 1=Receiver.*/
+    stat.mode             = 1;                                             /*Mode: 0=Slave, 1=Master.*/
     stat.arbitration_lost = !(!(ksdk_i2c_status & I2C_STAT_MSTARBLOSS_MASK));
     /*Master lost arbitration (cleared on start of next Master operation)*/
 
@@ -391,7 +391,7 @@ static int32_t I2C_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event, cmsis_i2c
     if (!(i2c->flags & I2C_FLAG_INIT))
     {
         i2c->cb_event = cb_event; /* cb_event is CMSIS driver callback. */
-        i2c->flags = I2C_FLAG_INIT;
+        i2c->flags    = I2C_FLAG_INIT;
     }
 
     return ARM_DRIVER_OK;
@@ -422,13 +422,13 @@ int32_t I2C_Master_InterruptTransmit(
     I2C_MasterTransferCreateHandle(i2c->resource->base, &(i2c->handle->master_handle),
                                    KSDK_I2C_MASTER_InterruptCallback, (void *)i2c->cb_event);
 
-    masterXfer.slaveAddress = addr;              /*7-bit slave address.*/
-    masterXfer.direction = kI2C_Write;           /*Transfer direction.*/
-    masterXfer.subaddress = (uint32_t)NULL;      /*Sub address*/
-    masterXfer.subaddressSize = 0;               /*Size of command buffer.*/
-    masterXfer.data = (uint8_t *)data;           /*Transfer buffer.*/
-    masterXfer.dataSize = num;                   /*Transfer size.*/
-    masterXfer.flags = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
+    masterXfer.slaveAddress   = addr;                     /*7-bit slave address.*/
+    masterXfer.direction      = kI2C_Write;               /*Transfer direction.*/
+    masterXfer.subaddress     = (uint32_t)NULL;           /*Sub address*/
+    masterXfer.subaddressSize = 0;                        /*Size of command buffer.*/
+    masterXfer.data           = (uint8_t *)data;          /*Transfer buffer.*/
+    masterXfer.dataSize       = num;                      /*Transfer size.*/
+    masterXfer.flags          = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
 
     if (xfer_pending)
     {
@@ -471,13 +471,13 @@ int32_t I2C_Master_InterruptReceive(
     I2C_MasterTransferCreateHandle(i2c->resource->base, &(i2c->handle->master_handle),
                                    KSDK_I2C_MASTER_InterruptCallback, (void *)i2c->cb_event);
 
-    masterXfer.slaveAddress = addr;              /*7-bit slave address.*/
-    masterXfer.direction = kI2C_Read;            /*Transfer direction.*/
-    masterXfer.subaddress = (uint32_t)NULL;      /*Sub address*/
-    masterXfer.subaddressSize = 0;               /*Size of command buffer.*/
-    masterXfer.data = data;                      /*Transfer buffer.*/
-    masterXfer.dataSize = num;                   /*Transfer size.*/
-    masterXfer.flags = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
+    masterXfer.slaveAddress   = addr;                     /*7-bit slave address.*/
+    masterXfer.direction      = kI2C_Read;                /*Transfer direction.*/
+    masterXfer.subaddress     = (uint32_t)NULL;           /*Sub address*/
+    masterXfer.subaddressSize = 0;                        /*Size of command buffer.*/
+    masterXfer.data           = data;                     /*Transfer buffer.*/
+    masterXfer.dataSize       = num;                      /*Transfer size.*/
+    masterXfer.flags          = kI2C_TransferDefaultFlag; /*Transfer flag which controls the transfer.*/
 
     if (xfer_pending)
     {
@@ -599,8 +599,8 @@ int32_t I2C_InterruptControl(uint32_t control, uint32_t arg, cmsis_i2c_interrupt
         case ARM_I2C_OWN_ADDRESS:
             /* Use as slave, set CLKDIV for clock stretching, ensure data set up time for standard mode 250ns. */
             /* divVal = (sourceClock_Hz / 1000000) * (dataSetupTime_ns / 1000) */
-            clkDiv = i2c->resource->GetFreq() / 1000U;
-            clkDiv = (clkDiv * 250) / 1000000U;
+            clkDiv                      = i2c->resource->GetFreq() / 1000U;
+            clkDiv                      = (clkDiv * 250) / 1000000U;
             i2c->resource->base->CLKDIV = clkDiv & I2C_CLKDIV_DIVVAL_MASK;
 
             /* Set slave address. */
@@ -636,8 +636,8 @@ int32_t I2C_InterruptControl(uint32_t control, uint32_t arg, cmsis_i2c_interrupt
                 /*disable master interrupt and send STOP signal*/
                 I2C_MasterTransferAbort(i2c->resource->base, &(i2c->handle->master_handle));
 
-                i2c->handle->master_handle.transferCount = 0;
-                i2c->handle->master_handle.transfer.data = NULL;
+                i2c->handle->master_handle.transferCount     = 0;
+                i2c->handle->master_handle.transfer.data     = NULL;
                 i2c->handle->master_handle.transfer.dataSize = 0;
             }
             /*if slave receive*/
@@ -648,8 +648,8 @@ int32_t I2C_InterruptControl(uint32_t control, uint32_t arg, cmsis_i2c_interrupt
                 I2C_SlaveTransferAbort(i2c->resource->base, &(i2c->handle->slave_handle));
 
                 i2c->handle->slave_handle.transfer.transferredCount = 0;
-                i2c->handle->slave_handle.transfer.txData = NULL;
-                i2c->handle->slave_handle.transfer.rxData = NULL;
+                i2c->handle->slave_handle.transfer.txData           = NULL;
+                i2c->handle->slave_handle.transfer.rxData           = NULL;
             }
             return ARM_DRIVER_OK;
         default:
@@ -704,9 +704,9 @@ ARM_I2C_STATUS I2C_InterruptGetStatus(cmsis_i2c_interrupt_driver_state_t *i2c)
 
     if (i2c->resource->base->CFG & I2C_CFG_MSTEN_MASK)
     {
-        stat.busy = !(ksdk_i2c_status & I2C_STAT_MSTPENDING_MASK);      /*Busy flag.*/
-        stat.direction = i2c->handle->master_handle.transfer.direction; /*Direction: 0=Transmitter, 1=Receiver.*/
-        stat.mode = 1;                                                  /*Mode: 0=Slave, 1=Master.*/
+        stat.busy             = !(ksdk_i2c_status & I2C_STAT_MSTPENDING_MASK); /*Busy flag.*/
+        stat.direction        = i2c->handle->master_handle.transfer.direction; /*Direction: 0=Transmitter, 1=Receiver.*/
+        stat.mode             = 1;                                             /*Mode: 0=Slave, 1=Master.*/
         stat.arbitration_lost = !(!(ksdk_i2c_status & I2C_STAT_MSTARBLOSS_MASK));
         /*Master lost arbitration (cleared on start of next Master operation)*/
     }
@@ -754,7 +754,10 @@ cmsis_i2c_dma_driver_state_t I2C0_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C0_DmaDriverState = {
 #endif
-    &I2C0_Resource, &I2C0_DmaResource, &I2C0_DmaHandle, &I2C0_DmaTxRxHandle,
+    &I2C0_Resource,
+    &I2C0_DmaResource,
+    &I2C0_DmaHandle,
+    &I2C0_DmaTxRxHandle,
 };
 
 static int32_t I2C0_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -811,7 +814,8 @@ cmsis_i2c_interrupt_driver_state_t I2C0_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C0_InterruptDriverState = {
 #endif
-    &I2C0_Resource, &I2C0_handle,
+    &I2C0_Resource,
+    &I2C0_handle,
 
 };
 
@@ -869,15 +873,29 @@ ARM_I2C_STATUS I2C0_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C0 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C0 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C0_DMA_EN
-                              I2C0_Master_DmaInitialize, I2C0_Master_DmaUninitialize, I2C0_Master_DmaPowerControl,
-                              I2C0_Master_DmaTransmit, I2C0_Master_DmaReceive, NULL, NULL, I2C0_Master_DmaGetDataCount,
-                              I2C0_Master_DmaControl, I2C0_Master_DmaGetStatus
+                              I2C0_Master_DmaInitialize,
+                              I2C0_Master_DmaUninitialize,
+                              I2C0_Master_DmaPowerControl,
+                              I2C0_Master_DmaTransmit,
+                              I2C0_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C0_Master_DmaGetDataCount,
+                              I2C0_Master_DmaControl,
+                              I2C0_Master_DmaGetStatus
 #else
-                              I2C0_InterruptInitialize, I2C0_InterruptUninitialize, I2C0_InterruptPowerControl,
-                              I2C0_Master_InterruptTransmit, I2C0_Master_InterruptReceive, I2C0_Slave_InterruptTransmit,
-                              I2C0_Slave_InterruptReceive, I2C0_InterruptGetDataCount, I2C0_InterruptControl,
+                              I2C0_InterruptInitialize,
+                              I2C0_InterruptUninitialize,
+                              I2C0_InterruptPowerControl,
+                              I2C0_Master_InterruptTransmit,
+                              I2C0_Master_InterruptReceive,
+                              I2C0_Slave_InterruptTransmit,
+                              I2C0_Slave_InterruptReceive,
+                              I2C0_InterruptGetDataCount,
+                              I2C0_InterruptControl,
                               I2C0_InterruptGetStatus
 #endif
 };
@@ -909,7 +927,10 @@ cmsis_i2c_dma_driver_state_t I2C1_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C1_DmaDriverState = {
 #endif
-    &I2C1_Resource, &I2C1_DmaResource, &I2C1_DmaHandle, &I2C1_DmaTxRxHandle,
+    &I2C1_Resource,
+    &I2C1_DmaResource,
+    &I2C1_DmaHandle,
+    &I2C1_DmaTxRxHandle,
 };
 
 static int32_t I2C1_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -966,7 +987,8 @@ cmsis_i2c_interrupt_driver_state_t I2C1_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C1_InterruptDriverState = {
 #endif
-    &I2C1_Resource, &I2C1_Handle,
+    &I2C1_Resource,
+    &I2C1_Handle,
 };
 
 static int32_t I2C1_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1023,15 +1045,29 @@ ARM_I2C_STATUS I2C1_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C1 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C1 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C1_DMA_EN
-                              I2C1_Master_DmaInitialize, I2C1_Master_DmaUninitialize, I2C1_Master_DmaPowerControl,
-                              I2C1_Master_DmaTransmit, I2C1_Master_DmaReceive, NULL, NULL, I2C1_Master_DmaGetDataCount,
-                              I2C1_Master_DmaControl, I2C1_Master_DmaGetStatus
+                              I2C1_Master_DmaInitialize,
+                              I2C1_Master_DmaUninitialize,
+                              I2C1_Master_DmaPowerControl,
+                              I2C1_Master_DmaTransmit,
+                              I2C1_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C1_Master_DmaGetDataCount,
+                              I2C1_Master_DmaControl,
+                              I2C1_Master_DmaGetStatus
 #else
-                              I2C1_InterruptInitialize, I2C1_InterruptUninitialize, I2C1_InterruptPowerControl,
-                              I2C1_Master_InterruptTransmit, I2C1_Master_InterruptReceive, I2C1_Slave_InterruptTransmit,
-                              I2C1_Slave_InterruptReceive, I2C1_InterruptGetDataCount, I2C1_InterruptControl,
+                              I2C1_InterruptInitialize,
+                              I2C1_InterruptUninitialize,
+                              I2C1_InterruptPowerControl,
+                              I2C1_Master_InterruptTransmit,
+                              I2C1_Master_InterruptReceive,
+                              I2C1_Slave_InterruptTransmit,
+                              I2C1_Slave_InterruptReceive,
+                              I2C1_InterruptGetDataCount,
+                              I2C1_InterruptControl,
                               I2C1_InterruptGetStatus
 #endif
 };
@@ -1063,7 +1099,10 @@ cmsis_i2c_dma_driver_state_t I2C2_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C2_DmaDriverState = {
 #endif
-    &I2C2_Resource, &I2C2_DmaResource, &I2C2_DmaHandle, &I2C2_DmaTxRxHandle,
+    &I2C2_Resource,
+    &I2C2_DmaResource,
+    &I2C2_DmaHandle,
+    &I2C2_DmaTxRxHandle,
 };
 
 static int32_t I2C2_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1120,7 +1159,8 @@ cmsis_i2c_interrupt_driver_state_t I2C2_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C2_InterruptDriverState = {
 #endif
-    &I2C2_Resource, &I2C2_Handle,
+    &I2C2_Resource,
+    &I2C2_Handle,
 
 };
 
@@ -1178,15 +1218,29 @@ ARM_I2C_STATUS I2C2_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C2 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C2 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C2_DMA_EN
-                              I2C2_Master_DmaInitialize, I2C2_Master_DmaUninitialize, I2C2_Master_DmaPowerControl,
-                              I2C2_Master_DmaTransmit, I2C2_Master_DmaReceive, NULL, NULL, I2C2_Master_DmaGetDataCount,
-                              I2C2_Master_DmaControl, I2C2_Master_DmaGetStatus
+                              I2C2_Master_DmaInitialize,
+                              I2C2_Master_DmaUninitialize,
+                              I2C2_Master_DmaPowerControl,
+                              I2C2_Master_DmaTransmit,
+                              I2C2_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C2_Master_DmaGetDataCount,
+                              I2C2_Master_DmaControl,
+                              I2C2_Master_DmaGetStatus
 #else
-                              I2C2_InterruptInitialize, I2C2_InterruptUninitialize, I2C2_InterruptPowerControl,
-                              I2C2_Master_InterruptTransmit, I2C2_Master_InterruptReceive, I2C2_Slave_InterruptTransmit,
-                              I2C2_Slave_InterruptReceive, I2C2_InterruptGetDataCount, I2C2_InterruptControl,
+                              I2C2_InterruptInitialize,
+                              I2C2_InterruptUninitialize,
+                              I2C2_InterruptPowerControl,
+                              I2C2_Master_InterruptTransmit,
+                              I2C2_Master_InterruptReceive,
+                              I2C2_Slave_InterruptTransmit,
+                              I2C2_Slave_InterruptReceive,
+                              I2C2_InterruptGetDataCount,
+                              I2C2_InterruptControl,
                               I2C2_InterruptGetStatus
 #endif
 };
@@ -1218,7 +1272,10 @@ cmsis_i2c_dma_driver_state_t I2C3_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C3_DmaDriverState = {
 #endif
-    &I2C3_Resource, &I2C3_DmaResource, &I2C3_DmaHandle, &I2C3_DmaTxRxHandle,
+    &I2C3_Resource,
+    &I2C3_DmaResource,
+    &I2C3_DmaHandle,
+    &I2C3_DmaTxRxHandle,
 };
 
 static int32_t I2C3_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1275,7 +1332,8 @@ cmsis_i2c_interrupt_driver_state_t I2C3_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C3_InterruptDriverState = {
 #endif
-    &I2C3_Resource, &I2C3_Handle,
+    &I2C3_Resource,
+    &I2C3_Handle,
 };
 
 static int32_t I2C3_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1332,15 +1390,29 @@ ARM_I2C_STATUS I2C3_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C3 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C3 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C3_DMA_EN
-                              I2C3_Master_DmaInitialize, I2C3_Master_DmaUninitialize, I2C3_Master_DmaPowerControl,
-                              I2C3_Master_DmaTransmit, I2C3_Master_DmaReceive, NULL, NULL, I2C3_Master_DmaGetDataCount,
-                              I2C3_Master_DmaControl, I2C3_Master_DmaGetStatus
+                              I2C3_Master_DmaInitialize,
+                              I2C3_Master_DmaUninitialize,
+                              I2C3_Master_DmaPowerControl,
+                              I2C3_Master_DmaTransmit,
+                              I2C3_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C3_Master_DmaGetDataCount,
+                              I2C3_Master_DmaControl,
+                              I2C3_Master_DmaGetStatus
 #else
-                              I2C3_InterruptInitialize, I2C3_InterruptUninitialize, I2C3_InterruptPowerControl,
-                              I2C3_Master_InterruptTransmit, I2C3_Master_InterruptReceive, I2C3_Slave_InterruptTransmit,
-                              I2C3_Slave_InterruptReceive, I2C3_InterruptGetDataCount, I2C3_InterruptControl,
+                              I2C3_InterruptInitialize,
+                              I2C3_InterruptUninitialize,
+                              I2C3_InterruptPowerControl,
+                              I2C3_Master_InterruptTransmit,
+                              I2C3_Master_InterruptReceive,
+                              I2C3_Slave_InterruptTransmit,
+                              I2C3_Slave_InterruptReceive,
+                              I2C3_InterruptGetDataCount,
+                              I2C3_InterruptControl,
                               I2C3_InterruptGetStatus
 #endif
 };
@@ -1371,7 +1443,10 @@ cmsis_i2c_dma_driver_state_t I2C4_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C4_DmaDriverState = {
 #endif
-    &I2C4_Resource, &I2C4_DmaResource, &I2C4_DmaHandle, &I2C4_DmaTxRxHandle,
+    &I2C4_Resource,
+    &I2C4_DmaResource,
+    &I2C4_DmaHandle,
+    &I2C4_DmaTxRxHandle,
 };
 
 static int32_t I2C4_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1428,7 +1503,8 @@ cmsis_i2c_interrupt_driver_state_t I2C4_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C4_InterruptDriverState = {
 #endif
-    &I2C4_Resource, &I2C4_handle,
+    &I2C4_Resource,
+    &I2C4_handle,
 
 };
 
@@ -1486,15 +1562,29 @@ ARM_I2C_STATUS I2C4_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C4 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C4 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C4_DMA_EN
-                              I2C4_Master_DmaInitialize, I2C4_Master_DmaUninitialize, I2C4_Master_DmaPowerControl,
-                              I2C4_Master_DmaTransmit, I2C4_Master_DmaReceive, NULL, NULL, I2C4_Master_DmaGetDataCount,
-                              I2C4_Master_DmaControl, I2C4_Master_DmaGetStatus
+                              I2C4_Master_DmaInitialize,
+                              I2C4_Master_DmaUninitialize,
+                              I2C4_Master_DmaPowerControl,
+                              I2C4_Master_DmaTransmit,
+                              I2C4_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C4_Master_DmaGetDataCount,
+                              I2C4_Master_DmaControl,
+                              I2C4_Master_DmaGetStatus
 #else
-                              I2C4_InterruptInitialize, I2C4_InterruptUninitialize, I2C4_InterruptPowerControl,
-                              I2C4_Master_InterruptTransmit, I2C4_Master_InterruptReceive, I2C4_Slave_InterruptTransmit,
-                              I2C4_Slave_InterruptReceive, I2C4_InterruptGetDataCount, I2C4_InterruptControl,
+                              I2C4_InterruptInitialize,
+                              I2C4_InterruptUninitialize,
+                              I2C4_InterruptPowerControl,
+                              I2C4_Master_InterruptTransmit,
+                              I2C4_Master_InterruptReceive,
+                              I2C4_Slave_InterruptTransmit,
+                              I2C4_Slave_InterruptReceive,
+                              I2C4_InterruptGetDataCount,
+                              I2C4_InterruptControl,
                               I2C4_InterruptGetStatus
 #endif
 };
@@ -1525,7 +1615,10 @@ cmsis_i2c_dma_driver_state_t I2C5_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C5_DmaDriverState = {
 #endif
-    &I2C5_Resource, &I2C5_DmaResource, &I2C5_DmaHandle, &I2C5_DmaTxRxHandle,
+    &I2C5_Resource,
+    &I2C5_DmaResource,
+    &I2C5_DmaHandle,
+    &I2C5_DmaTxRxHandle,
 };
 
 static int32_t I2C5_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1582,7 +1675,8 @@ cmsis_i2c_interrupt_driver_state_t I2C5_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C5_InterruptDriverState = {
 #endif
-    &I2C5_Resource, &I2C5_handle,
+    &I2C5_Resource,
+    &I2C5_handle,
 
 };
 
@@ -1640,15 +1734,29 @@ ARM_I2C_STATUS I2C5_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C5 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C5 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C5_DMA_EN
-                              I2C5_Master_DmaInitialize, I2C5_Master_DmaUninitialize, I2C5_Master_DmaPowerControl,
-                              I2C5_Master_DmaTransmit, I2C5_Master_DmaReceive, NULL, NULL, I2C5_Master_DmaGetDataCount,
-                              I2C5_Master_DmaControl, I2C5_Master_DmaGetStatus
+                              I2C5_Master_DmaInitialize,
+                              I2C5_Master_DmaUninitialize,
+                              I2C5_Master_DmaPowerControl,
+                              I2C5_Master_DmaTransmit,
+                              I2C5_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C5_Master_DmaGetDataCount,
+                              I2C5_Master_DmaControl,
+                              I2C5_Master_DmaGetStatus
 #else
-                              I2C5_InterruptInitialize, I2C5_InterruptUninitialize, I2C5_InterruptPowerControl,
-                              I2C5_Master_InterruptTransmit, I2C5_Master_InterruptReceive, I2C5_Slave_InterruptTransmit,
-                              I2C5_Slave_InterruptReceive, I2C5_InterruptGetDataCount, I2C5_InterruptControl,
+                              I2C5_InterruptInitialize,
+                              I2C5_InterruptUninitialize,
+                              I2C5_InterruptPowerControl,
+                              I2C5_Master_InterruptTransmit,
+                              I2C5_Master_InterruptReceive,
+                              I2C5_Slave_InterruptTransmit,
+                              I2C5_Slave_InterruptReceive,
+                              I2C5_InterruptGetDataCount,
+                              I2C5_InterruptControl,
                               I2C5_InterruptGetStatus
 #endif
 };
@@ -1679,7 +1787,10 @@ cmsis_i2c_dma_driver_state_t I2C6_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C6_DmaDriverState = {
 #endif
-    &I2C6_Resource, &I2C6_DmaResource, &I2C6_DmaHandle, &I2C6_DmaTxRxHandle,
+    &I2C6_Resource,
+    &I2C6_DmaResource,
+    &I2C6_DmaHandle,
+    &I2C6_DmaTxRxHandle,
 };
 
 static int32_t I2C6_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1736,7 +1847,8 @@ cmsis_i2c_interrupt_driver_state_t I2C6_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C6_InterruptDriverState = {
 #endif
-    &I2C6_Resource, &I2C6_handle,
+    &I2C6_Resource,
+    &I2C6_handle,
 
 };
 
@@ -1794,15 +1906,29 @@ ARM_I2C_STATUS I2C6_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C6 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C6 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C6_DMA_EN
-                              I2C6_Master_DmaInitialize, I2C6_Master_DmaUninitialize, I2C6_Master_DmaPowerControl,
-                              I2C6_Master_DmaTransmit, I2C6_Master_DmaReceive, NULL, NULL, I2C6_Master_DmaGetDataCount,
-                              I2C6_Master_DmaControl, I2C6_Master_DmaGetStatus
+                              I2C6_Master_DmaInitialize,
+                              I2C6_Master_DmaUninitialize,
+                              I2C6_Master_DmaPowerControl,
+                              I2C6_Master_DmaTransmit,
+                              I2C6_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C6_Master_DmaGetDataCount,
+                              I2C6_Master_DmaControl,
+                              I2C6_Master_DmaGetStatus
 #else
-                              I2C6_InterruptInitialize, I2C6_InterruptUninitialize, I2C6_InterruptPowerControl,
-                              I2C6_Master_InterruptTransmit, I2C6_Master_InterruptReceive, I2C6_Slave_InterruptTransmit,
-                              I2C6_Slave_InterruptReceive, I2C6_InterruptGetDataCount, I2C6_InterruptControl,
+                              I2C6_InterruptInitialize,
+                              I2C6_InterruptUninitialize,
+                              I2C6_InterruptPowerControl,
+                              I2C6_Master_InterruptTransmit,
+                              I2C6_Master_InterruptReceive,
+                              I2C6_Slave_InterruptTransmit,
+                              I2C6_Slave_InterruptReceive,
+                              I2C6_InterruptGetDataCount,
+                              I2C6_InterruptControl,
                               I2C6_InterruptGetStatus
 #endif
 };
@@ -1833,7 +1959,10 @@ cmsis_i2c_dma_driver_state_t I2C7_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C7_DmaDriverState = {
 #endif
-    &I2C7_Resource, &I2C7_DmaResource, &I2C7_DmaHandle, &I2C7_DmaTxRxHandle,
+    &I2C7_Resource,
+    &I2C7_DmaResource,
+    &I2C7_DmaHandle,
+    &I2C7_DmaTxRxHandle,
 };
 
 static int32_t I2C7_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -1889,7 +2018,8 @@ cmsis_i2c_interrupt_driver_state_t I2C7_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C7_InterruptDriverState = {
 #endif
-    &I2C7_Resource, &I2C7_handle,
+    &I2C7_Resource,
+    &I2C7_handle,
 
 };
 
@@ -1947,15 +2077,29 @@ ARM_I2C_STATUS I2C7_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C7 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C7 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C7_DMA_EN
-                              I2C7_Master_DmaInitialize, I2C7_Master_DmaUninitialize, I2C7_Master_DmaPowerControl,
-                              I2C7_Master_DmaTransmit, I2C7_Master_DmaReceive, NULL, NULL, I2C7_Master_DmaGetDataCount,
-                              I2C7_Master_DmaControl, I2C7_Master_DmaGetStatus
+                              I2C7_Master_DmaInitialize,
+                              I2C7_Master_DmaUninitialize,
+                              I2C7_Master_DmaPowerControl,
+                              I2C7_Master_DmaTransmit,
+                              I2C7_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C7_Master_DmaGetDataCount,
+                              I2C7_Master_DmaControl,
+                              I2C7_Master_DmaGetStatus
 #else
-                              I2C7_InterruptInitialize, I2C7_InterruptUninitialize, I2C7_InterruptPowerControl,
-                              I2C7_Master_InterruptTransmit, I2C7_Master_InterruptReceive, I2C7_Slave_InterruptTransmit,
-                              I2C7_Slave_InterruptReceive, I2C7_InterruptGetDataCount, I2C7_InterruptControl,
+                              I2C7_InterruptInitialize,
+                              I2C7_InterruptUninitialize,
+                              I2C7_InterruptPowerControl,
+                              I2C7_Master_InterruptTransmit,
+                              I2C7_Master_InterruptReceive,
+                              I2C7_Slave_InterruptTransmit,
+                              I2C7_Slave_InterruptReceive,
+                              I2C7_InterruptGetDataCount,
+                              I2C7_InterruptControl,
                               I2C7_InterruptGetStatus
 #endif
 };
@@ -1986,7 +2130,10 @@ cmsis_i2c_dma_driver_state_t I2C8_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C8_DmaDriverState = {
 #endif
-    &I2C8_Resource, &I2C8_DmaResource, &I2C8_DmaHandle, &I2C8_DmaTxRxHandle,
+    &I2C8_Resource,
+    &I2C8_DmaResource,
+    &I2C8_DmaHandle,
+    &I2C8_DmaTxRxHandle,
 };
 
 static int32_t I2C8_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -2043,7 +2190,8 @@ cmsis_i2c_interrupt_driver_state_t I2C8_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C8_InterruptDriverState = {
 #endif
-    &I2C8_Resource, &I2C8_handle,
+    &I2C8_Resource,
+    &I2C8_handle,
 
 };
 
@@ -2101,15 +2249,29 @@ ARM_I2C_STATUS I2C8_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C8 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C8 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C8_DMA_EN
-                              I2C8_Master_DmaInitialize, I2C8_Master_DmaUninitialize, I2C8_Master_DmaPowerControl,
-                              I2C8_Master_DmaTransmit, I2C8_Master_DmaReceive, NULL, NULL, I2C8_Master_DmaGetDataCount,
-                              I2C8_Master_DmaControl, I2C8_Master_DmaGetStatus
+                              I2C8_Master_DmaInitialize,
+                              I2C8_Master_DmaUninitialize,
+                              I2C8_Master_DmaPowerControl,
+                              I2C8_Master_DmaTransmit,
+                              I2C8_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C8_Master_DmaGetDataCount,
+                              I2C8_Master_DmaControl,
+                              I2C8_Master_DmaGetStatus
 #else
-                              I2C8_InterruptInitialize, I2C8_InterruptUninitialize, I2C8_InterruptPowerControl,
-                              I2C8_Master_InterruptTransmit, I2C8_Master_InterruptReceive, I2C8_Slave_InterruptTransmit,
-                              I2C8_Slave_InterruptReceive, I2C8_InterruptGetDataCount, I2C8_InterruptControl,
+                              I2C8_InterruptInitialize,
+                              I2C8_InterruptUninitialize,
+                              I2C8_InterruptPowerControl,
+                              I2C8_Master_InterruptTransmit,
+                              I2C8_Master_InterruptReceive,
+                              I2C8_Slave_InterruptTransmit,
+                              I2C8_Slave_InterruptReceive,
+                              I2C8_InterruptGetDataCount,
+                              I2C8_InterruptControl,
                               I2C8_InterruptGetStatus
 #endif
 };
@@ -2140,7 +2302,10 @@ cmsis_i2c_dma_driver_state_t I2C9_DmaDriverState = {
 #else
 cmsis_i2c_dma_driver_state_t I2C9_DmaDriverState = {
 #endif
-    &I2C9_Resource, &I2C9_DmaResource, &I2C9_DmaHandle, &I2C9_DmaTxRxHandle,
+    &I2C9_Resource,
+    &I2C9_DmaResource,
+    &I2C9_DmaHandle,
+    &I2C9_DmaTxRxHandle,
 };
 
 static int32_t I2C9_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
@@ -2197,7 +2362,8 @@ cmsis_i2c_interrupt_driver_state_t I2C9_InterruptDriverState = {
 #else
 cmsis_i2c_interrupt_driver_state_t I2C9_InterruptDriverState = {
 #endif
-    &I2C9_Resource, &I2C9_handle,
+    &I2C9_Resource,
+    &I2C9_handle,
 
 };
 
@@ -2255,15 +2421,29 @@ ARM_I2C_STATUS I2C9_InterruptGetStatus(void)
 
 #endif
 
-ARM_DRIVER_I2C Driver_I2C9 = {I2Cx_GetVersion, I2Cx_GetCapabilities,
+ARM_DRIVER_I2C Driver_I2C9 = {I2Cx_GetVersion,
+                              I2Cx_GetCapabilities,
 #if RTE_I2C9_DMA_EN
-                              I2C9_Master_DmaInitialize, I2C9_Master_DmaUninitialize, I2C9_Master_DmaPowerControl,
-                              I2C9_Master_DmaTransmit, I2C9_Master_DmaReceive, NULL, NULL, I2C9_Master_DmaGetDataCount,
-                              I2C9_Master_DmaControl, I2C9_Master_DmaGetStatus
+                              I2C9_Master_DmaInitialize,
+                              I2C9_Master_DmaUninitialize,
+                              I2C9_Master_DmaPowerControl,
+                              I2C9_Master_DmaTransmit,
+                              I2C9_Master_DmaReceive,
+                              NULL,
+                              NULL,
+                              I2C9_Master_DmaGetDataCount,
+                              I2C9_Master_DmaControl,
+                              I2C9_Master_DmaGetStatus
 #else
-                              I2C9_InterruptInitialize, I2C9_InterruptUninitialize, I2C9_InterruptPowerControl,
-                              I2C9_Master_InterruptTransmit, I2C9_Master_InterruptReceive, I2C9_Slave_InterruptTransmit,
-                              I2C9_Slave_InterruptReceive, I2C9_InterruptGetDataCount, I2C9_InterruptControl,
+                              I2C9_InterruptInitialize,
+                              I2C9_InterruptUninitialize,
+                              I2C9_InterruptPowerControl,
+                              I2C9_Master_InterruptTransmit,
+                              I2C9_Master_InterruptReceive,
+                              I2C9_Slave_InterruptTransmit,
+                              I2C9_Slave_InterruptReceive,
+                              I2C9_InterruptGetDataCount,
+                              I2C9_InterruptControl,
                               I2C9_InterruptGetStatus
 #endif
 };

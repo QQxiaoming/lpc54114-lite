@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2018 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -100,9 +100,9 @@ void UTICK_SetTick(UTICK_Type *base, utick_mode_t mode, uint32_t count, utick_ca
 }
 
 /*!
-* brief Initializes an UTICK by turning its bus clock on
-*
-*/
+ * brief Initializes an UTICK by turning its bus clock on
+ *
+ */
 void UTICK_Init(UTICK_Type *base)
 {
 #if !(defined(FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL) && FSL_SDK_DISABLE_DRIVER_CLOCK_CONTROL)
@@ -114,8 +114,11 @@ void UTICK_Init(UTICK_Type *base)
     RESET_PeripheralReset(s_utickResets[UTICK_GetInstance(base)]);
 #endif
 
+#if !(defined(FSL_FEATURE_UTICK_HAS_NO_PDCFG) && FSL_FEATURE_UTICK_HAS_NO_PDCFG)
     /* Power up Watchdog oscillator*/
     POWER_DisablePD(kPDRUNCFG_PD_WDT_OSC);
+#endif
+
     s_utickIsr = UTICK_HandleIRQ;
 }
 

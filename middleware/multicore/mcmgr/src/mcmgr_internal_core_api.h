@@ -10,31 +10,29 @@
 #ifndef MCMGR_INTERNAL_CORE_API_H
 #define MCMGR_INTERNAL_CORE_API_H
 
-#include "mcmgr.h"
-
 /*!
  * @addtogroup mcmgr_internal
  * @{
  */
 
 /*! @brief Type definition of structure with event handler and data. */
-typedef struct _mcmcg_event_t
+typedef struct _mcmgr_event
 {
     /*! @brief Pointer to callback function. */
     mcmgr_event_callback_t callback;
     /*! @brief Context data for callback. */
     void *callbackData;
-} mcmcg_event_t;
+} mcmgr_event_t;
 
 /*! @brief Type definition of structure which contains informations and functions for one core. */
-typedef struct _mcmgr_core_info_t
+typedef struct _mcmgr_core_info
 {
     mcmgr_core_type_t coreType;
     char *coreName;
 } mcmgr_core_info_t;
 
 /*! @brief Type definition of possible core states. */
-typedef enum _mcmgr_core_state_t
+typedef enum _mcmgr_core_state
 {
     kMCMGR_ResetCoreState = 0,
     kMCMGR_StartupGettingLowCoreState,
@@ -43,7 +41,7 @@ typedef enum _mcmgr_core_state_t
 } mcmgr_core_state_t;
 
 /*! @brief Type definition of structure which contains status information for a core. */
-typedef struct _mcmgr_core_context_t
+typedef struct _mcmgr_core_context
 {
     /*! @brief Current state of the core. */
     mcmgr_core_state_t state;
@@ -52,7 +50,7 @@ typedef struct _mcmgr_core_context_t
 } mcmgr_core_context_t;
 
 /*! @brief Type definition of structure with system informations */
-typedef struct _mcmgr_system_info_t
+typedef struct _mcmgr_system_info
 {
     /*! @brief Count of cores in the system. */
     uint32_t coreCount;
@@ -71,11 +69,11 @@ typedef struct _mcmgr_system_info_t
 extern const mcmgr_system_info_t g_mcmgrSystem;
 
 /*!
- * @brief Array of mcmcg_event_t
+ * @brief Array of mcmgr_event_t
  *
  * This array contains registred callbacks for event handling.
  */
-extern mcmcg_event_t MCMGR_eventTable[];
+extern mcmgr_event_t MCMGR_eventTable[];
 
 /*!
  * @brief Array of mcmgr_core_context_t

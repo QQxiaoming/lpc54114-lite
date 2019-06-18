@@ -19,6 +19,7 @@
 #include "fsl_i2s.h"
 #include "fsl_i2s_dma.h"
 #include "UARTCommandConsole.h"
+#include "fsl_codec_adapter.h"
 
 dma_handle_t s_DmaTxHandle;
 dma_handle_t s_DmaRxHandle;
@@ -37,83 +38,19 @@ const pll_setup_t pllSetup =
 };
 
 
-
-void WM8904_I2C_Init(I2C_Type *base, uint32_t clkSrc_Hz)
-{
-    i2c_master_config_t i2cConfig = {0};
-
-    I2C_MasterGetDefaultConfig(&i2cConfig);
-    I2C_MasterInit(base, &i2cConfig, clkSrc_Hz);
-}
-
-status_t WM8904_I2C_Send(I2C_Type *base,
-                        uint8_t deviceAddress,
-                        uint32_t subAddress,
-                        uint8_t subaddressSize,
-                        uint8_t *txBuff,
-                        uint8_t txBuffSize)
-{
-    i2c_master_transfer_t masterXfer;
-
-    /* Prepare transfer structure. */
-    masterXfer.slaveAddress = deviceAddress;
-    masterXfer.direction = kI2C_Write;
-    masterXfer.subaddress = subAddress;
-    masterXfer.subaddressSize = subaddressSize;
-    masterXfer.data = txBuff;
-    masterXfer.dataSize = txBuffSize;
-    masterXfer.flags = kI2C_TransferDefaultFlag;
-
-    return I2C_MasterTransferBlocking(base, &masterXfer);
-}
-
-status_t WM8904_I2C_Receive(I2C_Type *base,
-                           uint8_t deviceAddress,
-                           uint32_t subAddress,
-                           uint8_t subaddressSize,
-                           uint8_t *rxBuff,
-                           uint8_t rxBuffSize)
-{
-    i2c_master_transfer_t masterXfer;
-
-    /* Prepare transfer structure. */
-    masterXfer.slaveAddress = deviceAddress;
-    masterXfer.subaddress = subAddress;
-    masterXfer.subaddressSize = subaddressSize;
-    masterXfer.data = rxBuff;
-    masterXfer.dataSize = rxBuffSize;
-    masterXfer.direction = kI2C_Read;
-    masterXfer.flags = kI2C_TransferDefaultFlag;
-
-    return I2C_MasterTransferBlocking(base, &masterXfer);
-}
-
-void WM8904_Codec_I2C_Init(void)
-{
-    WM8904_I2C_Init(WM8904_I2C, 12000000);
-}
-
-status_t WM8904_Codec_I2C_Send(
-    uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, const uint8_t *txBuff, uint8_t txBuffSize)
-{
-    return WM8904_I2C_Send(WM8904_I2C, deviceAddress, subAddress, subAddressSize, (uint8_t *)txBuff,
-                          txBuffSize);
-}
-
-status_t WM8904_Codec_I2C_Receive(
-    uint8_t deviceAddress, uint32_t subAddress, uint8_t subAddressSize, uint8_t *rxBuff, uint8_t rxBuffSize)
-{
-    return WM8904_I2C_Receive(WM8904_I2C, deviceAddress, subAddress, subAddressSize, rxBuff, rxBuffSize);
-}
-
-codec_config_t boardCodecConfig = 
-{
-	.I2C_SendFunc = WM8904_Codec_I2C_Send,
-	.I2C_ReceiveFunc = WM8904_Codec_I2C_Receive,
-	.op.Init = WM8904_Init,
-	.op.Deinit = WM8904_Deinit,
-	.op.SetFormat = WM8904_SetAudioFormat
+wm8904_config_t wm8904Config = {
+    .i2cConfig    = {.codecI2CInstance = 4U, .codecI2CSourceClock = 12000000},
+    .recordSource = kWM8904_RecordSourceLineInput,
+    .recordChannelLeft  = kWM8904_RecordChannelLeft2,
+    .recordChannelRight = kWM8904_RecordChannelRight2,
+    .playSource         = kWM8904_PlaySourceDAC,
+    .slaveAddress       = WM8904_I2C_ADDRESS,
+    .protocol           = kWM8904_ProtocolI2S,
+    .format             = {.sampleRate = kWM8904_SampleRate48kHz, .bitWidth = kWM8904_BitWidth16},
+    .mclk_HZ            = 24576000,
+    .master             = false,
 };
+codec_config_t boardCodecConfig = {.codecDevType = kCODEC_WM8904, .codecDevConfig = &wm8904Config};
 
 status_t wm8904_i2s_init(void)
 {
@@ -138,21 +75,8 @@ status_t wm8904_i2s_init(void)
 	/* reset FLEXCOMM for I2S */
 	RESET_PeripheralReset(kFC6_RST_SHIFT_RSTn);
 	RESET_PeripheralReset(kFC7_RST_SHIFT_RSTn);
-	
-	
-	printfk("Configure I2C\r\n");
-    WM8904_Codec_I2C_Init();
 
 	printfk("Configure WM8904 codec\r\n");
-	/*
-	 * enableMaster = true;
-	 * baudRate_Bps = 100000U;
-	 * enableTimeout = false;
-	 */
-	WM8904_GetDefaultConfig(&codecConfig);
-	codecConfig.mclk_HZ = 12000000;
-	boardCodecConfig.codecConfig = (void *)&codecConfig;
-
     if (CODEC_Init(&codecHandle, &boardCodecConfig) != kStatus_Success)
     {
         printfk("WM8904_Init failed!\r\n");
@@ -160,12 +84,12 @@ status_t wm8904_i2s_init(void)
     }
 
 	/* SYSCLK=MCLK/MCLKDIV=12000000，采样率44100，位宽16 */
-	WM8904_SetAudioFormat(&codecHandle,12000000,44100,16);
+	CODEC_SetFormat(&codecHandle,12000000,44100,16);
 
 	/* Initial volume kept low for hearing safety. */
 	/* Adjust it to your needs, 0x0006 for -51 dB, 0x0039 for 0 dB etc. */
-	WM8904_SetVolume(&codecHandle, 0x0006, 0x0006);
-	
+    CODEC_SetVolume(&codecHandle, kCODEC_PlayChannelHeadphoneLeft | kCODEC_PlayChannelHeadphoneRight, 0x0006);
+
 	printfk("Configure I2S\r\n");
 	I2S_TxGetDefaultConfig(&s_TxConfig);
 	/* 采样率44100，位宽16，双声道 */

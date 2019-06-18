@@ -1,5 +1,5 @@
 Release Name: MCUXpresso Software Development Kit (SDK)
-Release Version: 2.5.0
+Release Version: 2.6.0
 Package License: LA_OPT_NXP_Software_License.htm - Production Use, Section 2.3 applies
 
 KSDK_Peripheral_Driver     Description: Peripheral drivers are designed for  
@@ -12,7 +12,7 @@ KSDK_Peripheral_Driver     Description: Peripheral drivers are designed for
                            name: KSDK Peripheral Driver                      
                            Location: devices/<device>/drivers                
 
-usb                        version: 2.1.0                                    
+usb                        version: 2.2.0                                    
                            Location: middleware/usb                          
                            Description: Freescale USB stack. This is a       
                            version of the USB stack that has been integrated 
@@ -22,6 +22,20 @@ usb                        version: 2.1.0
                            name: USB                                         
                            Format: source code                               
 
+FreeRTOS_heap_newlib       Author: Dave Nadler, Nadler & Associates          
+                           Consulting                                        
+                           Description: Newlib allocator for FreeRTOS        
+                           Format: source code                               
+                           License: Open Source - BSD-3-Clause               
+                           Location:                                         
+                           rtos/amazon-freertos/lib/FreeRTOS/portable/MemMang
+                           /                                                 
+                           name: Amazon FreeRTOS                             
+                           URL:                                              
+                           http://www.nadler.com/embedded/newlibAndFreeRTOS.h
+                           tml                                               
+                           version: 1.0.0                                    
+
 fatfs                      Approved Open Source License: Yes                 
                            Author: Electronic Lives Mfg. by ChaN of Ageo     
                            city, Japan (hobbyist)                            
@@ -29,7 +43,7 @@ fatfs                      Approved Open Source License: Yes
                            module for small embedded systems.                
                            Format: source code                               
                            License: Open Source - FatFs License,             
-                           middleware/fatfs/doc/en/appnote.html              
+                           middleware/fatfs/LICENSE.txt                      
                            Location: middleware/fatfs                        
                            name: FatFs                                       
                            URL: http://elm-chan.org/fsw/ff/00index_e.html    
@@ -92,7 +106,7 @@ percepio_snapshot          version: 3.0.9
                            name: Percepio Tracealyzer - Snapshot Demo        
                            Format: source code                               
 
-multicore                  version: 2.5.0                                    
+multicore                  version: 2.6.0                                    
                            Location: middleware/multicore                    
                            Description: NXP Multicore Software Development   
                            Kit.                                              
@@ -101,7 +115,7 @@ multicore                  version: 2.5.0
                            name: Multicore SDK                               
                            Format: source code                               
 
-erpc                       version: 1.7.1                                    
+erpc                       version: 1.7.2                                    
                            Location: middleware/multicore/erpc               
                            Description: Embedded Remote Procedure Call       
                            License: Open Source - BSD-3-Clause               
@@ -176,7 +190,7 @@ Pedometer_Library          version: 1.0
                            name: Pedometer Library                           
                            Format: binary library                            
 
-rpmsg_lite                 version: 2.0.2                                    
+rpmsg_lite                 version: 2.2.0                                    
                            Location: middleware/multicore/rpmsg_lite         
                            Description: Open Asymmetric Multi Processing     
                            (OpenAMP) framework project                       
@@ -187,7 +201,7 @@ rpmsg_lite                 version: 2.0.2
                            Format: source code                               
                            URL: https://github.com/OpenAMP/open-amp          
 
-MCMGR                      version: 4.0.2                                    
+MCMGR                      version: 4.0.3                                    
                            Location: middleware/multicore/mcmgr              
                            Description: Multicore manager                    
                            License: Open Source - BSD-3-Clause               

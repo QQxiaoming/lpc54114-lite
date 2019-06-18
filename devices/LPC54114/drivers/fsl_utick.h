@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2018 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -22,15 +22,15 @@
 
 /*! @name Driver version */
 /*@{*/
-/*! @brief UTICK driver version 2.0.1. */
-#define FSL_UTICK_DRIVER_VERSION (MAKE_VERSION(2, 0, 1))
+/*! @brief UTICK driver version 2.0.2. */
+#define FSL_UTICK_DRIVER_VERSION (MAKE_VERSION(2, 0, 2))
 /*@}*/
 
 /*! @brief UTICK timer operational mode. */
 typedef enum _utick_mode
 {
     kUTICK_Onetime = 0x0U, /*!< Trigger once*/
-    kUTICK_Repeat = 0x1U,  /*!< Trigger repeatedly */
+    kUTICK_Repeat  = 0x1U, /*!< Trigger repeatedly */
 } utick_mode_t;
 
 /*! @brief UTICK callback function. */
@@ -50,9 +50,9 @@ extern "C" {
  */
 
 /*!
-* @brief Initializes an UTICK by turning its bus clock on
-*
-*/
+ * @brief Initializes an UTICK by turning its bus clock on
+ *
+ */
 void UTICK_Init(UTICK_Type *base);
 
 /*!
