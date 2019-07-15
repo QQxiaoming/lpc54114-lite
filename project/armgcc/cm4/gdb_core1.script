@@ -1,8 +1,7 @@
 ######################################
 # 连接到jlinkGDBsever,请修改主机地址
 ######################################
-target remote localhost:2331
-#target remote 192.168.10.155:2331
+target remote localhost:2341
 
 ######################################
 # 复位并下载到目标板
@@ -10,15 +9,15 @@ target remote localhost:2331
 monitor reset
 monitor halt
 monitor speed 4000
-monitor writeu32 0xE000ED08 = 0x00000000
+monitor writeu32 0xE000ED08 = 0x20010000
 load
 
 ######################################
 # 程序运行到main
 ######################################
 monitor speed 400
-monitor reg r13 = (0x00000000)
-monitor reg pc = (0x00000004)
+monitor reg r13 = (0x20010000)
+monitor reg pc = (0x20010004)
 break main
 continue
 

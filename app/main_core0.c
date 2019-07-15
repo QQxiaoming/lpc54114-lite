@@ -11,19 +11,14 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "timers.h"
+
 #include "fsl_common.h"
 #include "fsl_debug_console.h"
-#include "UARTCommandConsole.h"
 
+#include "pin_mux.h"
 #include "mcmgr.h"
-#include "ff.h"
-#include "diskio.h"
-
 #include "clock_config.h"
+
 #include "bsp_led.h"
 #include "bsp_dmic.h"
 #include "bsp_flash.h"
@@ -31,10 +26,17 @@
 #include "bsp_systick.h"
 #include "bsp_pct2075.h"
 #include "bsp_adc.h"
-#include "pin_mux.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#include "timers.h"
+#include "UARTCommandConsole.h"
+
+#include "ff.h"
+#include "diskio.h"
 
 #include "start_core1.h"
-
 #include "test.h"
 
 

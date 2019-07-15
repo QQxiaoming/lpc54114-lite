@@ -1,0 +1,2 @@
+#!/bin/sh
+JLinkGDBServer -port 2331 -SWOPort 2332 -TelnetPort 2333 -device LPC54114J256_M4 -endian little -if SWD -speed 4000 -noir -noLocalhostOnly -rtos /opt/SEGGER/JLink_V632f/GDBServer/RTOSPlugin_FreeRTOS.so
