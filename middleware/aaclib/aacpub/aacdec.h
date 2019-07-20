@@ -58,7 +58,7 @@
 #
 #elif defined(_SYMBIAN) && defined(__WINS__)
 #
-#elif defined(__GNUC__) && defined(__arm__)
+#elif defined(__GNUC__) && (defined(ARM) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__))
 #
 #elif defined(__GNUC__) && defined(__i386__)
 #

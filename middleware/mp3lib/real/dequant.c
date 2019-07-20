@@ -108,12 +108,10 @@ int Dequantize(MP3DecInfo *mp3DecInfo, int gr)
 	 */
 	if (fh->modeExt && (hi->gb[0] < 1 || hi->gb[1] < 1)) {
 		for (i = 0; i < hi->nonZeroBound[0]; i++) {
-			if (hi->huffDecBuf[0][i] < -0x3fffffff)	 hi->huffDecBuf[0][i] = -0x3fffffff;
-			if (hi->huffDecBuf[0][i] >  0x3fffffff)	 hi->huffDecBuf[0][i] =  0x3fffffff;
+			hi->huffDecBuf[0][i] = CLIPTO30(hi->huffDecBuf[0][i]);
 		}
 		for (i = 0; i < hi->nonZeroBound[1]; i++) {
-			if (hi->huffDecBuf[1][i] < -0x3fffffff)	 hi->huffDecBuf[1][i] = -0x3fffffff;
-			if (hi->huffDecBuf[1][i] >  0x3fffffff)	 hi->huffDecBuf[1][i] =  0x3fffffff;
+			hi->huffDecBuf[1][i] = CLIPTO30(hi->huffDecBuf[1][i]);
 		}
 	}
 

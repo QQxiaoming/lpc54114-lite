@@ -96,6 +96,15 @@ static __inline int CLZ(int x)
 	return numZeros;
 }
 
+static __inline int CLIPTO30(int x)
+{
+	if (x < -0x3fffffff)	 x = -0x3fffffff;
+	if (x >  0x3fffffff)	 x =  0x3fffffff;
+
+	return x;
+}
+
+
 /* MADD64, SHL64, SAR64:
  * write in assembly to avoid dependency on run-time lib for 64-bit shifts, muls
  *  (sometimes compiler thunks to function calls instead of code generating)
@@ -184,6 +193,14 @@ static __inline Word64 SAR64(Word64 x, int n)
 	}
 }
 
+static __inline int CLIPTO30(int x)
+{
+	if (x < -0x3fffffff)	 x = -0x3fffffff;
+	if (x >  0x3fffffff)	 x =  0x3fffffff;
+
+	return x;
+}
+
 #elif (defined _WIN32) && (defined _WIN32_WCE)
 
 /* use asm function for now (EVC++ 3.0 does horrible job compiling __int64 version) */
@@ -215,6 +232,14 @@ static __inline int CLZ(int x)
 	} 
 
 	return numZeros;
+}
+
+static __inline int CLIPTO30(int x)
+{
+	if (x < -0x3fffffff)	 x = -0x3fffffff;
+	if (x >  0x3fffffff)	 x =  0x3fffffff;
+
+	return x;
 }
 
 #elif defined ARM_ADS
@@ -267,7 +292,18 @@ static __inline int CLZ(int x)
 	return numZeros;
 }
 
+static __inline int CLIPTO30(int x)
+{
+	if (x < -0x3fffffff)	 x = -0x3fffffff;
+	if (x >  0x3fffffff)	 x =  0x3fffffff;
+
+	return x;
+}
+
 #elif defined(__GNUC__) && (defined(ARM) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__))
+
+#include "LPC54114_cm4.h"
+#include "core_cm4.h"
 
 typedef long long Word64;
 
@@ -289,21 +325,9 @@ static inline long long SAR64(long long x, int n)
 	return ret;
 }
 
-static inline int CLZ(int x)
-{
-	int numZeros;
+#define CLZ(x)   __CLZ(x)
 
-	if (!x)
-		return (sizeof(int) * 8);
-
-	numZeros = 0;
-	while (!(x & 0x80000000)) {
-		numZeros++;
-		x <<= 1;
-	} 
-
-	return numZeros;
-}
+#define CLIPTO30(x) __SSAT(x,30)
 
 #else
 

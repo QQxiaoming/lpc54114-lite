@@ -34,7 +34,7 @@
 ; * ***** END LICENSE BLOCK ***** */ 
 
 
-        SECTION .text:CODE:REORDER(2)
+        SECTION .text:CODE:NOROOT:REORDER(2)
 ; int xmp3_MULSHIFT32(int x, int y)
 	;EXPORT	xmp3_MULSHIFT32
         PUBLIC	xmp3_MULSHIFT32

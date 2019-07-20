@@ -35,7 +35,7 @@
 ;   
 ; ***** END LICENSE BLOCK *****  
 
-        SECTION .text:CODE:REORDER(2)
+        SECTION .text:CODE:NOROOT:REORDER(2)
         THUMB
 	REQUIRE8
 	PRESERVE8

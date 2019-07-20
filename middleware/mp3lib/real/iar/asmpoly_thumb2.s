@@ -1,4 +1,4 @@
-	SECTION .text:CODE:REORDER(2)
+	SECTION .text:CODE:NOROOT:REORDER(2)
 	THUMB
 	REQUIRE8
 	PRESERVE8
@@ -11,14 +11,11 @@ RNDVAL SETA (1 << ((32 - 12) + (6 - 1)))
 	; sign = temp variable to use for sign
 	; maxPos = 0x00007fff (takes 2 instr. to generate - calculating
 	; once and using repeatedly saves if you do several CTOS in a row) */
-C64TOS	MACRO xl, xh, sign, maxPos
+C64TOS	MACRO xl, xh
 
 	mov xl, xl, lsr #(20+6)
 	orr xl, xl, xh, lsl #(12-6)
-	mov sign, xl, ASR #31
-	cmp sign, xl, ASR #15
-	it ne
-	eorne xl, sign, maxPos
+	ssat xl, #16, xl
 	ENDM ; C64TOS
 
 	; MC0S - process 2 taps, 1 sample per channel (sample 0) */
@@ -106,11 +103,9 @@ xmp3_PolyphaseStereo:
 	MC0S 7
 
 	ldr r0, [sp, #4] ; load pcm pointer
-	mov r14, #0x7f00
-	orr r14, r14, #0xff
 
-	C64TOS r4, r5, r12, r14
-	C64TOS r8, r9, r12, r14
+	C64TOS r4, r5
+	C64TOS r8, r9
 
 	strh r4, [r0, #(2*0)]
 	strh r8, [r0, #(2*1)]
@@ -134,11 +129,9 @@ xmp3_PolyphaseStereo:
 	MC1S 7
 
 	ldr r0, [sp, #4] ; load pcm pointer
-	mov r14, #0x7f00
-	orr r14, r14, #0xff
 
-	C64TOS r4, r5, r12, r14
-	C64TOS r8, r9, r12, r14
+	C64TOS r4, r5
+	C64TOS r8, r9
 
 	strh r4, [r0, #(2*(2*16+0))]
 	strh r8, [r0, #(2*(2*16+1))]
@@ -175,13 +168,11 @@ LoopPS
 	add r1, r1, #(4*64) ; vb1 += 64
 
 	ldr r0, [sp, #4] ; load pcm pointer
-	mov r14, #0x7f00
-	orr r14, r14, #0xff
 
-	C64TOS r4, r5, r12, r14
-	C64TOS r8, r9, r12, r14
-	C64TOS r6, r7, r12, r14
-	C64TOS r10, r11, r12, r14
+	C64TOS r4, r5
+	C64TOS r8, r9
+	C64TOS r6, r7
+	C64TOS r10, r11
 
 	ldr r12, [sp, #0] ; load loop counter
 	add r14, r0, r12, lsl #3 ; r14 = r0 + 4*i (short offset)
@@ -269,10 +260,8 @@ xmp3_PolyphaseMono:
 	MC0M 7
 
 	ldr r0, [sp, #4] ; load pcm pointer
-	mov r14, #0x7f00
-	orr r14, r14, #0xff
 
-	C64TOS r4, r5, r12, r14
+	C64TOS r4, r5
 	strh r4, [r0, #(2*0)]
 
 	; special case, output sample 16
@@ -292,10 +281,8 @@ xmp3_PolyphaseMono:
 	MC1M 7
 
 	ldr r0, [sp, #4] ; load pcm pointer
-	mov r14, #0x7f00
-	orr r14, r14, #0xff
 
-	C64TOS r4, r5, r12, r14
+	C64TOS r4, r5
 
 	strh r4, [r0, #(2*16)]
 
@@ -326,11 +313,9 @@ LoopPM
 	add r1, r1, #(4*64) ; vb1 += 64
 
 	ldr r0, [sp, #4] ; load pcm pointer
-	mov r14, #0x7f00
-	orr r14, r14, #0xff
 
-	C64TOS r4, r5, r12, r14
-	C64TOS r6, r7, r12, r14
+	C64TOS r4, r5
+	C64TOS r6, r7
 
 	ldr r12, [sp, #0] ; load loop counter*/
 	add r14, r0, r12, lsl #2 ; r14 = r0 + 2*i (short offset)*/

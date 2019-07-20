@@ -336,7 +336,10 @@ static __inline Word64 MADD64(Word64 sum64, int x, int y)
 /* toolchain:           ARM gcc
  * target architecture: ARM v.4 and above (requires 'M' type processor for 32x32->64 multiplier)
  */
-#elif defined(__GNUC__) && defined(__arm__)
+#elif defined(__GNUC__) && (defined(ARM) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__))
+
+#include "LPC54114_cm4.h"
+#include "core_cm4.h"
 
 static __inline__ int MULSHIFT32(int x, int y)
 {
@@ -345,17 +348,7 @@ static __inline__ int MULSHIFT32(int x, int y)
     return y;
 }
 
-static __inline short CLIPTOSHORT(int x)
-{
-        int sign;
-
-        /* clip to [-32768, 32767] */
-        sign = x >> 31;
-        if (sign != (x >> 15))
-                x = sign ^ ((1 << 15) - 1);
-
-        return (short)x;
-}
+#define CLIPTOSHORT(x)    __SSAT(x,16)
 
 static __inline int FASTABS(int x)
 {
@@ -368,21 +361,7 @@ static __inline int FASTABS(int x)
         return x;
 }
 
-static __inline int CLZ(int x)
-{
-        int numZeros;
-
-        if (!x)
-                return (sizeof(int) * 8);
-
-        numZeros = 0;
-        while (!(x & 0x80000000)) {
-                numZeros++;
-                x <<= 1;
-        }
-
-        return numZeros;
-}
+#define CLZ(x) __CLZ(x)
 
 typedef long long Word64;
 
