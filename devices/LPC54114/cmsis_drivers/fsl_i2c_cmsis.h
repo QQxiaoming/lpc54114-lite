@@ -69,6 +69,22 @@ extern ARM_DRIVER_I2C Driver_I2C8;
 extern ARM_DRIVER_I2C Driver_I2C9;
 #endif
 
+#if defined(I2C10)
+extern ARM_DRIVER_I2C Driver_I2C10;
+#endif
+
+#if defined(I2C11)
+extern ARM_DRIVER_I2C Driver_I2C11;
+#endif
+
+#if defined(I2C12)
+extern ARM_DRIVER_I2C Driver_I2C12;
+#endif
+
+#if defined(I2C13)
+extern ARM_DRIVER_I2C Driver_I2C13;
+#endif
+
 /* I2C Driver state flags */
 #define I2C_FLAG_UNINIT (0)
 #define I2C_FLAG_INIT (1 << 0)

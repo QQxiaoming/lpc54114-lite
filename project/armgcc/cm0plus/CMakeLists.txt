@@ -32,21 +32,21 @@ SET(CMAKE_ASM_FLAGS_RELEASE "${CMAKE_ASM_FLAGS_RELEASE} \
 
 SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} \
      -DDEBUG -DCPU_LPC54114J256BD64_cm0plus -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
-     -DMULTICORE_APP=1 -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
+     -DMULTICORE_APP=1 -DSERIAL_PORT_TYPE_UART=1 -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
      -mthumb -mapcs -std=gnu99 -mcpu=cortex-m0plus -mfloat-abi=soft -MMD -MP")
 
 SET(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} \
      -DNDEBUG -DCPU_LPC54114J256BD64_cm0plus -DMCMGR_HANDLE_EXCEPTIONS=1 -D__SEMIHOST_HARDFAULT_DISABLE=1 \
-     -DMULTICORE_APP=1 -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
+     -DMULTICORE_APP=1 -DSERIAL_PORT_TYPE_UART=1 -Os -Wall -fno-common -ffunction-sections -fdata-sections -ffreestanding -fno-builtin \
      -mthumb -mapcs -std=gnu99 -mcpu=cortex-m0plus -mfloat-abi=soft -MMD -MP")
 
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} \
-     -DDEBUG -DCPU_LPC54114J256BD64_cm0plus -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections \
+     -DDEBUG -DCPU_LPC54114J256BD64_cm0plus -DSERIAL_PORT_TYPE_UART=1 -g -O0 -Wall -fno-common -ffunction-sections -fdata-sections \
       -ffreestanding -fno-builtin -mthumb -mapcs -fno-rtti -fno-exceptions -mcpu=cortex-m0plus -mfloat-abi=soft \
       -MMD -MP")
 
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} \
-     -DNDEBUG -DCPU_LPC54114J256BD64_cm0plus -Os -Wall -fno-common -ffunction-sections -fdata-sections \
+     -DNDEBUG -DCPU_LPC54114J256BD64_cm0plus -DSERIAL_PORT_TYPE_UART=1 -Os -Wall -fno-common -ffunction-sections -fdata-sections \
      -ffreestanding -fno-builtin -mthumb -mapcs -fno-rtti -fno-exceptions -mcpu=cortex-m0plus -mfloat-abi=soft \
      -MMD -MP")
 

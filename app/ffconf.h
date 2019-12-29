@@ -1,21 +1,23 @@
-/*---------------------------------------------------------------------------/
-/  FatFs - Configuration file
-/---------------------------------------------------------------------------*/
-
-#define FFCONF_DEF 63463	/* Revision ID */
-
+#ifndef _FFCONF_H_
+#define _FFCONF_H_
 
 /*---------------------------------------------------------------------------/
-/ Freescale adaptation configuration
+/  FatFs Functional Configurations
 /---------------------------------------------------------------------------*/
 
+#define FFCONF_DEF	86604	/* Revision ID */
+
+/*---------------------------------------------------------------------------/
+/ MSDK adaptation configuration
+/---------------------------------------------------------------------------*/
 #define SDSPI_DISK_ENABLE
 /* Available options are:
 /      RAM_DISK_ENABLE
 /      USB_DISK_ENABLE
 /      SD_DISK_ENABLE
-/      MMC_DISK_ENABLE */
-
+/      MMC_DISK_ENABLE
+/      SDSPI_DISK_ENABLE
+/      NAND_DISK_ENABLE */
 
 /*---------------------------------------------------------------------------/
 / Function Configurations
@@ -245,7 +247,7 @@
 
 #define FF_FS_EXFAT		0
 /* This option switches support for exFAT filesystem. (0:Disable or 1:Enable)
-/  To enable exFAT, also LFN needs to be enabled.
+/  To enable exFAT, also LFN needs to be enabled. (FF_USE_LFN >= 1)
 /  Note that enabling exFAT discards ANSI C (C89) compatibility. */
 
 
@@ -261,7 +263,6 @@
 /  added to the project to read current time form real-time clock. FF_NORTC_MON,
 /  FF_NORTC_MDAY and FF_NORTC_YEAR have no effect.
 /  These options have no effect at read-only configuration (FF_FS_READONLY = 1). */
-
 
 
 #define FF_FS_LOCK		0
@@ -297,9 +298,8 @@
 /  SemaphoreHandle_t and etc. A header file for O/S definitions needs to be
 /  included somewhere in the scope of ff.h. */
 
-/* #include <windows.h>	// O/S definitions  */
-
 
 
 /*--- End of configuration options ---*/
 
+#endif /* _FFCONF_H_ */

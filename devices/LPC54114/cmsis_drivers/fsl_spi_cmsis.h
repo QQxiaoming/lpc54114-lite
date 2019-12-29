@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2013-2016 ARM Limited. All rights reserved.
  * Copyright (c) 2016, Freescale Semiconductor, Inc. Not a Contribution.
- * Copyright 2016-2017 NXP. Not a Contribution.
+ * Copyright 2016-2019 NXP. Not a Contribution.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -67,6 +67,22 @@ extern ARM_DRIVER_SPI Driver_SPI8;
 #if defined(SPI9)
 extern ARM_DRIVER_SPI Driver_SPI9;
 #endif /* SPI9 */
+
+#if defined(SPI10)
+extern ARM_DRIVER_SPI Driver_SPI10;
+#endif /* SPI10 */
+
+#if defined(SPI11)
+extern ARM_DRIVER_SPI Driver_SPI11;
+#endif /* SPI11 */
+
+#if defined(SPI12)
+extern ARM_DRIVER_SPI Driver_SPI12;
+#endif /* SPI12 */
+
+#if defined(SPI13)
+extern ARM_DRIVER_SPI Driver_SPI13;
+#endif /* SPI13 */
 
 #define SPI_FLAG_UNINIT (0)
 #define SPI_FLAG_INIT (1 << 0)

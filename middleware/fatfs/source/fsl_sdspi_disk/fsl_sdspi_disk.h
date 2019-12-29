@@ -32,6 +32,7 @@
 #define _FSL_SDSPI_DISK_H_
 
 #include <stdint.h>
+#include "ff.h"
 #include "diskio.h"
 #include "fsl_common.h"
 

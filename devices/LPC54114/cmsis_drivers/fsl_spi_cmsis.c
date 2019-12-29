@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2013-2016 ARM Limited. All rights reserved.
  * Copyright (c) 2016, Freescale Semiconductor, Inc. Not a Contribution.
- * Copyright 2016-2017 NXP. Not a Contribution.
+ * Copyright 2016-2019 NXP. Not a Contribution.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -26,14 +26,12 @@
 #endif
 
 #if (RTE_SPI0 || RTE_SPI1 || RTE_SPI2 || RTE_SPI3 || RTE_SPI4 || RTE_SPI5 || RTE_SPI6 || RTE_SPI7 || RTE_SPI8 || \
-     RTE_SPI9)
+     RTE_SPI9 || RTE_SPI10 || RTE_SPI11 || RTE_SPI12 || RTE_SPI13)
 
-#define ARM_SPI_DRV_VERSION ARM_DRIVER_VERSION_MAJOR_MINOR(2, 0) /* driver version */
+#define ARM_SPI_DRV_VERSION ARM_DRIVER_VERSION_MAJOR_MINOR(2, 1) /* driver version */
 
 /*! @brief IDs of clock for each FLEXCOMM module */
 static const clock_ip_name_t s_flexcommClocks[] = FLEXCOMM_CLOCKS;
-/* Array of SPI reset number. */
-static const reset_ip_name_t s_spiResetInstance[] = FLEXCOMM_RSTS;
 /*
  * ARMCC does not support split the data section automatically, so the driver
  * needs to split the data to separate sections explicitly, to reduce codesize.
@@ -206,6 +204,42 @@ void SPI_MasterCommonControl(uint32_t control,
 #endif
             break;
 
+        case 10:
+#if defined(RTE_SPI10_SSEL_NUM)
+            masterConfig->sselNum = RTE_SPI10_SSEL_NUM;
+#endif
+#if defined(RTE_SPI10_SSEL_POL)
+            masterConfig->sselPol = RTE_SPI10_SSEL_POL;
+#endif
+            break;
+
+        case 11:
+#if defined(RTE_SPI11_SSEL_NUM)
+            masterConfig->sselNum = RTE_SPI11_SSEL_NUM;
+#endif
+#if defined(RTE_SPI11_SSEL_POL)
+            masterConfig->sselPol = RTE_SPI11_SSEL_POL;
+#endif
+            break;
+
+        case 12:
+#if defined(RTE_SPI12_SSEL_NUM)
+            masterConfig->sselNum = RTE_SPI12_SSEL_NUM;
+#endif
+#if defined(RTE_SPI12_SSEL_POL)
+            masterConfig->sselPol = RTE_SPI12_SSEL_POL;
+#endif
+            break;
+
+        case 13:
+#if defined(RTE_SPI13_SSEL_NUM)
+            masterConfig->sselNum = RTE_SPI13_SSEL_NUM;
+#endif
+#if defined(RTE_SPI13_SSEL_POL)
+            masterConfig->sselPol = RTE_SPI13_SSEL_POL;
+#endif
+            break;
+
         default:
             break;
     }
@@ -326,6 +360,30 @@ void SPI_SlaveCommonControl(uint32_t control,
 #endif
             break;
 
+        case 10:
+#if defined(RTE_SPI10_SSEL_POL)
+            slaveConfig->sselPol = RTE_SPI10_SSEL_POL;
+#endif
+            break;
+
+        case 11:
+#if defined(RTE_SPI11_SSEL_POL)
+            slaveConfig->sselPol = RTE_SPI11_SSEL_POL;
+#endif
+            break;
+
+        case 12:
+#if defined(RTE_SPI12_SSEL_POL)
+            slaveConfig->sselPol = RTE_SPI12_SSEL_POL;
+#endif
+            break;
+
+        case 13:
+#if defined(RTE_SPI13_SSEL_POL)
+            slaveConfig->sselPol = RTE_SPI13_SSEL_POL;
+#endif
+            break;
+
         default:
             break;
     }
@@ -391,7 +449,8 @@ static ARM_SPI_CAPABILITIES SPIx_GetCapabilities(void)
 #endif
 
 #if (RTE_SPI0_DMA_EN || RTE_SPI1_DMA_EN || RTE_SPI2_DMA_EN || RTE_SPI3_DMA_EN || RTE_SPI4_DMA_EN || RTE_SPI5_DMA_EN || \
-     RTE_SPI6_DMA_EN || RTE_SPI7_DMA_EN || RTE_SPI8_DMA_EN || RTE_SPI9_DMA_EN)
+     RTE_SPI6_DMA_EN || RTE_SPI7_DMA_EN || RTE_SPI8_DMA_EN || RTE_SPI9_DMA_EN || RTE_SPI10_DMA_EN ||                   \
+     RTE_SPI11_DMA_EN || RTE_SPI12_DMA_EN || RTE_SPI13_DMA_EN)
 
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 
@@ -458,7 +517,6 @@ static int32_t SPI_DMAPowerControl(ARM_POWER_STATE state, cmsis_spi_dma_driver_s
             if (spi->flags & SPI_FLAG_POWER)
             {
                 SPI_Deinit(spi->resource->base);
-                RESET_PeripheralReset(s_spiResetInstance[spi->resource->instance]);
 
                 DMA_DisableChannel(spi->dmaResource->txdmaBase, spi->dmaResource->txdmaChannel);
                 DMA_DisableChannel(spi->dmaResource->rxdmaBase, spi->dmaResource->rxdmaChannel);
@@ -739,7 +797,6 @@ static int32_t SPI_DMAControl(uint32_t control, uint32_t arg, cmsis_spi_dma_driv
         if (spi->flags & SPI_FLAG_CONFIGURED)
         {
             SPI_Deinit(spi->resource->base);
-            RESET_PeripheralReset(s_spiResetInstance[spi->resource->instance]);
         }
         SPI_MasterInit(spi->resource->base, &masterConfig, spi->resource->GetFreq());
 
@@ -774,7 +831,6 @@ static int32_t SPI_DMAControl(uint32_t control, uint32_t arg, cmsis_spi_dma_driv
         if (spi->flags & SPI_FLAG_CONFIGURED)
         {
             SPI_Deinit(spi->resource->base);
-            RESET_PeripheralReset(s_spiResetInstance[spi->resource->instance]);
         }
         SPI_SlaveInit(spi->resource->base, &slaveConfig);
 
@@ -823,10 +879,11 @@ ARM_SPI_STATUS SPI_DMAGetStatus(cmsis_spi_dma_driver_state_t *spi)
 
 #endif
 
-#if ((RTE_SPI0 && !RTE_SPI0_DMA_EN) || (RTE_SPI1 && !RTE_SPI1_DMA_EN) || (RTE_SPI2 && !RTE_SPI2_DMA_EN) || \
-     (RTE_SPI3 && !RTE_SPI3_DMA_EN) || (RTE_SPI4 && !RTE_SPI4_DMA_EN) || (RTE_SPI5 && !RTE_SPI5_DMA_EN) || \
-     (RTE_SPI6 && !RTE_SPI6_DMA_EN) || (RTE_SPI7 && !RTE_SPI7_DMA_EN) || (RTE_SPI8 && !RTE_SPI8_DMA_EN) || \
-     (RTE_SPI9 && !RTE_SPI9_DMA_EN))
+#if ((RTE_SPI0 && !RTE_SPI0_DMA_EN) || (RTE_SPI1 && !RTE_SPI1_DMA_EN) || (RTE_SPI2 && !RTE_SPI2_DMA_EN) ||     \
+     (RTE_SPI3 && !RTE_SPI3_DMA_EN) || (RTE_SPI4 && !RTE_SPI4_DMA_EN) || (RTE_SPI5 && !RTE_SPI5_DMA_EN) ||     \
+     (RTE_SPI6 && !RTE_SPI6_DMA_EN) || (RTE_SPI7 && !RTE_SPI7_DMA_EN) || (RTE_SPI8 && !RTE_SPI8_DMA_EN) ||     \
+     (RTE_SPI9 && !RTE_SPI9_DMA_EN) || (RTE_SPI10 && !RTE_SPI10_DMA_EN) || (RTE_SPI11 && !RTE_SPI11_DMA_EN) || \
+     (RTE_SPI12 && !RTE_SPI12_DMA_EN) || (RTE_SPI13 && !RTE_SPI13_DMA_EN))
 
 void KSDK_SPI_MasterInterruptCallback(SPI_Type *base, spi_master_handle_t *handle, status_t status, void *userData)
 {
@@ -895,8 +952,6 @@ static int32_t SPI_InterruptPowerControl(ARM_POWER_STATE state, cmsis_spi_interr
             if (spi->flags & SPI_FLAG_POWER)
             {
                 SPI_Deinit(spi->resource->base);
-                /* Reset Periphera instance, and disable the clock gate */
-                RESET_PeripheralReset(s_spiResetInstance[spi->resource->instance]);
                 spi->flags = SPI_FLAG_INIT;
             }
             break;
@@ -1169,7 +1224,6 @@ static int32_t SPI_InterruptControl(uint32_t control, uint32_t arg, cmsis_spi_in
         if (spi->flags & SPI_FLAG_CONFIGURED)
         {
             SPI_Deinit(spi->resource->base);
-            RESET_PeripheralReset(s_spiResetInstance[spi->resource->instance]);
         }
         SPI_MasterInit(spi->resource->base, &masterConfig, spi->resource->GetFreq());
         SPI_MasterTransferCreateHandle(spi->resource->base, &spi->handle->masterHandle,
@@ -1197,7 +1251,6 @@ static int32_t SPI_InterruptControl(uint32_t control, uint32_t arg, cmsis_spi_in
         if (spi->flags & SPI_FLAG_CONFIGURED)
         {
             SPI_Deinit(spi->resource->base);
-            RESET_PeripheralReset(s_spiResetInstance[spi->resource->instance]);
         }
         SPI_SlaveInit(spi->resource->base, &slaveConfig);
         SPI_SlaveTransferCreateHandle(spi->resource->base, &spi->handle->slaveHandle, KSDK_SPI_SlaveInterruptCallback,
@@ -1261,7 +1314,7 @@ static dma_handle_t SPI0_DmaRxDataHandle;
 ARMCC_SECTION("spi0_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI0_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI0_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI0_DMADriverState  = {
 #endif
     &SPI0_Resource, &SPI0_DMAResource, &SPI0_DmaHandle, &SPI0_DmaTxDataHandle, &SPI0_DmaRxDataHandle,
 
@@ -1324,7 +1377,7 @@ static cmsis_spi_handle_t SPI0_Handle;
 ARMCC_SECTION("spi0_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI0_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI0_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI0_InterruptDriverState  = {
 #endif
     &SPI0_Resource,
     &SPI0_Handle,
@@ -1422,7 +1475,7 @@ static dma_handle_t SPI1_DmaRxDataHandle;
 ARMCC_SECTION("spi1_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI1_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI1_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI1_DMADriverState  = {
 #endif
     &SPI1_Resource, &SPI1_DMAResource, &SPI1_DmaHandle, &SPI1_DmaRxDataHandle, &SPI1_DmaTxDataHandle,
 };
@@ -1484,7 +1537,7 @@ static cmsis_spi_handle_t SPI1_Handle;
 ARMCC_SECTION("spi1_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI1_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI1_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI1_InterruptDriverState  = {
 #endif
     &SPI1_Resource,
     &SPI1_Handle,
@@ -1584,7 +1637,7 @@ static dma_handle_t SPI2_DmaRxDataHandle;
 ARMCC_SECTION("spi2_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI2_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI2_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI2_DMADriverState  = {
 #endif
     &SPI2_Resource, &SPI2_DMAResource, &SPI2_DmaHandle, &SPI2_DmaRxDataHandle, &SPI2_DmaTxDataHandle,
 };
@@ -1646,7 +1699,7 @@ static cmsis_spi_handle_t SPI2_Handle;
 ARMCC_SECTION("spi2_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI2_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI2_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI2_InterruptDriverState  = {
 #endif
     &SPI2_Resource,
     &SPI2_Handle,
@@ -1746,7 +1799,7 @@ static dma_handle_t SPI3_DmaRxDataHandle;
 ARMCC_SECTION("spi3_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI3_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI3_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI3_DMADriverState  = {
 #endif
     &SPI3_Resource, &SPI3_DMAResource, &SPI3_DmaHandle, &SPI3_DmaRxDataHandle, &SPI3_DmaTxDataHandle,
 };
@@ -1808,7 +1861,7 @@ static cmsis_spi_handle_t SPI3_Handle;
 ARMCC_SECTION("spi3_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI3_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI3_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI3_InterruptDriverState  = {
 #endif
     &SPI3_Resource,
     &SPI3_Handle,
@@ -1908,7 +1961,7 @@ static dma_handle_t SPI4_DmaRxDataHandle;
 ARMCC_SECTION("spi4_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI4_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI4_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI4_DMADriverState  = {
 #endif
     &SPI4_Resource, &SPI4_DMAResource, &SPI4_DmaHandle, &SPI4_DmaRxDataHandle, &SPI4_DmaTxDataHandle,
 };
@@ -1970,7 +2023,7 @@ static cmsis_spi_handle_t SPI4_Handle;
 ARMCC_SECTION("spi4_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI4_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI4_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI4_InterruptDriverState  = {
 #endif
     &SPI4_Resource,
     &SPI4_Handle,
@@ -2070,7 +2123,7 @@ static dma_handle_t SPI5_DmaRxDataHandle;
 ARMCC_SECTION("spi5_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI5_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI5_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI5_DMADriverState  = {
 #endif
     &SPI5_Resource, &SPI5_DMAResource, &SPI5_DmaHandle, &SPI5_DmaRxDataHandle, &SPI5_DmaTxDataHandle,
 };
@@ -2132,7 +2185,7 @@ static cmsis_spi_handle_t SPI5_Handle;
 ARMCC_SECTION("spi5_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI5_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI5_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI5_InterruptDriverState  = {
 #endif
     &SPI5_Resource,
     &SPI5_Handle,
@@ -2232,7 +2285,7 @@ static dma_handle_t SPI6_DmaRxDataHandle;
 ARMCC_SECTION("spi6_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI6_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI6_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI6_DMADriverState  = {
 #endif
     &SPI6_Resource, &SPI6_DMAResource, &SPI6_DmaHandle, &SPI6_DmaRxDataHandle, &SPI6_DmaTxDataHandle,
 };
@@ -2294,7 +2347,7 @@ static cmsis_spi_handle_t SPI6_Handle;
 ARMCC_SECTION("spi6_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI6_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI6_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI6_InterruptDriverState  = {
 #endif
     &SPI6_Resource,
     &SPI6_Handle,
@@ -2394,7 +2447,7 @@ static dma_handle_t SPI7_DmaRxDataHandle;
 ARMCC_SECTION("spi7_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI7_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI7_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI7_DMADriverState  = {
 #endif
     &SPI7_Resource, &SPI7_DMAResource, &SPI7_DmaHandle, &SPI7_DmaRxDataHandle, &SPI7_DmaTxDataHandle,
 };
@@ -2456,7 +2509,7 @@ static cmsis_spi_handle_t SPI7_Handle;
 ARMCC_SECTION("spi7_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI7_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI7_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI7_InterruptDriverState  = {
 #endif
     &SPI7_Resource,
     &SPI7_Handle,
@@ -2556,7 +2609,7 @@ static dma_handle_t SPI8_DmaRxDataHandle;
 ARMCC_SECTION("spi8_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI8_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI8_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI8_DMADriverState  = {
 #endif
     &SPI8_Resource, &SPI8_DMAResource, &SPI8_DmaHandle, &SPI8_DmaRxDataHandle, &SPI8_DmaTxDataHandle,
 };
@@ -2618,7 +2671,7 @@ static cmsis_spi_handle_t SPI8_Handle;
 ARMCC_SECTION("spi8_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI8_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI8_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI8_InterruptDriverState  = {
 #endif
     &SPI8_Resource,
     &SPI8_Handle,
@@ -2718,7 +2771,7 @@ static dma_handle_t SPI9_DmaRxDataHandle;
 ARMCC_SECTION("spi9_dma_driver_state")
 static cmsis_spi_dma_driver_state_t SPI9_DMADriverState = {
 #else
-static cmsis_spi_dma_driver_state_t SPI9_DMADriverState = {
+static cmsis_spi_dma_driver_state_t SPI9_DMADriverState  = {
 #endif
     &SPI9_Resource, &SPI9_DMAResource, &SPI9_DmaHandle, &SPI9_DmaRxDataHandle, &SPI9_DmaTxDataHandle,
 };
@@ -2780,7 +2833,7 @@ static cmsis_spi_handle_t SPI9_Handle;
 ARMCC_SECTION("spi9_interrupt_driver_state")
 static cmsis_spi_interrupt_driver_state_t SPI9_InterruptDriverState = {
 #else
-static cmsis_spi_interrupt_driver_state_t SPI9_InterruptDriverState = {
+static cmsis_spi_interrupt_driver_state_t SPI9_InterruptDriverState  = {
 #endif
     &SPI9_Resource,
     &SPI9_Handle,
@@ -2854,3 +2907,643 @@ ARM_DRIVER_SPI Driver_SPI9 = {SPIx_GetVersion,    SPIx_GetCapabilities,
 };
 
 #endif /*  SPI9  */
+
+#if defined(SPI10) && RTE_SPI10
+/* User needs to provide the implementation for SPI10_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t SPI10_GetFreq(void);
+extern void SPI10_InitPins(void);
+extern void SPI10_DeinitPins(void);
+cmsis_spi_resource_t SPI10_Resource = {SPI10, 1, SPI10_GetFreq};
+
+#if RTE_SPI10_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_spi_dma_resource_t SPI10_DMAResource = {RTE_SPI10_DMA_TX_DMA_BASE, RTE_SPI10_DMA_TX_CH, RTE_SPI10_DMA_RX_DMA_BASE,
+                                              RTE_SPI10_DMA_RX_CH};
+
+static cmsis_spi_dma_handle_t SPI10_DmaHandle;
+static dma_handle_t SPI10_DmaTxDataHandle;
+static dma_handle_t SPI10_DmaRxDataHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi10_dma_driver_state")
+static cmsis_spi_dma_driver_state_t SPI10_DMADriverState = {
+#else
+static cmsis_spi_dma_driver_state_t SPI10_DMADriverState = {
+#endif
+    &SPI10_Resource, &SPI10_DMAResource, &SPI10_DmaHandle, &SPI10_DmaRxDataHandle, &SPI10_DmaTxDataHandle,
+};
+
+static int32_t SPI10_DMAInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI10_InitPins();
+    return SPI_DMAInitialize(cb_event, &SPI10_DMADriverState);
+}
+
+static int32_t SPI10_DMAUninitialize(void)
+{
+    SPI10_DeinitPins();
+    return SPI_DMAUninitialize(&SPI10_DMADriverState);
+}
+
+static int32_t SPI10_DMAPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_DMAPowerControl(state, &SPI10_DMADriverState);
+}
+
+static int32_t SPI10_DMASend(const void *data, uint32_t num)
+{
+    return SPI_DMASend(data, num, &SPI10_DMADriverState);
+}
+
+static int32_t SPI10_DMAReceive(void *data, uint32_t num)
+{
+    return SPI_DMAReceive(data, num, &SPI10_DMADriverState);
+}
+
+static int32_t SPI10_DMATransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_DMATransfer(data_out, data_in, num, &SPI10_DMADriverState);
+}
+
+static uint32_t SPI10_DMAGetCount(void)
+{
+    return SPI_DMAGetCount(&SPI10_DMADriverState);
+}
+
+static int32_t SPI10_DMAControl(uint32_t control, uint32_t arg)
+{
+    return SPI_DMAControl(control, arg, &SPI10_DMADriverState);
+}
+
+static ARM_SPI_STATUS SPI10_DMAGetStatus(void)
+{
+    return SPI_DMAGetStatus(&SPI10_DMADriverState);
+}
+
+#endif
+
+#else
+
+static cmsis_spi_handle_t SPI10_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi10_interrupt_driver_state")
+static cmsis_spi_interrupt_driver_state_t SPI10_InterruptDriverState = {
+#else
+static cmsis_spi_interrupt_driver_state_t SPI10_InterruptDriverState = {
+#endif
+    &SPI10_Resource,
+    &SPI10_Handle,
+};
+
+static int32_t SPI10_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI10_InitPins();
+    return SPI_InterruptInitialize(cb_event, &SPI10_InterruptDriverState);
+}
+
+static int32_t SPI10_InterruptUninitialize(void)
+{
+    SPI10_DeinitPins();
+    return SPI_InterruptUninitialize(&SPI10_InterruptDriverState);
+}
+
+static int32_t SPI10_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_InterruptPowerControl(state, &SPI10_InterruptDriverState);
+}
+
+static int32_t SPI10_InterruptSend(const void *data, uint32_t num)
+{
+    return SPI_InterruptSend(data, num, &SPI10_InterruptDriverState);
+}
+
+static int32_t SPI10_InterruptReceive(void *data, uint32_t num)
+{
+    return SPI_InterruptReceive(data, num, &SPI10_InterruptDriverState);
+}
+
+static int32_t SPI10_InterruptTransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_InterruptTransfer(data_out, data_in, num, &SPI10_InterruptDriverState);
+}
+
+static uint32_t SPI10_InterruptGetCount(void)
+{
+    return SPI_InterruptGetCount(&SPI10_InterruptDriverState);
+}
+
+static int32_t SPI10_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return SPI_InterruptControl(control, arg, &SPI10_InterruptDriverState);
+}
+
+static ARM_SPI_STATUS SPI10_InterruptGetStatus(void)
+{
+    return SPI_InterruptGetStatus(&SPI10_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_SPI Driver_SPI10 = {SPIx_GetVersion,     SPIx_GetCapabilities,
+#if RTE_SPI10_DMA_EN
+                               SPI10_DMAInitialize, SPI10_DMAUninitialize, SPI10_DMAPowerControl, SPI10_DMASend,
+                               SPI10_DMAReceive,    SPI10_DMATransfer,     SPI10_DMAGetCount,     SPI10_DMAControl,
+                               SPI10_DMAGetStatus
+#else
+                               SPI10_InterruptInitialize,
+                               SPI10_InterruptUninitialize,
+                               SPI10_InterruptPowerControl,
+                               SPI10_InterruptSend,
+                               SPI10_InterruptReceive,
+                               SPI10_InterruptTransfer,
+                               SPI10_InterruptGetCount,
+                               SPI10_InterruptControl,
+                               SPI10_InterruptGetStatus
+#endif
+};
+
+#endif /*  SPI10  */
+
+#if defined(SPI11) && RTE_SPI11
+/* User needs to provide the implementation for SPI11_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t SPI11_GetFreq(void);
+extern void SPI11_InitPins(void);
+extern void SPI11_DeinitPins(void);
+cmsis_spi_resource_t SPI11_Resource = {SPI11, 1, SPI11_GetFreq};
+
+#if RTE_SPI11_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_spi_dma_resource_t SPI11_DMAResource = {RTE_SPI11_DMA_TX_DMA_BASE, RTE_SPI11_DMA_TX_CH, RTE_SPI11_DMA_RX_DMA_BASE,
+                                              RTE_SPI11_DMA_RX_CH};
+
+static cmsis_spi_dma_handle_t SPI11_DmaHandle;
+static dma_handle_t SPI11_DmaTxDataHandle;
+static dma_handle_t SPI11_DmaRxDataHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi11_dma_driver_state")
+static cmsis_spi_dma_driver_state_t SPI11_DMADriverState = {
+#else
+static cmsis_spi_dma_driver_state_t SPI11_DMADriverState = {
+#endif
+    &SPI11_Resource, &SPI11_DMAResource, &SPI11_DmaHandle, &SPI11_DmaRxDataHandle, &SPI11_DmaTxDataHandle,
+};
+
+static int32_t SPI11_DMAInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI11_InitPins();
+    return SPI_DMAInitialize(cb_event, &SPI11_DMADriverState);
+}
+
+static int32_t SPI11_DMAUninitialize(void)
+{
+    SPI11_DeinitPins();
+    return SPI_DMAUninitialize(&SPI11_DMADriverState);
+}
+
+static int32_t SPI11_DMAPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_DMAPowerControl(state, &SPI11_DMADriverState);
+}
+
+static int32_t SPI11_DMASend(const void *data, uint32_t num)
+{
+    return SPI_DMASend(data, num, &SPI11_DMADriverState);
+}
+
+static int32_t SPI11_DMAReceive(void *data, uint32_t num)
+{
+    return SPI_DMAReceive(data, num, &SPI11_DMADriverState);
+}
+
+static int32_t SPI11_DMATransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_DMATransfer(data_out, data_in, num, &SPI11_DMADriverState);
+}
+
+static uint32_t SPI11_DMAGetCount(void)
+{
+    return SPI_DMAGetCount(&SPI11_DMADriverState);
+}
+
+static int32_t SPI11_DMAControl(uint32_t control, uint32_t arg)
+{
+    return SPI_DMAControl(control, arg, &SPI11_DMADriverState);
+}
+
+static ARM_SPI_STATUS SPI11_DMAGetStatus(void)
+{
+    return SPI_DMAGetStatus(&SPI11_DMADriverState);
+}
+
+#endif
+
+#else
+
+static cmsis_spi_handle_t SPI11_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi11_interrupt_driver_state")
+static cmsis_spi_interrupt_driver_state_t SPI11_InterruptDriverState = {
+#else
+static cmsis_spi_interrupt_driver_state_t SPI11_InterruptDriverState = {
+#endif
+    &SPI11_Resource,
+    &SPI11_Handle,
+};
+
+static int32_t SPI11_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI11_InitPins();
+    return SPI_InterruptInitialize(cb_event, &SPI11_InterruptDriverState);
+}
+
+static int32_t SPI11_InterruptUninitialize(void)
+{
+    SPI11_DeinitPins();
+    return SPI_InterruptUninitialize(&SPI11_InterruptDriverState);
+}
+
+static int32_t SPI11_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_InterruptPowerControl(state, &SPI11_InterruptDriverState);
+}
+
+static int32_t SPI11_InterruptSend(const void *data, uint32_t num)
+{
+    return SPI_InterruptSend(data, num, &SPI11_InterruptDriverState);
+}
+
+static int32_t SPI11_InterruptReceive(void *data, uint32_t num)
+{
+    return SPI_InterruptReceive(data, num, &SPI11_InterruptDriverState);
+}
+
+static int32_t SPI11_InterruptTransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_InterruptTransfer(data_out, data_in, num, &SPI11_InterruptDriverState);
+}
+
+static uint32_t SPI11_InterruptGetCount(void)
+{
+    return SPI_InterruptGetCount(&SPI11_InterruptDriverState);
+}
+
+static int32_t SPI11_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return SPI_InterruptControl(control, arg, &SPI11_InterruptDriverState);
+}
+
+static ARM_SPI_STATUS SPI11_InterruptGetStatus(void)
+{
+    return SPI_InterruptGetStatus(&SPI11_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_SPI Driver_SPI11 = {SPIx_GetVersion,     SPIx_GetCapabilities,
+#if RTE_SPI11_DMA_EN
+                               SPI11_DMAInitialize, SPI11_DMAUninitialize, SPI11_DMAPowerControl, SPI11_DMASend,
+                               SPI11_DMAReceive,    SPI11_DMATransfer,     SPI11_DMAGetCount,     SPI11_DMAControl,
+                               SPI11_DMAGetStatus
+#else
+                               SPI11_InterruptInitialize,
+                               SPI11_InterruptUninitialize,
+                               SPI11_InterruptPowerControl,
+                               SPI11_InterruptSend,
+                               SPI11_InterruptReceive,
+                               SPI11_InterruptTransfer,
+                               SPI11_InterruptGetCount,
+                               SPI11_InterruptControl,
+                               SPI11_InterruptGetStatus
+#endif
+};
+
+#endif /*  SPI11  */
+
+#if defined(SPI12) && RTE_SPI12
+/* User needs to provide the implementation for SPI12_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t SPI12_GetFreq(void);
+extern void SPI12_InitPins(void);
+extern void SPI12_DeinitPins(void);
+cmsis_spi_resource_t SPI12_Resource = {SPI12, 1, SPI12_GetFreq};
+
+#if RTE_SPI12_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_spi_dma_resource_t SPI12_DMAResource = {RTE_SPI12_DMA_TX_DMA_BASE, RTE_SPI12_DMA_TX_CH, RTE_SPI12_DMA_RX_DMA_BASE,
+                                              RTE_SPI12_DMA_RX_CH};
+
+static cmsis_spi_dma_handle_t SPI12_DmaHandle;
+static dma_handle_t SPI12_DmaTxDataHandle;
+static dma_handle_t SPI12_DmaRxDataHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi12_dma_driver_state")
+static cmsis_spi_dma_driver_state_t SPI12_DMADriverState = {
+#else
+static cmsis_spi_dma_driver_state_t SPI12_DMADriverState = {
+#endif
+    &SPI12_Resource, &SPI12_DMAResource, &SPI12_DmaHandle, &SPI12_DmaRxDataHandle, &SPI12_DmaTxDataHandle,
+};
+
+static int32_t SPI12_DMAInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI12_InitPins();
+    return SPI_DMAInitialize(cb_event, &SPI12_DMADriverState);
+}
+
+static int32_t SPI12_DMAUninitialize(void)
+{
+    SPI12_DeinitPins();
+    return SPI_DMAUninitialize(&SPI12_DMADriverState);
+}
+
+static int32_t SPI12_DMAPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_DMAPowerControl(state, &SPI12_DMADriverState);
+}
+
+static int32_t SPI12_DMASend(const void *data, uint32_t num)
+{
+    return SPI_DMASend(data, num, &SPI12_DMADriverState);
+}
+
+static int32_t SPI12_DMAReceive(void *data, uint32_t num)
+{
+    return SPI_DMAReceive(data, num, &SPI12_DMADriverState);
+}
+
+static int32_t SPI12_DMATransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_DMATransfer(data_out, data_in, num, &SPI12_DMADriverState);
+}
+
+static uint32_t SPI12_DMAGetCount(void)
+{
+    return SPI_DMAGetCount(&SPI12_DMADriverState);
+}
+
+static int32_t SPI12_DMAControl(uint32_t control, uint32_t arg)
+{
+    return SPI_DMAControl(control, arg, &SPI12_DMADriverState);
+}
+
+static ARM_SPI_STATUS SPI12_DMAGetStatus(void)
+{
+    return SPI_DMAGetStatus(&SPI12_DMADriverState);
+}
+
+#endif
+
+#else
+
+static cmsis_spi_handle_t SPI12_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi12_interrupt_driver_state")
+static cmsis_spi_interrupt_driver_state_t SPI12_InterruptDriverState = {
+#else
+static cmsis_spi_interrupt_driver_state_t SPI12_InterruptDriverState = {
+#endif
+    &SPI12_Resource,
+    &SPI12_Handle,
+};
+
+static int32_t SPI12_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI12_InitPins();
+    return SPI_InterruptInitialize(cb_event, &SPI12_InterruptDriverState);
+}
+
+static int32_t SPI12_InterruptUninitialize(void)
+{
+    SPI12_DeinitPins();
+    return SPI_InterruptUninitialize(&SPI12_InterruptDriverState);
+}
+
+static int32_t SPI12_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_InterruptPowerControl(state, &SPI12_InterruptDriverState);
+}
+
+static int32_t SPI12_InterruptSend(const void *data, uint32_t num)
+{
+    return SPI_InterruptSend(data, num, &SPI12_InterruptDriverState);
+}
+
+static int32_t SPI12_InterruptReceive(void *data, uint32_t num)
+{
+    return SPI_InterruptReceive(data, num, &SPI12_InterruptDriverState);
+}
+
+static int32_t SPI12_InterruptTransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_InterruptTransfer(data_out, data_in, num, &SPI12_InterruptDriverState);
+}
+
+static uint32_t SPI12_InterruptGetCount(void)
+{
+    return SPI_InterruptGetCount(&SPI12_InterruptDriverState);
+}
+
+static int32_t SPI12_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return SPI_InterruptControl(control, arg, &SPI12_InterruptDriverState);
+}
+
+static ARM_SPI_STATUS SPI12_InterruptGetStatus(void)
+{
+    return SPI_InterruptGetStatus(&SPI12_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_SPI Driver_SPI12 = {SPIx_GetVersion,     SPIx_GetCapabilities,
+#if RTE_SPI12_DMA_EN
+                               SPI12_DMAInitialize, SPI12_DMAUninitialize, SPI12_DMAPowerControl, SPI12_DMASend,
+                               SPI12_DMAReceive,    SPI12_DMATransfer,     SPI12_DMAGetCount,     SPI12_DMAControl,
+                               SPI12_DMAGetStatus
+#else
+                               SPI12_InterruptInitialize,
+                               SPI12_InterruptUninitialize,
+                               SPI12_InterruptPowerControl,
+                               SPI12_InterruptSend,
+                               SPI12_InterruptReceive,
+                               SPI12_InterruptTransfer,
+                               SPI12_InterruptGetCount,
+                               SPI12_InterruptControl,
+                               SPI12_InterruptGetStatus
+#endif
+};
+
+#endif /*  SPI12  */
+
+#if defined(SPI13) && RTE_SPI13
+/* User needs to provide the implementation for SPI13_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t SPI13_GetFreq(void);
+extern void SPI13_InitPins(void);
+extern void SPI13_DeinitPins(void);
+cmsis_spi_resource_t SPI13_Resource = {SPI13, 1, SPI13_GetFreq};
+
+#if RTE_SPI13_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_spi_dma_resource_t SPI13_DMAResource = {RTE_SPI13_DMA_TX_DMA_BASE, RTE_SPI13_DMA_TX_CH, RTE_SPI13_DMA_RX_DMA_BASE,
+                                              RTE_SPI13_DMA_RX_CH};
+
+static cmsis_spi_dma_handle_t SPI13_DmaHandle;
+static dma_handle_t SPI13_DmaTxDataHandle;
+static dma_handle_t SPI13_DmaRxDataHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi13_dma_driver_state")
+static cmsis_spi_dma_driver_state_t SPI13_DMADriverState = {
+#else
+static cmsis_spi_dma_driver_state_t SPI13_DMADriverState = {
+#endif
+    &SPI13_Resource, &SPI13_DMAResource, &SPI13_DmaHandle, &SPI13_DmaRxDataHandle, &SPI13_DmaTxDataHandle,
+};
+
+static int32_t SPI13_DMAInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI13_InitPins();
+    return SPI_DMAInitialize(cb_event, &SPI13_DMADriverState);
+}
+
+static int32_t SPI13_DMAUninitialize(void)
+{
+    SPI13_DeinitPins();
+    return SPI_DMAUninitialize(&SPI13_DMADriverState);
+}
+
+static int32_t SPI13_DMAPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_DMAPowerControl(state, &SPI13_DMADriverState);
+}
+
+static int32_t SPI13_DMASend(const void *data, uint32_t num)
+{
+    return SPI_DMASend(data, num, &SPI13_DMADriverState);
+}
+
+static int32_t SPI13_DMAReceive(void *data, uint32_t num)
+{
+    return SPI_DMAReceive(data, num, &SPI13_DMADriverState);
+}
+
+static int32_t SPI13_DMATransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_DMATransfer(data_out, data_in, num, &SPI13_DMADriverState);
+}
+
+static uint32_t SPI13_DMAGetCount(void)
+{
+    return SPI_DMAGetCount(&SPI13_DMADriverState);
+}
+
+static int32_t SPI13_DMAControl(uint32_t control, uint32_t arg)
+{
+    return SPI_DMAControl(control, arg, &SPI13_DMADriverState);
+}
+
+static ARM_SPI_STATUS SPI13_DMAGetStatus(void)
+{
+    return SPI_DMAGetStatus(&SPI13_DMADriverState);
+}
+
+#endif
+
+#else
+
+static cmsis_spi_handle_t SPI13_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("spi13_interrupt_driver_state")
+static cmsis_spi_interrupt_driver_state_t SPI13_InterruptDriverState = {
+#else
+static cmsis_spi_interrupt_driver_state_t SPI13_InterruptDriverState = {
+#endif
+    &SPI13_Resource,
+    &SPI13_Handle,
+};
+
+static int32_t SPI13_InterruptInitialize(ARM_SPI_SignalEvent_t cb_event)
+{
+    SPI13_InitPins();
+    return SPI_InterruptInitialize(cb_event, &SPI13_InterruptDriverState);
+}
+
+static int32_t SPI13_InterruptUninitialize(void)
+{
+    SPI13_DeinitPins();
+    return SPI_InterruptUninitialize(&SPI13_InterruptDriverState);
+}
+
+static int32_t SPI13_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return SPI_InterruptPowerControl(state, &SPI13_InterruptDriverState);
+}
+
+static int32_t SPI13_InterruptSend(const void *data, uint32_t num)
+{
+    return SPI_InterruptSend(data, num, &SPI13_InterruptDriverState);
+}
+
+static int32_t SPI13_InterruptReceive(void *data, uint32_t num)
+{
+    return SPI_InterruptReceive(data, num, &SPI13_InterruptDriverState);
+}
+
+static int32_t SPI13_InterruptTransfer(const void *data_out, void *data_in, uint32_t num)
+{
+    return SPI_InterruptTransfer(data_out, data_in, num, &SPI13_InterruptDriverState);
+}
+
+static uint32_t SPI13_InterruptGetCount(void)
+{
+    return SPI_InterruptGetCount(&SPI13_InterruptDriverState);
+}
+
+static int32_t SPI13_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return SPI_InterruptControl(control, arg, &SPI13_InterruptDriverState);
+}
+
+static ARM_SPI_STATUS SPI13_InterruptGetStatus(void)
+{
+    return SPI_InterruptGetStatus(&SPI13_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_SPI Driver_SPI13 = {SPIx_GetVersion,     SPIx_GetCapabilities,
+#if RTE_SPI13_DMA_EN
+                               SPI13_DMAInitialize, SPI13_DMAUninitialize, SPI13_DMAPowerControl, SPI13_DMASend,
+                               SPI13_DMAReceive,    SPI13_DMATransfer,     SPI13_DMAGetCount,     SPI13_DMAControl,
+                               SPI13_DMAGetStatus
+#else
+                               SPI13_InterruptInitialize,
+                               SPI13_InterruptUninitialize,
+                               SPI13_InterruptPowerControl,
+                               SPI13_InterruptSend,
+                               SPI13_InterruptReceive,
+                               SPI13_InterruptTransfer,
+                               SPI13_InterruptGetCount,
+                               SPI13_InterruptControl,
+                               SPI13_InterruptGetStatus
+#endif
+};
+
+#endif /*  SPI13  */

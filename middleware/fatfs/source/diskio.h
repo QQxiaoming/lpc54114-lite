@@ -9,8 +9,6 @@
 extern "C" {
 #endif
 
-#include "integer.h"
-
 /* Definitions of physical drive number for each drive */
 #define RAMDISK         0       /* Example: ram disk to physical drive 0 */
 #define USBDISK         1       /* usb disk to physical drive 1 */
@@ -50,7 +48,7 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
 #define STA_PROTECT		0x04	/* Write protected */
 
 
-/* Command code for disk_ioctrl function */
+/* Command code for disk_ioctrl fucntion */
 
 /* Generic command (Used by FatFs) */
 #define CTRL_SYNC			0	/* Complete pending write process (needed at FF_FS_READONLY == 0) */

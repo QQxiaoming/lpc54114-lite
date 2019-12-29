@@ -65,7 +65,11 @@
 /*******************************************************************************
  * Variables
  ******************************************************************************/
-
+static const codec_capability_t s_wm8904_capability = {
+    .codecPlayCapability   = HAL_WM8904_PLAY_CAPABILITY,
+    .codecModuleCapability = HAL_WM8904_MODULE_CAPABILITY,
+    .codecRecordCapability = HAL_WM8904_RECORD_CAPABILITY,
+};
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -79,27 +83,14 @@
 status_t HAL_CODEC_Init(codec_handle_t *handle, void *config)
 {
     assert((config != NULL) && (handle != NULL));
-    assert(CODEC_HANDLE_SIZE >= (sizeof(codec_handle_t) + sizeof(wm8904_handle_t)) + HAL_I2C_MASTER_HANDLE_SIZE);
 
     codec_config_t *codecConfig = (codec_config_t *)config;
 
     wm8904_config_t *wm8904Config = (wm8904_config_t *)(codecConfig->codecDevConfig);
-    wm8904_handle_t *wm8904Handle = (wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle));
+    wm8904_handle_t *wm8904Handle = (wm8904_handle_t *)((uint32_t)(handle->codecDevHandle));
 
-    /* load codec capability */
-    handle->codecCapability.codecModuleCapability = HAL_WM8904_MODULE_CAPABILITY;
-    /* add nop to aovid alignment fault, since that the compiler may generate 'strd' instruction to store 64 bit
-    with one instruction, but the address may not word-aligned
-    Will remove the __NOP in next release and use a word align address.
-    */
-    __NOP();
-    handle->codecCapability.codecPlayCapability = HAL_WM8904_PLAY_CAPABILITY;
-    /* add nop to aovid alignment fault, since that the compiler may generate 'strd' instruction to store 64 bit
-    with one instruction, but the address may not word-aligned
-    Will remove the __NOP in next release and use a word align address.
-    */
-    __NOP();
-    handle->codecCapability.codecRecordCapability = HAL_WM8904_RECORD_CAPABILITY;
+    handle->codecCapability = &s_wm8904_capability;
+
     /* codec device initialization */
     return WM8904_Init(wm8904Handle, wm8904Config);
 }
@@ -114,7 +105,7 @@ status_t HAL_CODEC_Deinit(codec_handle_t *handle)
 {
     assert(handle != NULL);
 
-    return WM8904_Deinit((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)));
+    return WM8904_Deinit((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)));
 }
 
 /*!
@@ -130,7 +121,7 @@ status_t HAL_CODEC_SetFormat(codec_handle_t *handle, uint32_t mclk, uint32_t sam
 {
     assert(handle != NULL);
 
-    return WM8904_SetAudioFormat((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)), mclk,
+    return WM8904_SetAudioFormat((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), mclk,
                                  HAL_WM8904_MAP_SAMPLERATE(sampleRate), bitWidth);
 }
 
@@ -146,7 +137,7 @@ status_t HAL_CODEC_SetVolume(codec_handle_t *handle, uint32_t playChannel, uint3
 {
     assert(handle != NULL);
 
-    return WM8904_SetChannelVolume((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)), playChannel, volume);
+    return WM8904_SetChannelVolume((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), playChannel, volume);
 }
 
 /*!
@@ -161,7 +152,7 @@ status_t HAL_CODEC_SetMute(codec_handle_t *handle, uint32_t playChannel, bool is
 {
     assert(handle != NULL);
 
-    return WM8904_SetChannelMute((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)), playChannel, isMute);
+    return WM8904_SetChannelMute((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), playChannel, isMute);
 }
 
 /*!
@@ -176,8 +167,8 @@ status_t HAL_CODEC_SetPower(codec_handle_t *handle, codec_module_t module, bool 
 {
     assert(handle != NULL);
 
-    return WM8904_SetModulePower((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)),
-                                 HAL_WM8904_MAP_MODULE(module), powerOn);
+    return WM8904_SetModulePower((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), HAL_WM8904_MAP_MODULE(module),
+                                 powerOn);
 }
 
 /*!
@@ -192,7 +183,7 @@ status_t HAL_CODEC_SetRecord(codec_handle_t *handle, uint32_t recordSource)
 {
     assert(handle != NULL);
 
-    return WM8904_SetRecord((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)), recordSource);
+    return WM8904_SetRecord((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), recordSource);
 }
 
 /*!
@@ -210,7 +201,7 @@ status_t HAL_CODEC_SetRecordChannel(codec_handle_t *handle, uint32_t leftRecordC
 {
     assert(handle != NULL);
 
-    return WM8904_SetRecordChannel((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)), leftRecordChannel,
+    return WM8904_SetRecordChannel((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), leftRecordChannel,
                                    rightRecordChannel);
 }
 
@@ -226,7 +217,7 @@ status_t HAL_CODEC_SetPlay(codec_handle_t *handle, uint32_t playSource)
 {
     assert(handle != NULL);
 
-    return WM8904_SetPlay((wm8904_handle_t *)((uint32_t) & (handle->codecDevHandle)), playSource);
+    return WM8904_SetPlay((wm8904_handle_t *)((uint32_t)(handle->codecDevHandle)), playSource);
 }
 
 /*!

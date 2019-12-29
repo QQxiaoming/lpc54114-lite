@@ -18,8 +18,8 @@
 /* Count of memory regions in the system */
 #define MCMGR_MEMREGCOUNT 2
 
-volatile mcmgr_core_context_t s_mcmgrCoresContext[MCMGR_CORECOUNT] = {{.state = kMCMGR_ResetCoreState, .startupData = 0},
-                                                                      {.state = kMCMGR_ResetCoreState, .startupData = 0}};
+volatile mcmgr_core_context_t s_mcmgrCoresContext[MCMGR_CORECOUNT] = {
+    {.state = kMCMGR_ResetCoreState, .startupData = 0}, {.state = kMCMGR_ResetCoreState, .startupData = 0}};
 
 /* Initialize structure with informations of all cores */
 static const mcmgr_core_info_t s_mcmgrCores[MCMGR_CORECOUNT] = {
@@ -31,14 +31,12 @@ const mcmgr_system_info_t g_mcmgrSystem = {
 
 mcmgr_status_t mcmgr_early_init_internal(mcmgr_core_t coreNum)
 {
-    if(coreNum < g_mcmgrSystem.coreCount)
+    if ((uint32_t)coreNum < g_mcmgrSystem.coreCount)
     {
         MAILBOX_Init(MAILBOX);
-        
-        /* Trigger core up event here, core is starting! */
-        MCMGR_TriggerEvent(kMCMGR_RemoteCoreUpEvent, 0);
 
-        return kStatus_MCMGR_Success;
+        /* Trigger core up event here, core is starting! */
+        return MCMGR_TriggerEvent(kMCMGR_RemoteCoreUpEvent, 0);
     }
     return kStatus_MCMGR_Error;
 }
@@ -46,9 +44,9 @@ mcmgr_status_t mcmgr_early_init_internal(mcmgr_core_t coreNum)
 mcmgr_status_t mcmgr_late_init_internal(mcmgr_core_t coreNum)
 {
 #if defined(FSL_FEATURE_MAILBOX_SIDE_A)
-        NVIC_SetPriority(MAILBOX_IRQn, 5);
+    NVIC_SetPriority(MAILBOX_IRQn, 5);
 #else
-        NVIC_SetPriority(MAILBOX_IRQn, 2);
+    NVIC_SetPriority(MAILBOX_IRQn, 2);
 #endif
 
     NVIC_EnableIRQ(MAILBOX_IRQn);
@@ -72,7 +70,7 @@ mcmgr_status_t mcmgr_start_core_internal(mcmgr_core_t coreNum, void *bootAddress
      * Make sure the startup code for current core (Cortex-M4) is
      * appropriate and shareable with the Cortex-M0 core!
      */
-    SYSCON->CPBOOT = SYSCON_CPBOOT_BOOTADDR(*(uint32_t *)((uint8_t *)bootAddress + 0x4));
+    SYSCON->CPBOOT  = SYSCON_CPBOOT_BOOTADDR(*((uint32_t *)bootAddress + 0x1u));
     SYSCON->CPSTACK = SYSCON_CPSTACK_STACKADDR(*(uint32_t *)bootAddress);
 
     uint32_t temp = SYSCON->CPUCTRL;
@@ -89,7 +87,7 @@ mcmgr_status_t mcmgr_get_startup_data_internal(mcmgr_core_t coreNum, uint32_t *s
     {
         return kStatus_MCMGR_Error;
     }
-    if (!startupData)
+    if (startupData == ((void *)0))
     {
         return kStatus_MCMGR_Error;
     }
@@ -145,9 +143,9 @@ mcmgr_status_t mcmgr_trigger_event_internal(uint32_t remoteData, bool forcedWrit
 #endif
     /* When forcedWrite is false, wait until the Mailbox Interrupt request register is cleared,
        i.e. until previously sent data is processed. */
-    if(false == forcedWrite)
+    if (false == forcedWrite)
     {
-        while(0 != MAILBOX_GetValue(MAILBOX, cpu_id))
+        while (0U != MAILBOX_GetValue(MAILBOX, cpu_id))
         {
         }
     }
@@ -173,18 +171,20 @@ void MAILBOX_IRQHandler(void)
 
     data = MAILBOX_GetValue(MAILBOX, cpu_id);
     /* To be MISRA compliant, return value needs to be checked even it could not never be 0 */
-    if(0 != data)
+    if (0U != data)
     {
         MAILBOX_ClearValueBits(MAILBOX, cpu_id, data);
 
-        eventType = data >> 16;
-        eventData = data & 0xFFFF;
+        eventType = (uint16_t)(data >> 16u);
+        eventData = (uint16_t)(data & 0x0000FFFFu);
 
-        if ((eventType >= kMCMGR_RemoteCoreUpEvent) && (eventType < kMCMGR_EventTableLength))
+        if (((mcmgr_event_type_t)eventType >= kMCMGR_RemoteCoreUpEvent) &&
+            ((mcmgr_event_type_t)eventType < kMCMGR_EventTableLength))
         {
-            if (MCMGR_eventTable[eventType].callback != NULL)
+            if (MCMGR_eventTable[(mcmgr_event_type_t)eventType].callback != ((void *)0))
             {
-                MCMGR_eventTable[eventType].callback(eventData, MCMGR_eventTable[eventType].callbackData);
+                MCMGR_eventTable[(mcmgr_event_type_t)eventType].callback(
+                    eventData, MCMGR_eventTable[(mcmgr_event_type_t)eventType].callbackData);
             }
         }
     }
@@ -201,8 +201,8 @@ void MAILBOX_IRQHandler(void)
 void DefaultISR(void)
 {
     uint32_t exceptionNumber = __get_IPSR();
-    MCMGR_TriggerEvent(kMCMGR_RemoteExceptionEvent, (uint16_t)exceptionNumber);
-    while (1)
+    (void)MCMGR_TriggerEvent(kMCMGR_RemoteExceptionEvent, (uint16_t)exceptionNumber);
+    for (;;)
     {
     } /* stop here */
 }
@@ -236,4 +236,3 @@ void UsageFault_Handler(void)
 #endif
 
 #endif /* MCMGR_HANDLE_EXCEPTIONS */
-

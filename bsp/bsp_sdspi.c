@@ -22,6 +22,7 @@
 #include "bsp_sdspi.h"
 #include "bsp_systick.h"
 #include "fsl_spi_dma.h"
+#include "fsl_clock.h"
 
 /* SDSPI driver state. */
 sdspi_card_t g_card;
@@ -61,7 +62,7 @@ void spi_init(void)
 	masterConfig.phase = kSPI_ClockPhaseFirstEdge;
 	masterConfig.baudRate_Bps = 100000;
 	masterConfig.sselNum = kSPI_Ssel2; // use GPIO as CS is prefer
-	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFreq(kCLOCK_Flexcomm2));
+	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFlexCommClkFreq(2));
 
     /* 配置使能SPI2DMA*/
     DMA_EnableChannel(DMA0, SPI2_DMA_TX);
@@ -79,7 +80,7 @@ void spi_init(void)
 status_t spi_set_frequency(uint32_t frequency)
 {
  	uint32_t sourceClock;
-	sourceClock = CLOCK_GetFreq(kCLOCK_Flexcomm2);
+	sourceClock = CLOCK_GetFlexCommClkFreq(2);
 	/* If returns 0, indicates failed. */
 	return 	SPI_MasterSetBaud(SPI2, frequency, sourceClock);
 	return kStatus_Fail;

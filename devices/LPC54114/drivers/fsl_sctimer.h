@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016, Freescale Semiconductor, Inc.
- * Copyright 2016-2017 NXP
+ * Copyright 2016-2019 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -23,7 +23,7 @@
 
 /*! @name Driver version */
 /*@{*/
-#define FSL_SCTIMER_DRIVER_VERSION (MAKE_VERSION(2, 1, 0)) /*!< Version 2.1.0 */
+#define FSL_SCTIMER_DRIVER_VERSION (MAKE_VERSION(2, 1, 2)) /*!< Version 2.1.2 */
 /*@}*/
 
 /*! @brief SCTimer PWM operation modes */
@@ -132,61 +132,61 @@ typedef enum _sctimer_conflict_resolution
 typedef enum _sctimer_event
 {
     kSCTIMER_InputLowOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputRiseOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (1 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (1 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputFallOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (2 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (2 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputHighOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (3 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (3 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
 
     kSCTIMER_MatchEventOnly =
-        (1 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (1 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
 
     kSCTIMER_InputLowEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputRiseEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (1 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (1 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputFallEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (2 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (2 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputHighEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (3 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (3 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
 
     kSCTIMER_InputLowAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputRiseAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (1 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (1 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputFallAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (2 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (2 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_InputHighAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (3 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (0 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (3 << SCT_EV_CTRL_IOCOND_SHIFT) + (0 << SCT_EV_CTRL_OUTSEL_SHIFT),
 
     kSCTIMER_OutputLowOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputRiseOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (1 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (1 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputFallOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (2 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (2 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputHighOrMatchEvent =
-        (0 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (3 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (0 << SCT_EV_CTRL_COMBMODE_SHIFT) + (3 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
 
     kSCTIMER_OutputLowEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputRiseEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (1 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (1 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputFallEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (2 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (2 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputHighEvent =
-        (2 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (3 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (2 << SCT_EV_CTRL_COMBMODE_SHIFT) + (3 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
 
     kSCTIMER_OutputLowAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (0 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (0 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputRiseAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (1 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (1 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputFallAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (2 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT),
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (2 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT),
     kSCTIMER_OutputHighAndMatchEvent =
-        (3 << SCT_EVENT_CTRL_COMBMODE_SHIFT) + (3 << SCT_EVENT_CTRL_IOCOND_SHIFT) + (1 << SCT_EVENT_CTRL_OUTSEL_SHIFT)
+        (3 << SCT_EV_CTRL_COMBMODE_SHIFT) + (3 << SCT_EV_CTRL_IOCOND_SHIFT) + (1 << SCT_EV_CTRL_OUTSEL_SHIFT)
 } sctimer_event_t;
 
 /*! @brief SCTimer callback typedef. */
@@ -482,7 +482,7 @@ static inline void SCTIMER_ClearStatusFlags(SCT_Type *base, uint32_t mask)
 static inline void SCTIMER_StartTimer(SCT_Type *base, sctimer_counter_t countertoStart)
 {
     /* Clear HALT_L bit if counter is operating in 32-bit mode or user wants to start L counter */
-    if ((base->CONFIG & SCT_CONFIG_UNIFY_MASK) || (countertoStart == kSCTIMER_Counter_L))
+    if (((base->CONFIG & SCT_CONFIG_UNIFY_MASK) != 0U) || (countertoStart == kSCTIMER_Counter_L))
     {
         base->CTRL &= ~(SCT_CTRL_HALT_L_MASK);
     }
@@ -503,7 +503,7 @@ static inline void SCTIMER_StartTimer(SCT_Type *base, sctimer_counter_t countert
 static inline void SCTIMER_StopTimer(SCT_Type *base, sctimer_counter_t countertoStop)
 {
     /* Set HALT_L bit if counter is operating in 32-bit mode or user wants to stop L counter */
-    if ((base->CONFIG & SCT_CONFIG_UNIFY_MASK) || (countertoStop == kSCTIMER_Counter_L))
+    if (((base->CONFIG & SCT_CONFIG_UNIFY_MASK) != 0U) || (countertoStop == kSCTIMER_Counter_L))
     {
         base->CTRL |= (SCT_CTRL_HALT_L_MASK);
     }
@@ -638,13 +638,13 @@ void SCTIMER_SetCallback(SCT_Type *base, sctimer_event_callback_t callback, uint
  */
 static inline void SCTIMER_SetupNextStateAction(SCT_Type *base, uint32_t nextState, uint32_t event)
 {
-    uint32_t reg = base->EVENT[event].CTRL;
+    uint32_t reg = base->EV[event].CTRL;
 
-    reg &= ~(SCT_EVENT_CTRL_STATEV_MASK);
+    reg &= ~(SCT_EV_CTRL_STATEV_MASK);
     /* Load the STATEV value when the event occurs to be the next state */
-    reg |= SCT_EVENT_CTRL_STATEV(nextState) | SCT_EVENT_CTRL_STATELD_MASK;
+    reg |= SCT_EV_CTRL_STATEV(nextState) | SCT_EV_CTRL_STATELD_MASK;
 
-    base->EVENT[event].CTRL = reg;
+    base->EV[event].CTRL = reg;
 }
 
 /*!
@@ -658,9 +658,9 @@ static inline void SCTIMER_SetupNextStateAction(SCT_Type *base, uint32_t nextSta
  */
 static inline void SCTIMER_SetupOutputSetAction(SCT_Type *base, uint32_t whichIO, uint32_t event)
 {
-    assert(whichIO < FSL_FEATURE_SCT_NUMBER_OF_OUTPUTS);
+    assert(whichIO < (uint32_t)FSL_FEATURE_SCT_NUMBER_OF_OUTPUTS);
 
-    base->OUT[whichIO].SET |= (1U << event);
+    base->OUT[whichIO].SET |= (1UL << event);
 }
 
 /*!
@@ -674,9 +674,9 @@ static inline void SCTIMER_SetupOutputSetAction(SCT_Type *base, uint32_t whichIO
  */
 static inline void SCTIMER_SetupOutputClearAction(SCT_Type *base, uint32_t whichIO, uint32_t event)
 {
-    assert(whichIO < FSL_FEATURE_SCT_NUMBER_OF_OUTPUTS);
+    assert(whichIO < (uint32_t)FSL_FEATURE_SCT_NUMBER_OF_OUTPUTS);
 
-    base->OUT[whichIO].CLR |= (1U << event);
+    base->OUT[whichIO].CLR |= (1UL << event);
 }
 
 /*!
@@ -703,13 +703,13 @@ void SCTIMER_SetupOutputToggleAction(SCT_Type *base, uint32_t whichIO, uint32_t 
 static inline void SCTIMER_SetupCounterLimitAction(SCT_Type *base, sctimer_counter_t whichCounter, uint32_t event)
 {
     /* Use Counter_L bits if counter is operating in 32-bit mode or user wants to setup the L counter */
-    if ((base->CONFIG & SCT_CONFIG_UNIFY_MASK) || (whichCounter == kSCTIMER_Counter_L))
+    if (((base->CONFIG & SCT_CONFIG_UNIFY_MASK) != 0U) || (whichCounter == kSCTIMER_Counter_L))
     {
-        base->LIMIT |= SCT_LIMIT_LIMMSK_L(1U << event);
+        base->LIMIT |= SCT_LIMIT_LIMMSK_L(1UL << event);
     }
     else
     {
-        base->LIMIT |= SCT_LIMIT_LIMMSK_H(1U << event);
+        base->LIMIT |= SCT_LIMIT_LIMMSK_H(1UL << event);
     }
 }
 
@@ -726,13 +726,13 @@ static inline void SCTIMER_SetupCounterLimitAction(SCT_Type *base, sctimer_count
 static inline void SCTIMER_SetupCounterStopAction(SCT_Type *base, sctimer_counter_t whichCounter, uint32_t event)
 {
     /* Use Counter_L bits if counter is operating in 32-bit mode or user wants to setup the L counter */
-    if ((base->CONFIG & SCT_CONFIG_UNIFY_MASK) || (whichCounter == kSCTIMER_Counter_L))
+    if (((base->CONFIG & SCT_CONFIG_UNIFY_MASK) != 0U) || (whichCounter == kSCTIMER_Counter_L))
     {
-        base->STOP |= SCT_STOP_STOPMSK_L(1U << event);
+        base->STOP |= SCT_STOP_STOPMSK_L(1UL << event);
     }
     else
     {
-        base->STOP |= SCT_STOP_STOPMSK_H(1U << event);
+        base->STOP |= SCT_STOP_STOPMSK_H(1UL << event);
     }
 }
 
@@ -749,13 +749,13 @@ static inline void SCTIMER_SetupCounterStopAction(SCT_Type *base, sctimer_counte
 static inline void SCTIMER_SetupCounterStartAction(SCT_Type *base, sctimer_counter_t whichCounter, uint32_t event)
 {
     /* Use Counter_L bits if counter is operating in 32-bit mode or user wants to setup the L counter */
-    if ((base->CONFIG & SCT_CONFIG_UNIFY_MASK) || (whichCounter == kSCTIMER_Counter_L))
+    if (((base->CONFIG & SCT_CONFIG_UNIFY_MASK) != 0U) || (whichCounter == kSCTIMER_Counter_L))
     {
-        base->START |= SCT_START_STARTMSK_L(1U << event);
+        base->START |= SCT_START_STARTMSK_L(1UL << event);
     }
     else
     {
-        base->START |= SCT_START_STARTMSK_H(1U << event);
+        base->START |= SCT_START_STARTMSK_H(1UL << event);
     }
 }
 
@@ -774,13 +774,13 @@ static inline void SCTIMER_SetupCounterStartAction(SCT_Type *base, sctimer_count
 static inline void SCTIMER_SetupCounterHaltAction(SCT_Type *base, sctimer_counter_t whichCounter, uint32_t event)
 {
     /* Use Counter_L bits if counter is operating in 32-bit mode or user wants to setup the L counter */
-    if ((base->CONFIG & SCT_CONFIG_UNIFY_MASK) || (whichCounter == kSCTIMER_Counter_L))
+    if (((base->CONFIG & SCT_CONFIG_UNIFY_MASK) != 0U) || (whichCounter == kSCTIMER_Counter_L))
     {
-        base->HALT |= SCT_HALT_HALTMSK_L(1U << event);
+        base->HALT |= SCT_HALT_HALTMSK_L(1UL << event);
     }
     else
     {
-        base->HALT |= SCT_HALT_HALTMSK_H(1U << event);
+        base->HALT |= SCT_HALT_HALTMSK_H(1UL << event);
     }
 }
 
@@ -796,13 +796,13 @@ static inline void SCTIMER_SetupCounterHaltAction(SCT_Type *base, sctimer_counte
  */
 static inline void SCTIMER_SetupDmaTriggerAction(SCT_Type *base, uint32_t dmaNumber, uint32_t event)
 {
-    if (dmaNumber == 0)
+    if (dmaNumber == 0U)
     {
-        base->DMA0REQUEST |= (1U << event);
+        base->DMAREQ0 |= (1UL << event);
     }
     else
     {
-        base->DMA1REQUEST |= (1U << event);
+        base->DMAREQ1 |= (1UL << event);
     }
 }
 #endif /* FSL_FEATURE_SCT_HAS_NO_DMA_REQUEST */

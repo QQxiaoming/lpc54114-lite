@@ -61,6 +61,30 @@ extern ARM_DRIVER_USART Driver_USART6;
 extern ARM_DRIVER_USART Driver_USART7;
 #endif /* USART7 */
 
+#if defined(USART8)
+extern ARM_DRIVER_USART Driver_USART8;
+#endif /* USART8 */
+
+#if defined(USART9)
+extern ARM_DRIVER_USART Driver_USART9;
+#endif /* USART9 */
+
+#if defined(USART10)
+extern ARM_DRIVER_USART Driver_USART10;
+#endif /* USART10 */
+
+#if defined(USART11)
+extern ARM_DRIVER_USART Driver_USART11;
+#endif /* USART11 */
+
+#if defined(USART12)
+extern ARM_DRIVER_USART Driver_USART12;
+#endif /* USART12 */
+
+#if defined(USART13)
+extern ARM_DRIVER_USART Driver_USART13;
+#endif /* USART13 */
+
 /* USART Driver state flags */
 #define USART_FLAG_UNINIT (0)
 #define USART_FLAG_INIT (1 << 0)
