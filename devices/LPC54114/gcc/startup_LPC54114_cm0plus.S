@@ -86,15 +86,6 @@ rel_vals:
     .short  0x0FFF       
     .short  0x0C24
 #endif
-
-#if !defined(DONT_ENABLE_DISABLED_RAMBANKS)
-    .text
-    .thumb
-rel_en_sram2:
-    .long   0x40000220   /* AHBCLKCTRLSET0 */
-    .long   0x10         /* SRAM2_MASK */
-#endif
-
 /* Reset Handler */
 
     .thumb_func
@@ -104,14 +95,6 @@ rel_en_sram2:
     .type    Reset_Handler, %function
 
 Reset_Handler:
-#if !defined(DONT_ENABLE_DISABLED_RAMBANKS)
-en_sram2_entry:
-    ldr     r6, =rel_en_sram2
-    ldr     r0, [r6, #0]
-    ldr     r1, [r6, #4]
-    str     r1, [r0]
-#endif
-
 #ifndef  SLAVEBOOT
 /* Both the M0+ and M4 core come via this shared startup code,
  * but the M0+ and M4 core have different vector tables.

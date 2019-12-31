@@ -39,6 +39,7 @@ const uint32_t ExtClockIn = BOARD_EXTCLKINRATE;
 /* Initialize debug console. */
 status_t BOARD_InitDebugConsole(void)
 {
+#if ((SDK_DEBUGCONSOLE == DEBUGCONSOLE_REDIRECT_TO_SDK) || defined(SDK_DEBUGCONSOLE_UART))
     status_t result;
 
     /* attach 12 MHz clock to FLEXCOMM0 (debug console) */
@@ -49,6 +50,9 @@ status_t BOARD_InitDebugConsole(void)
                              BOARD_DEBUG_UART_CLK_FREQ);
     assert(kStatus_Success == result);
     return result;
+#else
+    return kStatus_Success;
+#endif
 }
 
 #ifdef SDK_PRIMARY_CORE
@@ -71,7 +75,7 @@ void BOARD_StartSecondaryCore(void)
     memcpy(CORE1_BOOT_ADDRESS, (void *)CORE1_IMAGE_START, core1_image_size);
 #endif
     /* Boot source for Core 1 from RAM */
-    SYSCON->CPBOOT = SYSCON_CPBOOT_BOOTADDR(*(uint32_t *)((uint8_t *)CORE1_BOOT_ADDRESS + 0x4));
+    SYSCON->CPBOOT  = SYSCON_CPBOOT_BOOTADDR(*(uint32_t *)((uint8_t *)CORE1_BOOT_ADDRESS + 0x4));
     SYSCON->CPSTACK = SYSCON_CPSTACK_STACKADDR(*(uint32_t *)CORE1_BOOT_ADDRESS);
 
     uint32_t temp = SYSCON->CPUCTRL;

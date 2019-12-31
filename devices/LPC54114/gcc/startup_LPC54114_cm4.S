@@ -755,3 +755,4 @@ SPIFI0_IRQHandler:
     def_irq_handler     SPIFI0_DriverIRQHandler               /* SPI flash interface */
 
     .end
+

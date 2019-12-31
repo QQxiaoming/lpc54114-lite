@@ -21,13 +21,13 @@
  ******************************************************************************/
 /*! @name Driver version */
 /*@{*/
-/*! @brief WM8904 driver version 2.1.0. */
-#define FSL_WM8904_DRIVER_VERSION (MAKE_VERSION(2, 1, 0))
+/*! @brief WM8904 driver version 2.4.0. */
+#define FSL_WM8904_DRIVER_VERSION (MAKE_VERSION(2, 4, 0))
 /*@}*/
 
 /*! @brief wm8904 handle size */
-#ifndef WM8904_HANDLE_SIZE
-#define WM8904_HANDLE_SIZE (100U)
+#ifndef WM8904_I2C_HANDLER_SIZE
+#define WM8904_I2C_HANDLER_SIZE (CODEC_I2C_MASTER_HANDLER_SIZE)
 #endif
 /*! @brief wm8904 debug macro */
 #ifndef WM8904_DEBUG_REGISTER
@@ -70,6 +70,21 @@
 #define WM8904_ADC_DIGITAL_VOLUME_RIGHT (0x25)
 #define WM8904_ANALOG_OUT2_LEFT (0x3B)
 #define WM8904_ANALOG_OUT2_RIGHT (0x3C)
+#define WM8904_GPIO_CONTROL_4 (0x7C)
+/* FLL control register */
+#define WM8904_FLL_CONTROL_1 (0x74)
+#define WM8904_FLL_CONTROL_2 (0x75)
+#define WM8904_FLL_CONTROL_3 (0x76)
+#define WM8904_FLL_CONTROL_4 (0x77)
+#define WM8904_FLL_CONTROL_5 (0x78)
+/* GPIO control register */
+#define WM8904_GPIO_CONTROL_1 (0x79)
+#define WM8904_GPIO_CONTROL_2 (0x7A)
+#define WM8904_GPIO_CONTROL_3 (0x7B)
+#define WM8904_GPIO_CONTROL_4 (0x7C)
+/* fll nco */
+#define WM8904_FLL_NCO_TEST_0 (0xF7U)
+#define WM8904_FLL_NCO_TEST_1 (0xF8U)
 
 /*! @brief WM8904 I2C address. */
 #define WM8904_I2C_ADDRESS (0x1A)
@@ -195,6 +210,27 @@ enum _wm8904_play_source
     kWM8904_PlaySourceDAC = 4U, /*!< play source Input3 */
 };
 
+/*! @brief wm8904 system clock source */
+typedef enum _wm8904_sys_clk_source
+{
+    kWM8904_SysClkSourceMCLK = 0U,       /*!< wm8904 system clock soure from MCLK */
+    kWM8904_SysClkSourceFLL  = 1U << 14, /*!< wm8904 system clock soure from FLL */
+} wm8904_sys_clk_source_t;
+
+/*! @brief wm8904 fll clock source */
+typedef enum _wm8904_fll_clk_source
+{
+    kWM8904_FLLClkSourceMCLK = 0U, /*!< wm8904 FLL clock source from MCLK */
+} wm8904_fll_clk_source_t;
+
+/*! @wm8904 fll configuration */
+typedef struct _wm8904_fll_config
+{
+    wm8904_fll_clk_source_t source; /*!< fll reference clock source */
+    uint32_t refClock_HZ;           /*!< fll reference clock frequency */
+    uint32_t outputClock_HZ;        /*!< fll output clock frequency  */
+} wm8904_fll_config_t;
+
 /*! @brief Audio format configuration. */
 typedef struct _wm8904_audio_format
 {
@@ -206,10 +242,12 @@ typedef struct _wm8904_audio_format
 /*! @brief Configuration structure of WM8904.*/
 typedef struct _wm8904_config
 {
-    bool master;                  /*!< Master or slave */
-    wm8904_protocol_t protocol;   /*!< Audio transfer protocol */
-    wm8904_audio_format_t format; /*!< Audio format */
-    uint32_t mclk_HZ;             /*!< MCLK frequency value */
+    bool master;                          /*!< Master or slave */
+    wm8904_sys_clk_source_t sysClkSource; /*!< system clock source */
+    wm8904_fll_config_t *fll;             /*!< fll configuration */
+    wm8904_protocol_t protocol;           /*!< Audio transfer protocol */
+    wm8904_audio_format_t format;         /*!< Audio format */
+    uint32_t mclk_HZ;                     /*!< MCLK frequency value */
 
     uint16_t recordSource;       /*!< record source */
     uint16_t recordChannelLeft;  /*!< record channel */
@@ -221,14 +259,11 @@ typedef struct _wm8904_config
 } wm8904_config_t;
 
 /*! @brief wm8904 codec handler
- * Applicationi should allocate a buffer with WM8904_HANDLE_SIZE for handle definition, such as
- * uint8_t wm8904HandleBuffer[WM8904_HANDLE_SIZE];
- * wm8904_handle_t *wm8904Handle = wm8904HandleBuffer;
  */
 typedef struct _wm8904_handle
 {
-    wm8904_config_t *config; /*!< wm8904 config pointer */
-    void *i2cHandle;         /*!< i2c handle */
+    wm8904_config_t *config;                    /*!< wm8904 config pointer */
+    uint8_t i2cHandle[WM8904_I2C_HANDLER_SIZE]; /*!< i2c handle */
 } wm8904_handle_t;
 
 /*******************************************************************************
@@ -305,13 +340,36 @@ void WM8904_GetDefaultConfig(wm8904_config_t *config);
 
 /*!
  * @brief Sets WM8904 as master or slave.
- *
+ * @deprecated DO NOT USE THIS API ANYMORE. IT HAS BEEN SUPERCEDED BY @ref WM8904_SeMasterClock
  * @param handle WM8904 handle structure.
  * @param master true for master, false for slave.
  *
  * @return kStatus_WM8904_Success if successful, different code otherwise.
  */
 status_t WM8904_SetMasterSlave(wm8904_handle_t *handle, bool master);
+
+/*!
+ * @brief Sets WM8904 master clock configuration.
+ *
+ * @param handle WM8904 handle structure.
+ * @param sysclk system clock rate.
+ * @param sampleRate sample rate
+ * @param bitWidth bit width
+ *
+ * @return kStatus_WM8904_Success if successful, different code otherwise.
+ */
+status_t WM8904_SeMasterClock(wm8904_handle_t *handle, uint32_t sysclk, uint32_t sampleRate, uint32_t bitWidth);
+
+/*!
+ * @brief WM8904 set PLL configuration
+ * This function will enable the GPIO1 FLL clock output function, so user can see
+ * the generated fll output clock frequency from WM8904 GPIO1.
+ *
+ * @param handle wm8904 handler pointer.
+ * @param config FLL configuration pointer.
+ *
+ */
+status_t WM8904_SetFLLConfig(wm8904_handle_t *handle, wm8904_fll_config_t *config);
 
 /*!
  * @brief Sets the audio data transfer protocol.

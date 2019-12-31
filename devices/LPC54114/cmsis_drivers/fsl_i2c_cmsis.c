@@ -26,7 +26,7 @@
 #endif
 
 #if (RTE_I2C0 || RTE_I2C1 || RTE_I2C2 || RTE_I2C3 || RTE_I2C4 || RTE_I2C5 || RTE_I2C6 || RTE_I2C7 || RTE_I2C8 || \
-     RTE_I2C9)
+     RTE_I2C9 || RTE_I2C10 || RTE_I2C11 || RTE_I2C12 || RTE_I2C13)
 
 #define ARM_I2C_DRV_VERSION ARM_DRIVER_VERSION_MAJOR_MINOR(2, 0)
 
@@ -97,7 +97,8 @@ static ARM_I2C_CAPABILITIES I2Cx_GetCapabilities(void)
 #endif
 
 #if (RTE_I2C0_DMA_EN || RTE_I2C1_DMA_EN || RTE_I2C2_DMA_EN || RTE_I2C3_DMA_EN || RTE_I2C4_DMA_EN || RTE_I2C5_DMA_EN || \
-     RTE_I2C6_DMA_EN || RTE_I2C7_DMA_EN || RTE_I2C8_DMA_EN || RTE_I2C9_DMA_EN)
+     RTE_I2C6_DMA_EN || RTE_I2C7_DMA_EN || RTE_I2C8_DMA_EN || RTE_I2C9_DMA_EN || RTE_I2C10_DMA_EN ||                   \
+     RTE_I2C11_DMA_EN || RTE_I2C12_DMA_EN || RTE_I2C13_DMA_EN)
 
 #if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
 void KSDK_I2C_MASTER_DmaCallback(I2C_Type *base, i2c_master_dma_handle_t *handle, status_t status, void *userData)
@@ -334,10 +335,11 @@ ARM_I2C_STATUS I2C_Master_DmaGetStatus(cmsis_i2c_dma_driver_state_t *i2c)
 
 #endif
 
-#if ((RTE_I2C0 && !RTE_I2C0_DMA_EN) || (RTE_I2C1 && !RTE_I2C1_DMA_EN) || (RTE_I2C2 && !RTE_I2C2_DMA_EN) || \
-     (RTE_I2C3 && !RTE_I2C3_DMA_EN) || (RTE_I2C4 && !RTE_I2C4_DMA_EN) || (RTE_I2C5 && !RTE_I2C5_DMA_EN) || \
-     (RTE_I2C6 && !RTE_I2C6_DMA_EN) || (RTE_I2C7 && !RTE_I2C7_DMA_EN) || (RTE_I2C8 && !RTE_I2C8_DMA_EN) || \
-     (RTE_I2C9 && !RTE_I2C9_DMA_EN))
+#if ((RTE_I2C0 && !RTE_I2C0_DMA_EN) || (RTE_I2C1 && !RTE_I2C1_DMA_EN) || (RTE_I2C2 && !RTE_I2C2_DMA_EN) ||     \
+     (RTE_I2C3 && !RTE_I2C3_DMA_EN) || (RTE_I2C4 && !RTE_I2C4_DMA_EN) || (RTE_I2C5 && !RTE_I2C5_DMA_EN) ||     \
+     (RTE_I2C6 && !RTE_I2C6_DMA_EN) || (RTE_I2C7 && !RTE_I2C7_DMA_EN) || (RTE_I2C8 && !RTE_I2C8_DMA_EN) ||     \
+     (RTE_I2C9 && !RTE_I2C9_DMA_EN) || (RTE_I2C10 && !RTE_I2C10_DMA_EN) || (RTE_I2C11 && !RTE_I2C11_DMA_EN) || \
+     (RTE_I2C12 && !RTE_I2C12_DMA_EN) || (RTE_I2C13 && !RTE_I2C13_DMA_EN))
 
 static void KSDK_I2C_SLAVE_InterruptCallback(I2C_Type *base, volatile i2c_slave_transfer_t *xfer, void *param)
 {
@@ -699,7 +701,7 @@ static int32_t I2C_InterruptPowerControl(ARM_POWER_STATE state, cmsis_i2c_interr
 
 ARM_I2C_STATUS I2C_InterruptGetStatus(cmsis_i2c_interrupt_driver_state_t *i2c)
 {
-    ARM_I2C_STATUS stat;
+    ARM_I2C_STATUS stat      = {0};
     uint32_t ksdk_i2c_status = I2C_GetStatusFlags(i2c->resource->base);
 
     if (i2c->resource->base->CFG & I2C_CFG_MSTEN_MASK)
@@ -752,7 +754,7 @@ dma_handle_t I2C0_DmaTxRxHandle;
 ARMCC_SECTION("i2c0_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C0_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C0_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C0_DmaDriverState  = {
 #endif
     &I2C0_Resource,
     &I2C0_DmaResource,
@@ -812,7 +814,7 @@ cmsis_i2c_handle_t I2C0_handle;
 ARMCC_SECTION("i2c0_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C0_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C0_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C0_InterruptDriverState  = {
 #endif
     &I2C0_Resource,
     &I2C0_handle,
@@ -925,7 +927,7 @@ dma_handle_t I2C1_DmaTxRxHandle;
 ARMCC_SECTION("i2c1_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C1_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C1_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C1_DmaDriverState  = {
 #endif
     &I2C1_Resource,
     &I2C1_DmaResource,
@@ -985,7 +987,7 @@ cmsis_i2c_handle_t I2C1_Handle;
 ARMCC_SECTION("i2c1_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C1_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C1_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C1_InterruptDriverState  = {
 #endif
     &I2C1_Resource,
     &I2C1_Handle,
@@ -1097,7 +1099,7 @@ dma_handle_t I2C2_DmaTxRxHandle;
 ARMCC_SECTION("i2c2_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C2_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C2_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C2_DmaDriverState  = {
 #endif
     &I2C2_Resource,
     &I2C2_DmaResource,
@@ -1157,7 +1159,7 @@ cmsis_i2c_handle_t I2C2_Handle;
 ARMCC_SECTION("i2c2_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C2_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C2_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C2_InterruptDriverState  = {
 #endif
     &I2C2_Resource,
     &I2C2_Handle,
@@ -1270,7 +1272,7 @@ dma_handle_t I2C3_DmaTxRxHandle;
 ARMCC_SECTION("i2c3_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C3_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C3_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C3_DmaDriverState  = {
 #endif
     &I2C3_Resource,
     &I2C3_DmaResource,
@@ -1330,7 +1332,7 @@ cmsis_i2c_handle_t I2C3_Handle;
 ARMCC_SECTION("i2c3_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C3_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C3_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C3_InterruptDriverState  = {
 #endif
     &I2C3_Resource,
     &I2C3_Handle,
@@ -1441,7 +1443,7 @@ dma_handle_t I2C4_DmaTxRxHandle;
 ARMCC_SECTION("i2c4_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C4_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C4_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C4_DmaDriverState  = {
 #endif
     &I2C4_Resource,
     &I2C4_DmaResource,
@@ -1501,7 +1503,7 @@ cmsis_i2c_handle_t I2C4_handle;
 ARMCC_SECTION("i2c4_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C4_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C4_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C4_InterruptDriverState  = {
 #endif
     &I2C4_Resource,
     &I2C4_handle,
@@ -1613,7 +1615,7 @@ dma_handle_t I2C5_DmaTxRxHandle;
 ARMCC_SECTION("i2c5_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C5_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C5_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C5_DmaDriverState  = {
 #endif
     &I2C5_Resource,
     &I2C5_DmaResource,
@@ -1673,7 +1675,7 @@ cmsis_i2c_handle_t I2C5_handle;
 ARMCC_SECTION("i2c5_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C5_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C5_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C5_InterruptDriverState  = {
 #endif
     &I2C5_Resource,
     &I2C5_handle,
@@ -1785,7 +1787,7 @@ dma_handle_t I2C6_DmaTxRxHandle;
 ARMCC_SECTION("i2c6_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C6_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C6_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C6_DmaDriverState  = {
 #endif
     &I2C6_Resource,
     &I2C6_DmaResource,
@@ -1845,7 +1847,7 @@ cmsis_i2c_handle_t I2C6_handle;
 ARMCC_SECTION("i2c6_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C6_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C6_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C6_InterruptDriverState  = {
 #endif
     &I2C6_Resource,
     &I2C6_handle,
@@ -1957,7 +1959,7 @@ dma_handle_t I2C7_DmaTxRxHandle;
 ARMCC_SECTION("i2c7_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C7_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C7_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C7_DmaDriverState  = {
 #endif
     &I2C7_Resource,
     &I2C7_DmaResource,
@@ -2016,7 +2018,7 @@ cmsis_i2c_handle_t I2C7_handle;
 ARMCC_SECTION("i2c7_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C7_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C7_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C7_InterruptDriverState  = {
 #endif
     &I2C7_Resource,
     &I2C7_handle,
@@ -2128,7 +2130,7 @@ dma_handle_t I2C8_DmaTxRxHandle;
 ARMCC_SECTION("i2c8_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C8_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C8_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C8_DmaDriverState  = {
 #endif
     &I2C8_Resource,
     &I2C8_DmaResource,
@@ -2188,7 +2190,7 @@ cmsis_i2c_handle_t I2C8_handle;
 ARMCC_SECTION("i2c8_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C8_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C8_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C8_InterruptDriverState  = {
 #endif
     &I2C8_Resource,
     &I2C8_handle,
@@ -2300,7 +2302,7 @@ dma_handle_t I2C9_DmaTxRxHandle;
 ARMCC_SECTION("i2c9_dma_driver_state")
 cmsis_i2c_dma_driver_state_t I2C9_DmaDriverState = {
 #else
-cmsis_i2c_dma_driver_state_t I2C9_DmaDriverState = {
+cmsis_i2c_dma_driver_state_t I2C9_DmaDriverState  = {
 #endif
     &I2C9_Resource,
     &I2C9_DmaResource,
@@ -2360,7 +2362,7 @@ cmsis_i2c_handle_t I2C9_handle;
 ARMCC_SECTION("i2c9_interrupt_driver_state")
 cmsis_i2c_interrupt_driver_state_t I2C9_InterruptDriverState = {
 #else
-cmsis_i2c_interrupt_driver_state_t I2C9_InterruptDriverState = {
+cmsis_i2c_interrupt_driver_state_t I2C9_InterruptDriverState  = {
 #endif
     &I2C9_Resource,
     &I2C9_handle,
@@ -2445,6 +2447,694 @@ ARM_DRIVER_I2C Driver_I2C9 = {I2Cx_GetVersion,
                               I2C9_InterruptGetDataCount,
                               I2C9_InterruptControl,
                               I2C9_InterruptGetStatus
+#endif
+};
+
+#endif
+
+#if defined(I2C10) && RTE_I2C10
+
+/* User needs to provide the implementation for I2C10_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t I2C10_GetFreq(void);
+extern void I2C10_InitPins(void);
+extern void I2C10_DeinitPins(void);
+
+cmsis_i2c_resource_t I2C10_Resource = {I2C10, I2C10_GetFreq};
+
+#if RTE_I2C10_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_i2c_dma_resource_t I2C10_DmaResource = {RTE_I2C10_Master_DMA_BASE, RTE_I2C10_Master_DMA_CH};
+
+i2c_master_dma_handle_t I2C10_DmaHandle;
+dma_handle_t I2C10_DmaTxRxHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c10_dma_driver_state")
+cmsis_i2c_dma_driver_state_t I2C10_DmaDriverState = {
+#else
+cmsis_i2c_dma_driver_state_t I2C10_DmaDriverState = {
+#endif
+    &I2C10_Resource,
+    &I2C10_DmaResource,
+    &I2C10_DmaHandle,
+    &I2C10_DmaTxRxHandle,
+};
+
+static int32_t I2C10_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C10_InitPins();
+    return I2C_Master_DmaInitialize(cb_event, &I2C10_DmaDriverState);
+}
+
+int32_t I2C10_Master_DmaUninitialize(void)
+{
+    I2C10_DeinitPins();
+    return I2C_Master_DmaUninitialize(&I2C10_DmaDriverState);
+}
+
+int32_t I2C10_Master_DmaPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_Master_DmaPowerControl(state, &I2C10_DmaDriverState);
+}
+
+int32_t I2C10_Master_DmaTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaTransmit(addr, data, num, xfer_pending, &I2C10_DmaDriverState);
+}
+
+int32_t I2C10_Master_DmaReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaReceive(addr, data, num, xfer_pending, &I2C10_DmaDriverState);
+}
+
+int32_t I2C10_Master_DmaGetDataCount(void)
+{
+    return I2C_Master_DmaGetDataCount(&I2C10_DmaDriverState);
+}
+
+int32_t I2C10_Master_DmaControl(uint32_t control, uint32_t arg)
+{
+    return I2C_Master_DmaControl(control, arg, &I2C10_DmaDriverState);
+}
+
+ARM_I2C_STATUS I2C10_Master_DmaGetStatus(void)
+{
+    return I2C_Master_DmaGetStatus(&I2C10_DmaDriverState);
+}
+
+#endif
+
+#else
+
+cmsis_i2c_handle_t I2C10_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c10_interrupt_driver_state")
+cmsis_i2c_interrupt_driver_state_t I2C10_InterruptDriverState = {
+#else
+cmsis_i2c_interrupt_driver_state_t I2C10_InterruptDriverState = {
+#endif
+    &I2C10_Resource,
+    &I2C10_Handle,
+};
+
+static int32_t I2C10_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C10_InitPins();
+    return I2C_InterruptInitialize(cb_event, &I2C10_InterruptDriverState);
+}
+
+static int32_t I2C10_InterruptUninitialize(void)
+{
+    I2C10_DeinitPins();
+    return I2C_InterruptUninitialize(&I2C10_InterruptDriverState);
+}
+
+static int32_t I2C10_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_InterruptPowerControl(state, &I2C10_InterruptDriverState);
+}
+
+int32_t I2C10_Master_InterruptTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptTransmit(addr, data, num, xfer_pending, &I2C10_InterruptDriverState);
+}
+
+int32_t I2C10_Master_InterruptReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptReceive(addr, data, num, xfer_pending, &I2C10_InterruptDriverState);
+}
+
+int32_t I2C10_Slave_InterruptTransmit(const uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptTransmit(data, num, &I2C10_InterruptDriverState);
+}
+
+int32_t I2C10_Slave_InterruptReceive(uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptReceive(data, num, &I2C10_InterruptDriverState);
+}
+
+int32_t I2C10_InterruptGetDataCount(void)
+{
+    return I2C_InterruptGetDataCount(&I2C10_InterruptDriverState);
+}
+
+int32_t I2C10_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return I2C_InterruptControl(control, arg, &I2C10_InterruptDriverState);
+}
+
+ARM_I2C_STATUS I2C10_InterruptGetStatus(void)
+{
+    return I2C_InterruptGetStatus(&I2C10_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_I2C Driver_I2C10 = {I2Cx_GetVersion,
+                               I2Cx_GetCapabilities,
+#if RTE_I2C10_DMA_EN
+                               I2C10_Master_DmaInitialize,
+                               I2C10_Master_DmaUninitialize,
+                               I2C10_Master_DmaPowerControl,
+                               I2C10_Master_DmaTransmit,
+                               I2C10_Master_DmaReceive,
+                               NULL,
+                               NULL,
+                               I2C10_Master_DmaGetDataCount,
+                               I2C10_Master_DmaControl,
+                               I2C10_Master_DmaGetStatus
+#else
+                               I2C10_InterruptInitialize,
+                               I2C10_InterruptUninitialize,
+                               I2C10_InterruptPowerControl,
+                               I2C10_Master_InterruptTransmit,
+                               I2C10_Master_InterruptReceive,
+                               I2C10_Slave_InterruptTransmit,
+                               I2C10_Slave_InterruptReceive,
+                               I2C10_InterruptGetDataCount,
+                               I2C10_InterruptControl,
+                               I2C10_InterruptGetStatus
+#endif
+};
+
+#endif
+
+#if defined(I2C11) && RTE_I2C11
+
+/* User needs to provide the implementation for I2C1_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t I2C11_GetFreq(void);
+extern void I2C11_InitPins(void);
+extern void I2C11_DeinitPins(void);
+
+cmsis_i2c_resource_t I2C11_Resource = {I2C11, I2C11_GetFreq};
+
+#if RTE_I2C11_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_i2c_dma_resource_t I2C11_DmaResource = {RTE_I2C11_Master_DMA_BASE, RTE_I2C11_Master_DMA_CH};
+
+i2c_master_dma_handle_t I2C11_DmaHandle;
+dma_handle_t I2C11_DmaTxRxHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c11_dma_driver_state")
+cmsis_i2c_dma_driver_state_t I2C11_DmaDriverState = {
+#else
+cmsis_i2c_dma_driver_state_t I2C11_DmaDriverState = {
+#endif
+    &I2C11_Resource,
+    &I2C11_DmaResource,
+    &I2C11_DmaHandle,
+    &I2C11_DmaTxRxHandle,
+};
+
+static int32_t I2C11_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C11_InitPins();
+    return I2C_Master_DmaInitialize(cb_event, &I2C11_DmaDriverState);
+}
+
+int32_t I2C11_Master_DmaUninitialize(void)
+{
+    I2C11_DeinitPins();
+    return I2C_Master_DmaUninitialize(&I2C11_DmaDriverState);
+}
+
+int32_t I2C11_Master_DmaPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_Master_DmaPowerControl(state, &I2C11_DmaDriverState);
+}
+
+int32_t I2C11_Master_DmaTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaTransmit(addr, data, num, xfer_pending, &I2C11_DmaDriverState);
+}
+
+int32_t I2C11_Master_DmaReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaReceive(addr, data, num, xfer_pending, &I2C11_DmaDriverState);
+}
+
+int32_t I2C11_Master_DmaGetDataCount(void)
+{
+    return I2C_Master_DmaGetDataCount(&I2C11_DmaDriverState);
+}
+
+int32_t I2C11_Master_DmaControl(uint32_t control, uint32_t arg)
+{
+    return I2C_Master_DmaControl(control, arg, &I2C11_DmaDriverState);
+}
+
+ARM_I2C_STATUS I2C11_Master_DmaGetStatus(void)
+{
+    return I2C_Master_DmaGetStatus(&I2C11_DmaDriverState);
+}
+
+#endif
+
+#else
+
+cmsis_i2c_handle_t I2C11_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c11_interrupt_driver_state")
+cmsis_i2c_interrupt_driver_state_t I2C11_InterruptDriverState = {
+#else
+cmsis_i2c_interrupt_driver_state_t I2C11_InterruptDriverState = {
+#endif
+    &I2C11_Resource,
+    &I2C11_Handle,
+};
+
+static int32_t I2C11_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C11_InitPins();
+    return I2C_InterruptInitialize(cb_event, &I2C11_InterruptDriverState);
+}
+
+static int32_t I2C11_InterruptUninitialize(void)
+{
+    I2C11_DeinitPins();
+    return I2C_InterruptUninitialize(&I2C11_InterruptDriverState);
+}
+
+static int32_t I2C11_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_InterruptPowerControl(state, &I2C11_InterruptDriverState);
+}
+
+int32_t I2C11_Master_InterruptTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptTransmit(addr, data, num, xfer_pending, &I2C11_InterruptDriverState);
+}
+
+int32_t I2C11_Master_InterruptReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptReceive(addr, data, num, xfer_pending, &I2C11_InterruptDriverState);
+}
+
+int32_t I2C11_Slave_InterruptTransmit(const uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptTransmit(data, num, &I2C11_InterruptDriverState);
+}
+
+int32_t I2C11_Slave_InterruptReceive(uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptReceive(data, num, &I2C11_InterruptDriverState);
+}
+
+int32_t I2C11_InterruptGetDataCount(void)
+{
+    return I2C_InterruptGetDataCount(&I2C11_InterruptDriverState);
+}
+
+int32_t I2C11_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return I2C_InterruptControl(control, arg, &I2C11_InterruptDriverState);
+}
+
+ARM_I2C_STATUS I2C11_InterruptGetStatus(void)
+{
+    return I2C_InterruptGetStatus(&I2C11_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_I2C Driver_I2C11 = {I2Cx_GetVersion,
+                               I2Cx_GetCapabilities,
+#if RTE_I2C11_DMA_EN
+                               I2C11_Master_DmaInitialize,
+                               I2C11_Master_DmaUninitialize,
+                               I2C11_Master_DmaPowerControl,
+                               I2C11_Master_DmaTransmit,
+                               I2C11_Master_DmaReceive,
+                               NULL,
+                               NULL,
+                               I2C11_Master_DmaGetDataCount,
+                               I2C11_Master_DmaControl,
+                               I2C11_Master_DmaGetStatus
+#else
+                               I2C11_InterruptInitialize,
+                               I2C11_InterruptUninitialize,
+                               I2C11_InterruptPowerControl,
+                               I2C11_Master_InterruptTransmit,
+                               I2C11_Master_InterruptReceive,
+                               I2C11_Slave_InterruptTransmit,
+                               I2C11_Slave_InterruptReceive,
+                               I2C11_InterruptGetDataCount,
+                               I2C11_InterruptControl,
+                               I2C11_InterruptGetStatus
+#endif
+};
+
+#endif
+
+#if defined(I2C12) && RTE_I2C12
+
+/* User needs to provide the implementation for I2C1_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t I2C12_GetFreq(void);
+extern void I2C12_InitPins(void);
+extern void I2C12_DeinitPins(void);
+
+cmsis_i2c_resource_t I2C12_Resource = {I2C12, I2C12_GetFreq};
+
+#if RTE_I2C12_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_i2c_dma_resource_t I2C12_DmaResource = {RTE_I2C12_Master_DMA_BASE, RTE_I2C12_Master_DMA_CH};
+
+i2c_master_dma_handle_t I2C12_DmaHandle;
+dma_handle_t I2C12_DmaTxRxHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c12_dma_driver_state")
+cmsis_i2c_dma_driver_state_t I2C12_DmaDriverState = {
+#else
+cmsis_i2c_dma_driver_state_t I2C12_DmaDriverState = {
+#endif
+    &I2C12_Resource,
+    &I2C12_DmaResource,
+    &I2C12_DmaHandle,
+    &I2C12_DmaTxRxHandle,
+};
+
+static int32_t I2C12_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C12_InitPins();
+    return I2C_Master_DmaInitialize(cb_event, &I2C12_DmaDriverState);
+}
+
+int32_t I2C12_Master_DmaUninitialize(void)
+{
+    I2C12_DeinitPins();
+    return I2C_Master_DmaUninitialize(&I2C12_DmaDriverState);
+}
+
+int32_t I2C12_Master_DmaPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_Master_DmaPowerControl(state, &I2C12_DmaDriverState);
+}
+
+int32_t I2C12_Master_DmaTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaTransmit(addr, data, num, xfer_pending, &I2C12_DmaDriverState);
+}
+
+int32_t I2C12_Master_DmaReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaReceive(addr, data, num, xfer_pending, &I2C12_DmaDriverState);
+}
+
+int32_t I2C12_Master_DmaGetDataCount(void)
+{
+    return I2C_Master_DmaGetDataCount(&I2C12_DmaDriverState);
+}
+
+int32_t I2C12_Master_DmaControl(uint32_t control, uint32_t arg)
+{
+    return I2C_Master_DmaControl(control, arg, &I2C12_DmaDriverState);
+}
+
+ARM_I2C_STATUS I2C12_Master_DmaGetStatus(void)
+{
+    return I2C_Master_DmaGetStatus(&I2C12_DmaDriverState);
+}
+
+#endif
+
+#else
+
+cmsis_i2c_handle_t I2C12_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c12_interrupt_driver_state")
+cmsis_i2c_interrupt_driver_state_t I2C12_InterruptDriverState = {
+#else
+cmsis_i2c_interrupt_driver_state_t I2C12_InterruptDriverState = {
+#endif
+    &I2C12_Resource,
+    &I2C12_Handle,
+};
+
+static int32_t I2C12_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C12_InitPins();
+    return I2C_InterruptInitialize(cb_event, &I2C12_InterruptDriverState);
+}
+
+static int32_t I2C12_InterruptUninitialize(void)
+{
+    I2C12_DeinitPins();
+    return I2C_InterruptUninitialize(&I2C12_InterruptDriverState);
+}
+
+static int32_t I2C12_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_InterruptPowerControl(state, &I2C12_InterruptDriverState);
+}
+
+int32_t I2C12_Master_InterruptTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptTransmit(addr, data, num, xfer_pending, &I2C12_InterruptDriverState);
+}
+
+int32_t I2C12_Master_InterruptReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptReceive(addr, data, num, xfer_pending, &I2C12_InterruptDriverState);
+}
+
+int32_t I2C12_Slave_InterruptTransmit(const uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptTransmit(data, num, &I2C12_InterruptDriverState);
+}
+
+int32_t I2C12_Slave_InterruptReceive(uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptReceive(data, num, &I2C12_InterruptDriverState);
+}
+
+int32_t I2C12_InterruptGetDataCount(void)
+{
+    return I2C_InterruptGetDataCount(&I2C12_InterruptDriverState);
+}
+
+int32_t I2C12_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return I2C_InterruptControl(control, arg, &I2C12_InterruptDriverState);
+}
+
+ARM_I2C_STATUS I2C12_InterruptGetStatus(void)
+{
+    return I2C_InterruptGetStatus(&I2C12_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_I2C Driver_I2C12 = {I2Cx_GetVersion,
+                               I2Cx_GetCapabilities,
+#if RTE_I2C12_DMA_EN
+                               I2C12_Master_DmaInitialize,
+                               I2C12_Master_DmaUninitialize,
+                               I2C12_Master_DmaPowerControl,
+                               I2C12_Master_DmaTransmit,
+                               I2C12_Master_DmaReceive,
+                               NULL,
+                               NULL,
+                               I2C12_Master_DmaGetDataCount,
+                               I2C12_Master_DmaControl,
+                               I2C12_Master_DmaGetStatus
+#else
+                               I2C12_InterruptInitialize,
+                               I2C12_InterruptUninitialize,
+                               I2C12_InterruptPowerControl,
+                               I2C12_Master_InterruptTransmit,
+                               I2C12_Master_InterruptReceive,
+                               I2C12_Slave_InterruptTransmit,
+                               I2C12_Slave_InterruptReceive,
+                               I2C12_InterruptGetDataCount,
+                               I2C12_InterruptControl,
+                               I2C12_InterruptGetStatus
+#endif
+};
+
+#endif
+
+#if defined(I2C13) && RTE_I2C13
+
+/* User needs to provide the implementation for I2C1_GetFreq/InitPins/DeinitPins
+in the application for enabling according instance. */
+extern uint32_t I2C13_GetFreq(void);
+extern void I2C13_InitPins(void);
+extern void I2C13_DeinitPins(void);
+
+cmsis_i2c_resource_t I2C13_Resource = {I2C13, I2C13_GetFreq};
+
+#if RTE_I2C13_DMA_EN
+
+#if (defined(FSL_FEATURE_SOC_DMA_COUNT) && FSL_FEATURE_SOC_DMA_COUNT)
+
+cmsis_i2c_dma_resource_t I2C13_DmaResource = {RTE_I2C13_Master_DMA_BASE, RTE_I2C13_Master_DMA_CH};
+
+i2c_master_dma_handle_t I2C13_DmaHandle;
+dma_handle_t I2C13_DmaTxRxHandle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c13_dma_driver_state")
+cmsis_i2c_dma_driver_state_t I2C13_DmaDriverState = {
+#else
+cmsis_i2c_dma_driver_state_t I2C13_DmaDriverState = {
+#endif
+    &I2C13_Resource,
+    &I2C13_DmaResource,
+    &I2C13_DmaHandle,
+    &I2C13_DmaTxRxHandle,
+};
+
+static int32_t I2C13_Master_DmaInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C13_InitPins();
+    return I2C_Master_DmaInitialize(cb_event, &I2C13_DmaDriverState);
+}
+
+int32_t I2C13_Master_DmaUninitialize(void)
+{
+    I2C13_DeinitPins();
+    return I2C_Master_DmaUninitialize(&I2C13_DmaDriverState);
+}
+
+int32_t I2C13_Master_DmaPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_Master_DmaPowerControl(state, &I2C13_DmaDriverState);
+}
+
+int32_t I2C13_Master_DmaTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaTransmit(addr, data, num, xfer_pending, &I2C13_DmaDriverState);
+}
+
+int32_t I2C13_Master_DmaReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_DmaReceive(addr, data, num, xfer_pending, &I2C13_DmaDriverState);
+}
+
+int32_t I2C13_Master_DmaGetDataCount(void)
+{
+    return I2C_Master_DmaGetDataCount(&I2C13_DmaDriverState);
+}
+
+int32_t I2C13_Master_DmaControl(uint32_t control, uint32_t arg)
+{
+    return I2C_Master_DmaControl(control, arg, &I2C13_DmaDriverState);
+}
+
+ARM_I2C_STATUS I2C13_Master_DmaGetStatus(void)
+{
+    return I2C_Master_DmaGetStatus(&I2C13_DmaDriverState);
+}
+
+#endif
+
+#else
+
+cmsis_i2c_handle_t I2C13_Handle;
+
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+ARMCC_SECTION("i2c13_interrupt_driver_state")
+cmsis_i2c_interrupt_driver_state_t I2C13_InterruptDriverState = {
+#else
+cmsis_i2c_interrupt_driver_state_t I2C13_InterruptDriverState = {
+#endif
+    &I2C13_Resource,
+    &I2C13_Handle,
+};
+
+static int32_t I2C13_InterruptInitialize(ARM_I2C_SignalEvent_t cb_event)
+{
+    I2C13_InitPins();
+    return I2C_InterruptInitialize(cb_event, &I2C13_InterruptDriverState);
+}
+
+static int32_t I2C13_InterruptUninitialize(void)
+{
+    I2C13_DeinitPins();
+    return I2C_InterruptUninitialize(&I2C13_InterruptDriverState);
+}
+
+static int32_t I2C13_InterruptPowerControl(ARM_POWER_STATE state)
+{
+    return I2C_InterruptPowerControl(state, &I2C13_InterruptDriverState);
+}
+
+int32_t I2C13_Master_InterruptTransmit(uint32_t addr, const uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptTransmit(addr, data, num, xfer_pending, &I2C13_InterruptDriverState);
+}
+
+int32_t I2C13_Master_InterruptReceive(uint32_t addr, uint8_t *data, uint32_t num, bool xfer_pending)
+{
+    return I2C_Master_InterruptReceive(addr, data, num, xfer_pending, &I2C13_InterruptDriverState);
+}
+
+int32_t I2C13_Slave_InterruptTransmit(const uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptTransmit(data, num, &I2C13_InterruptDriverState);
+}
+
+int32_t I2C13_Slave_InterruptReceive(uint8_t *data, uint32_t num)
+{
+    return I2C_Slave_InterruptReceive(data, num, &I2C13_InterruptDriverState);
+}
+
+int32_t I2C13_InterruptGetDataCount(void)
+{
+    return I2C_InterruptGetDataCount(&I2C13_InterruptDriverState);
+}
+
+int32_t I2C13_InterruptControl(uint32_t control, uint32_t arg)
+{
+    return I2C_InterruptControl(control, arg, &I2C13_InterruptDriverState);
+}
+
+ARM_I2C_STATUS I2C13_InterruptGetStatus(void)
+{
+    return I2C_InterruptGetStatus(&I2C13_InterruptDriverState);
+}
+
+#endif
+
+ARM_DRIVER_I2C Driver_I2C13 = {I2Cx_GetVersion,
+                               I2Cx_GetCapabilities,
+#if RTE_I2C13_DMA_EN
+                               I2C13_Master_DmaInitialize,
+                               I2C13_Master_DmaUninitialize,
+                               I2C13_Master_DmaPowerControl,
+                               I2C13_Master_DmaTransmit,
+                               I2C13_Master_DmaReceive,
+                               NULL,
+                               NULL,
+                               I2C13_Master_DmaGetDataCount,
+                               I2C13_Master_DmaControl,
+                               I2C13_Master_DmaGetStatus
+#else
+                               I2C13_InterruptInitialize,
+                               I2C13_InterruptUninitialize,
+                               I2C13_InterruptPowerControl,
+                               I2C13_Master_InterruptTransmit,
+                               I2C13_Master_InterruptReceive,
+                               I2C13_Slave_InterruptTransmit,
+                               I2C13_Slave_InterruptReceive,
+                               I2C13_InterruptGetDataCount,
+                               I2C13_InterruptControl,
+                               I2C13_InterruptGetStatus
 #endif
 };
 

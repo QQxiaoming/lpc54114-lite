@@ -13,6 +13,7 @@
 #include "fsl_common.h"
 #include "fsl_iocon.h"
 #include "fsl_spi.h"
+#include "fsl_clock.h"
 
 struct mx25r_instance mx25r;
 
@@ -50,7 +51,7 @@ status_t spiflash_init(void)
 	masterConfig.phase = kSPI_ClockPhaseFirstEdge;
 	masterConfig.baudRate_Bps = 100000;
 	masterConfig.sselNum = kSPI_Ssel3; // use GPIO as CS is prefer
-	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFreq(kCLOCK_Flexcomm2));
+	SPI_MasterInit(SPI2, &masterConfig, CLOCK_GetFlexCommClkFreq(2));
 
     mx25r_init(&mx25r, flash_transfer_cb, SPI2);
 	mx25r_cmd_rdid(&mx25r, &gIDResult);
