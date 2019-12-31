@@ -9,15 +9,15 @@ target remote localhost:2331
 monitor reset
 monitor halt
 monitor speed 4000
-monitor writeu32 0xE000ED08 = 0x20000000
+monitor writeu32 0xE000ED08 = 0x00000000
 load
 
 ######################################
 # 程序运行到main
 ######################################
 monitor speed 400
-monitor reg r13 = (0x20000000)
-monitor reg pc = (0x20000004)
+monitor reg r13 = (0x00000000)
+monitor reg pc = (0x00000004)
 break main
 continue
 
