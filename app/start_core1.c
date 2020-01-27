@@ -4,16 +4,13 @@
  * @brief 
  * @version 1.0
  * @date 2019-04-14
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "fsl_debug_console.h"
 #include "UARTCommandConsole.h"
 #include "mcmgr.h"
 #include "start_core1.h"
 
-/* Address of RAM, where the image for core1 should be copied */
+/* m0+核程序启动地址 */
 #define CORE1_BOOT_ADDRESS (void *)0x20010000
 
 #if defined(__CC_ARM) || defined(__ARMCC_VERSION)
@@ -31,7 +28,11 @@ extern int m0_image_size;
 #define CORE1_IMAGE_SIZE ((void *)m0_image_size)
 #endif
 
-
+/**
+ * @brief 获取m0+核bin大小
+ * 
+ * @return uint32_t m0核bin大小
+ */
 static uint32_t get_core1_image_size(void)
 {
     uint32_t core1_image_size;
@@ -47,16 +48,24 @@ static uint32_t get_core1_image_size(void)
 }
 
 
+/**
+ * @brief 拷贝m0+核bin到ram
+ * 
+ */
 void copy_core1_image_to_ram(void)
 {
     uint32_t core1_image_size;
     core1_image_size = get_core1_image_size();
     printfk("Copy Secondary core image to address: 0x%x, size: %d\r\n", CORE1_BOOT_ADDRESS, core1_image_size);
 
-    /* Copy Secondary core application from FLASH to the target memory. */
     memcpy(CORE1_BOOT_ADDRESS, (void *)CORE1_IMAGE_START, core1_image_size);
 }
 
+
+/**
+ * @brief 启动m0+核
+ * 
+ */
 void start_core1(void)
 {
     printfk("Starting Secondary core.\r\n");

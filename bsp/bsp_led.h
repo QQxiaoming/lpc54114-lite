@@ -4,9 +4,6 @@
  * @brief 板载led驱动
  * @version 1.0
  * @date 2018-06-12
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #ifndef SRC_BSP_LED_H_
 #define SRC_BSP_LED_H_

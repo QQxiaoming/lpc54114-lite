@@ -4,9 +4,6 @@
  * @brief 
  * @version 1.0
  * @date 2019-06-4
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #ifndef _UART_COMMAND_CONSOLE_H_
 #define _UART_COMMAND_CONSOLE_H_

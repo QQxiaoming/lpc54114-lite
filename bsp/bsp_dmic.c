@@ -4,9 +4,6 @@
  * @brief dmic驱动
  * @version 1.0
  * @date 2019-04-16
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include <stdbool.h>
 #include "fsl_common.h"

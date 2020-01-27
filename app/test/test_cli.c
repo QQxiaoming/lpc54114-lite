@@ -4,9 +4,6 @@
  * @brief cli
  * @version 0.9
  * @date 2019-06-06
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "FreeRTOS.h"
 #include "task.h"

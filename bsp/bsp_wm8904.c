@@ -4,9 +4,6 @@
  * @brief 板载wm8904驱动
  * @version 1.0
  * @date 2019-04-21
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_wm8904.h"
 #include "fsl_device_registers.h"

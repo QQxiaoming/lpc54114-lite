@@ -4,9 +4,6 @@
  * @brief systick初始化
  * @version 1.0
  * @date 2019-04-16
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_systick.h"
 #include "fsl_common.h"

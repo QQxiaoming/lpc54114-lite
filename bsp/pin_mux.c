@@ -4,11 +4,7 @@
  * @brief 板级io管脚功能初始化
  * @version 1.0
  * @date 2019-04-15
- * 
- * @copyright Copyright (c) 2019
- * 
  */
-
 #include "fsl_common.h"
 #include "fsl_iocon.h"
 #include "pin_mux.h"

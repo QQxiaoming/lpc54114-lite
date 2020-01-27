@@ -4,11 +4,7 @@
  * @brief 音频读取解码播放测试
  * @version 1.0
  * @date 2019-05-21
- * 
- * @copyright Copyright (c) 2019
- * 
  */
-
 #include <stdint.h>
 #include <string.h>
 #include "FreeRTOS.h"
@@ -226,6 +222,7 @@ audio_play_voice_ret:
     /* 任务退出 */
     vTaskDelete(NULL);
 }
+
 
 /**
  * @brief 创建播放任务

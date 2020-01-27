@@ -4,9 +4,6 @@
  * @brief 测试代码声明文件
  * @version 1.0
  * @date 2019-05-13
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #ifndef _TEST_H_
 #define _TEST_H_

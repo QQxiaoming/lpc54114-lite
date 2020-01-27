@@ -4,9 +4,6 @@
  * @brief 板载led驱动
  * @version 1.0
  * @date 2018-06-12
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_led.h"
 

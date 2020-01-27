@@ -4,9 +4,6 @@
  * @brief 编译器宏定义
  * @version 1.0
  * @date 2019-05-22
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #ifndef _COMPILE_H_
 #define _COMPILE_H_

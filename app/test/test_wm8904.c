@@ -4,9 +4,6 @@
  * @brief 测试wm8904
  * @version 1.0
  * @date 2019-05-13
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_wm8904.h"
 #include "fsl_common.h"
@@ -54,13 +51,30 @@ static i2s_transfer_t s_RxTransfer;
 static i2s_dma_handle_t s_TxHandle;
 static i2s_dma_handle_t s_RxHandle;
 
+/**
+ * @brief 
+ * 
+ * @param base 
+ * @param handle 
+ * @param completionStatus 
+ * @param userData 
+ */
 static void TxCallback(I2S_Type *base, i2s_dma_handle_t *handle, status_t completionStatus, void *userData)
 {
-    /* Enqueue the same original buffer all over again */
+    /* 使用相同的配置再次发送数据给dma */
     i2s_transfer_t *transfer = (i2s_transfer_t *)userData;
     I2S_TxTransferSendDMA(base, handle, *transfer);
 }
 
+
+/**
+ * @brief 
+ * 
+ * @param base 
+ * @param handle 
+ * @param completionStatus 
+ * @param userData 
+ */
 static void RxCallback(I2S_Type *base, i2s_dma_handle_t *handle, status_t completionStatus, void *userData)
 {
     /* Enqueue the same original buffer all over again */
@@ -69,20 +83,30 @@ static void RxCallback(I2S_Type *base, i2s_dma_handle_t *handle, status_t comple
 }
 
 
+/**
+ * @brief 通过wm8904播放正弦波测试示例
+ * 
+ */
 void StartSoundPlayback(void)
 {
     printfk("Setup looping playback of sine wave\r\n");
 
+    /* 配置正弦波数据通过dma发送给i2s，并注册TxCallback，该函数在中断里作为回调函数被调用 */
     s_TxTransfer.data = &g_Music[0];
     s_TxTransfer.dataSize = sizeof(g_Music);
-
     I2S_TxTransferCreateHandleDMA(WM8904_I2S_TX, &s_TxHandle, &s_DmaTxHandle, TxCallback, (void *)&s_TxTransfer);
-    /* need to queue two transmit buffers so when the first one
-     * finishes transfer, the other immediatelly starts */
+    
+    /* 连续发送两包数据给dma，dma内部为乒乓buf，之后的数据会在TxCallback发送程序将一直循环播放正弦波 */
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &s_TxHandle, s_TxTransfer);
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &s_TxHandle, s_TxTransfer);
 }
 
+
+/**
+ * @brief 通过wm8904播放采集到的输入声音回环测试示例
+ *          TODO:这个代码看起来没啥问题，但在我的板子上没有声音，待定位
+ * 
+ */
 void StartDigitalLoopback(void)
 {
     printfk("Setup digital loopback\r\n");
@@ -96,13 +120,9 @@ void StartDigitalLoopback(void)
     I2S_TxTransferCreateHandleDMA(WM8904_I2S_TX, &s_TxHandle, &s_DmaTxHandle, TxCallback, (void *)&s_TxTransfer);
     I2S_RxTransferCreateHandleDMA(WM8904_I2S_RX, &s_RxHandle, &s_DmaRxHandle, RxCallback, (void *)&s_RxTransfer);
 
-    /* need to queue two receive buffers so when the first one is filled,
-     * the other is immediatelly starts to be filled */
     I2S_RxTransferReceiveDMA(WM8904_I2S_RX, &s_RxHandle, s_RxTransfer);
     I2S_RxTransferReceiveDMA(WM8904_I2S_RX, &s_RxHandle, s_RxTransfer);
 
-    /* need to queue two transmit buffers so when the first one
-     * finishes transfer, the other immediatelly starts */
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &s_TxHandle, s_TxTransfer);
     I2S_TxTransferSendDMA(WM8904_I2S_TX, &s_TxHandle, s_TxTransfer);
 }

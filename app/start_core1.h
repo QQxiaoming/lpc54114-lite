@@ -4,9 +4,6 @@
  * @brief 
  * @version 1.0
  * @date 2019-04-14
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #ifndef _START_CORE1_H_
 #define _START_CORE1_H_

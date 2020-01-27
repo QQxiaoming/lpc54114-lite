@@ -4,9 +4,6 @@
  * @brief 串口初始化
  * @version 1.0
  * @date 2019-04-14
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include <stdint.h>
 

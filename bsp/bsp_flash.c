@@ -4,9 +4,6 @@
  * @brief 板载flash驱动
  * @version 1.0
  * @date 2019-04-21
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_flash.h"
 #include "mx25r_flash.h"

@@ -4,9 +4,6 @@
  * @brief adc测试
  * @version 1.0
  * @date 2019-05-25
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_adc.h"
 #include "fsl_debug_console.h"
@@ -27,15 +24,21 @@ static void delay(void)
 }
 
 
+/**
+ * @brief adc示例
+ * 
+ */
 void test_adc(void)
 {
     uint16_t wADCValue = 0;
 
     for(;;)
     {
+        /* 触发并读取一次adc数据 */
         wADCValue = adc_read(ADC_CHANNEL_NUM);
         if(wADCValue != 0xFFFF)
         {
+            /* 打印adc值 */
             printfk("adc Value is %d\r\n", wADCValue);
         }
         delay();

@@ -4,9 +4,6 @@
  * @brief M0+核主函数
  * @version 1.0
  * @date 2019-04-14
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "fsl_common.h"
 #include "fsl_gpio.h"
@@ -37,10 +34,7 @@ static void delay(void)
  */
 void SystemInitHook(void)
 {
-    /* Initialize MCMGR - low level multicore management library. Call this
-       function as close to the reset entry as possible to allow CoreUp event
-       triggering. The SystemInitHook() weak function overloading is used in this
-       application. */
+    /* 初始化多核管理器系统，完成后才可调用MCMGR_Init */
     MCMGR_EarlyInit();
 }
 

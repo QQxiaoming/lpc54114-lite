@@ -4,14 +4,17 @@
  * @brief 板载pct2075驱动
  * @version 1.0
  * @date 2019-05-25
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include "bsp_pct2075.h"
 #include "fsl_i2c.h"
 
 
+/**
+ * @brief 读取pct2075温度数据
+ * 
+ * @param data 待返回数据地址
+ * @return status_t 状态码
+ */
 status_t pct2075_i2c_read(float *data)
 {
 	status_t reVal = kStatus_Fail;

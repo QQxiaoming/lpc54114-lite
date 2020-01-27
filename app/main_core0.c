@@ -4,9 +4,6 @@
  * @brief M4核主函数
  * @version 1.0
  * @date 2019-04-14
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #include <string.h>
 #include <stdio.h>

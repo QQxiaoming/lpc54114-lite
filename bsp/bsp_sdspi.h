@@ -4,9 +4,6 @@
  * @brief 板载spisd卡驱动
  * @version 1.0
  * @date 2019-04-15
- * 
- * @copyright Copyright (c) 2019
- * 
  */
 #ifndef _BSP_SDSPI_H_
 #define _BSP_SDSPI_H_

@@ -4,11 +4,7 @@
  * @brief 文件系统测试
  * @version 1.0
  * @date 2019-05-22
- * 
- * @copyright Copyright (c) 2019
- * 
  */
-
 #include <string.h>
 #include <stdio.h>
 #include "ff.h"
